@@ -1,0 +1,12 @@
+package application;
+
+import javafx.scene.control.Button;
+
+public class GameStartupScreen {
+
+	String student;
+	String parent;
+	String teacher;
+	String engineer;
+	Button start = new Button("Start");
+}
