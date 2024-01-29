@@ -1,12 +1,13 @@
 package application;
 
+import java.util.Random;
+
 import javafx.animation.AnimationTimer;
 import javafx.scene.Node;
 import javafx.scene.effect.PerspectiveTransform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Polygon;
 
 public class BoardHandler {
 	private int shouldMove = 0;
@@ -66,14 +67,6 @@ public class BoardHandler {
 			data2[1]++;
 			float[] data3 = data.clone();
 			data3[0]++;
-			if (p instanceof Polygon) {
-				((Polygon) p).getPoints().setAll(new Double[] { (double) calculateBallPointPosition(data)[0],
-						(double) calculateBallPointPosition(data)[1], (double) calculateBallPointPosition(data1)[0],
-						(double) calculateBallPointPosition(data1)[1], (double) calculateBallPointPosition(data2)[0],
-						(double) calculateBallPointPosition(data2)[1], (double) calculateBallPointPosition(data3)[0],
-						(double) calculateBallPointPosition(data3)[1] });
-				;
-			}
 			if (p instanceof ImageView) {
 				PerspectiveTransform pT = (PerspectiveTransform) p.getEffect();
 				pT.setUlx((double) calculateBallPointPosition(data)[0]);
@@ -109,8 +102,14 @@ public class BoardHandler {
 		for (int i = 0; i < gridSize; i++) {
 			for (int j = 0; j < gridSize; j++) {
 				Node tile;
-				
-				Image image = new Image("/WaterTile.png", sideLengthScaler, sideLengthScaler, false, false);
+
+				Image image;
+				Random r = new Random();
+				if (r.nextFloat() > .5f) {
+					image = new Image("/GrassTile.png", sideLengthScaler, sideLengthScaler, false, false);
+				} else {
+					image = new Image("/WaterTile.png", sideLengthScaler, sideLengthScaler, false, false);
+				}
 				tile = new ImageView(image);
 				PerspectiveTransform pT = new PerspectiveTransform();
 				pT.setUlx((double) points[i][j][0]);
@@ -133,13 +132,13 @@ public class BoardHandler {
 				tile.setUserData(new float[] { i, j, sideLengthScaler, origin[0], origin[1], gridSize });
 			}
 		}
-		
+
 		Node tile;
-		
+
 		Image image = new Image("/TeacherBot.png", sideLengthScaler, sideLengthScaler, false, false);
 		tile = new ImageView(image);
-		int i =4;
-		int j =4;
+		int i = 4;
+		int j = 4;
 		PerspectiveTransform pT = new PerspectiveTransform();
 		pT.setUlx((double) points[i][j][0]);
 		pT.setUly((double) points[i][j][1]);
@@ -159,7 +158,7 @@ public class BoardHandler {
 
 		ball.getChildren().add(tile);
 		tile.setUserData(new float[] { i, j, sideLengthScaler, origin[0], origin[1], gridSize });
-		
+
 		return ball;
 	}
 
