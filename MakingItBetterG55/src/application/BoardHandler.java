@@ -4,12 +4,9 @@ import java.util.Random;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.Node;
-import javafx.scene.Scene;
+import javafx.scene.effect.PerspectiveTransform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -111,17 +108,27 @@ public class BoardHandler {
 		for(int i=0; i<gridSize;i++) {
 			for(int j=0; j<gridSize;j++) {
 				Node quad;
-				//if(i==3&&j==3) {
-				if(false) {
-					Image image = new Image("/assets/Medalgold.png",sideLengthScaler,sideLengthScaler, false, false);
+				if(i==3&&j==3) {
+					Image image = new Image("/TeacherBot.png",sideLengthScaler,sideLengthScaler, false, false);
 					quad= new ImageView(image);
+					PerspectiveTransform pT = new PerspectiveTransform();
+					pT.setUlx((double) points[i][j][0]);
+					pT.setUly((double) points[i][j][1]);
+					pT.setUrx((double) points[i][j+1][0]);
+					pT.setUry((double) points[i][j+1][1]);
+					pT.setLrx((double) points[i+1][j+1][0]);
+					pT.setLry((double) points[i+1][j+1][1]);
+					pT.setLlx((double) points[i+1][j][0]);
+					pT.setLly((double) points[i+1][j][1]);
+					quad.setEffect(pT);
+					
 				} else {
 				quad = new Polygon();
 				((Polygon)quad).getPoints().addAll(new Double[]{
 						(double) points[i][j][0], (double) points[i][j][1],
 						(double) points[i][j+1][0], (double) points[i][j+1][1],
 						(double) points[i+1][j+1][0], (double) points[i+1][j+1][1],
-						(double) points[i+1][j][0], (double) points[i+1][j][1],});
+						(double) points[i+1][j][0], (double) points[i+1][j][1]});
 				((Polygon)quad).setFill(new Color(new Random().nextFloat(0, .5f),Math.random(),new Random().nextFloat(0, .5f),1));
 				((Polygon)quad).setStroke(Color.BLACK);
 				}
