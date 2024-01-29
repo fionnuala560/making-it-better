@@ -1,14 +1,11 @@
 package application;
 
-import java.util.Random;
-
 import javafx.animation.AnimationTimer;
 import javafx.scene.Node;
 import javafx.scene.effect.PerspectiveTransform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 public class BoardHandler {
@@ -30,37 +27,10 @@ public class BoardHandler {
 		animator.start();
 	}
 
-	private void reorderSquareBallDepth(Pane ball) {
-		boolean ordered = false;
-		Object[] tiles = ball.getChildren().toArray();
-		while (!ordered) {
-			ordered = true;
-			for (int i = 0; i < tiles.length - 1; i++) {
-
-				float[] data = (float[]) ((Node) tiles[i]).getUserData();
-				float[] data1 = (float[]) ((Node) tiles[i + 1]).getUserData();
-
-				if (Math.abs(data[0] - data[3]) + Math.abs(data[1] - data[4]) > Math.abs(data1[0] - data1[3])
-						+ Math.abs(data1[1] - data1[4])) {
-					Object temp = tiles[i];
-					tiles[i] = tiles[i + 1];
-					tiles[i + 1] = temp;
-					ordered = false;
-				}
-				((Node) tiles[i]).setViewOrder(i);
-				if (i == tiles.length - 2) {
-					((Node) tiles[i + 1]).setViewOrder(i + 1);
-				}
-			}
-		}
-	}
-
 	private void moveSquareBallGroup(Pane ball, int direction) {
 		final float ROT_SPEED = .02f;
 		for (Node p : ball.getChildren()) {
 
-			// uncomment for fun ;)((Polygon)p).setFill(new
-			// Color(Math.random(),Math.random(),Math.random(),1));
 			float[] data = (float[]) p.getUserData();
 			switch (direction) {
 			case 0:
@@ -120,11 +90,9 @@ public class BoardHandler {
 				} else {
 					p.setVisible(true);
 				}
-				System.out.println(calculateBallPointPosition(data2)[1] - calculateBallPointPosition(data1)[1]);
 			}
 
 		}
-		reorderSquareBallDepth(ball);
 	}
 
 	public Pane makeSquareBallGroup(float sideLengthScaler, int gridSize) {
@@ -140,44 +108,58 @@ public class BoardHandler {
 		}
 		for (int i = 0; i < gridSize; i++) {
 			for (int j = 0; j < gridSize; j++) {
-				Node quad;
-				if (true) {
-					Image image = new Image("/WaterTile.png", sideLengthScaler, sideLengthScaler, false, false);
-					quad = new ImageView(image);
-					PerspectiveTransform pT = new PerspectiveTransform();
-					pT.setUlx((double) points[i][j][0]);
-					pT.setUly((double) points[i][j][1]);
-					pT.setUrx((double) points[i][j + 1][0]);
-					pT.setUry((double) points[i][j + 1][1]);
-					pT.setLrx((double) points[i + 1][j + 1][0]);
-					pT.setLry((double) points[i + 1][j + 1][1]);
-					pT.setLlx((double) points[i + 1][j][0]);
-					pT.setLly((double) points[i + 1][j][1]);
-					quad.setEffect(pT);
-					if (pT.getUrx() - pT.getLlx() < 1 || pT.getLry() - pT.getUly() < 1 || pT.getLrx() - pT.getUlx() < 1
-							|| pT.getLly() - pT.getUry() < 1) {
-						quad.setVisible(false);
-					} else {
-						quad.setVisible(true);
-					}
-
+				Node tile;
+				
+				Image image = new Image("/WaterTile.png", sideLengthScaler, sideLengthScaler, false, false);
+				tile = new ImageView(image);
+				PerspectiveTransform pT = new PerspectiveTransform();
+				pT.setUlx((double) points[i][j][0]);
+				pT.setUly((double) points[i][j][1]);
+				pT.setUrx((double) points[i][j + 1][0]);
+				pT.setUry((double) points[i][j + 1][1]);
+				pT.setLrx((double) points[i + 1][j + 1][0]);
+				pT.setLry((double) points[i + 1][j + 1][1]);
+				pT.setLlx((double) points[i + 1][j][0]);
+				pT.setLly((double) points[i + 1][j][1]);
+				tile.setEffect(pT);
+				if (pT.getUrx() - pT.getLlx() < 1 || pT.getLry() - pT.getUly() < 1 || pT.getLrx() - pT.getUlx() < 1
+						|| pT.getLly() - pT.getUry() < 1) {
+					tile.setVisible(false);
 				} else {
-					quad = new Polygon();
-					((Polygon) quad).getPoints()
-							.addAll(new Double[] { (double) points[i][j][0], (double) points[i][j][1],
-									(double) points[i][j + 1][0], (double) points[i][j + 1][1],
-									(double) points[i + 1][j + 1][0], (double) points[i + 1][j + 1][1],
-									(double) points[i + 1][j][0], (double) points[i + 1][j][1] });
-					((Polygon) quad).setFill(new Color(new Random().nextFloat(0, .5f), Math.random(),
-							new Random().nextFloat(0, .5f), 1));
-					((Polygon) quad).setStroke(Color.BLACK);
+					tile.setVisible(true);
 				}
 
-				ball.getChildren().add(quad);
-				quad.setUserData(new float[] { i, j, sideLengthScaler, origin[0], origin[1], gridSize });
+				ball.getChildren().add(tile);
+				tile.setUserData(new float[] { i, j, sideLengthScaler, origin[0], origin[1], gridSize });
 			}
 		}
-		reorderSquareBallDepth(ball);
+		
+		Node tile;
+		
+		Image image = new Image("/TeacherBot.png", sideLengthScaler, sideLengthScaler, false, false);
+		tile = new ImageView(image);
+		int i =4;
+		int j =4;
+		PerspectiveTransform pT = new PerspectiveTransform();
+		pT.setUlx((double) points[i][j][0]);
+		pT.setUly((double) points[i][j][1]);
+		pT.setUrx((double) points[i][j + 1][0]);
+		pT.setUry((double) points[i][j + 1][1]);
+		pT.setLrx((double) points[i + 1][j + 1][0]);
+		pT.setLry((double) points[i + 1][j + 1][1]);
+		pT.setLlx((double) points[i + 1][j][0]);
+		pT.setLly((double) points[i + 1][j][1]);
+		tile.setEffect(pT);
+		if (pT.getUrx() - pT.getLlx() < 1 || pT.getLry() - pT.getUly() < 1 || pT.getLrx() - pT.getUlx() < 1
+				|| pT.getLly() - pT.getUry() < 1) {
+			tile.setVisible(false);
+		} else {
+			tile.setVisible(true);
+		}
+
+		ball.getChildren().add(tile);
+		tile.setUserData(new float[] { i, j, sideLengthScaler, origin[0], origin[1], gridSize });
+		
 		return ball;
 	}
 
