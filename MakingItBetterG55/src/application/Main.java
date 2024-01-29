@@ -15,6 +15,10 @@ public class Main extends Application {
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			
+			GameStartupScreen gSS = new GameStartupScreen();
+			Scene gSSScene = gSS.getStartupScreen();
+			primaryStage.setScene(gSSScene);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

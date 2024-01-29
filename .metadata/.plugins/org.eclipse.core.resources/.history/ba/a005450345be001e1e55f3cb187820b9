@@ -1,0 +1,33 @@
+package application;
+
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+
+public class GameStartupScreen {
+
+	private String student;
+	private String parent;
+	private String teacher;
+	private String engineer;
+	private boolean studentAI;
+	private boolean parentAI;
+	private boolean teacherAI;
+	private boolean engineerAI;
+	private Scene scene;
+	
+	Button startButton = new Button("Start");
+	CheckBox boxA = new CheckBox("AI Controlled");
+	CheckBox boxB = new CheckBox("Player Controlled");
+	Label label1 = new Label("Name:");
+	TextField textField1 = new TextField();
+	
+	public GameStartupScreen() {
+		GridPane gridPane = new GridPane();
+		scene = new Scene(gridPane, 240, 100);
+		gridPane.add(startButton,3,7);
+		gridPane.add(boxA, 0, 0);
+	}
+	
+	public getStartupScene
+}
