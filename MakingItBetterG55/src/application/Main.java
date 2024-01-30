@@ -14,12 +14,16 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			GridPane root = new GridPane();
-			Scene scene = new Scene(root,1200,800);
+			Scene scene = new Scene(root,400,400);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			
-			//Will be moved into main screen aka stage/scene once that exists
+			GameStartupScreen gSS = new GameStartupScreen();
+			Scene gSSScene = gSS.getGameStartupScreen();
+			primaryStage.setScene(gSSScene);
+			
+			/*//Will be moved into main screen aka stage/scene once that exists
 			BoardHandler boardHandler = new BoardHandler();
 			Pane board = boardHandler.makeSquareBallGroup(200, 9);
 			root.add(board,0,0);
@@ -40,7 +44,7 @@ public class Main extends Application {
 	                	boardHandler.animateSquareBallMovement(board,3);
 	                }
 	            
-	        });
+	        });*/
 			// end of section for main screen
 			
 		} catch(Exception e) {
