@@ -6,7 +6,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFXReal">
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFX">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
