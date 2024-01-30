@@ -106,16 +106,18 @@ public class BoardHandler {
 				Image image;
 				Random r = new Random();
 				float val = r.nextFloat();
-				if (val > .80f) {
+				if (val > .83f) {
 					image = new Image("/GrassTile.png", sideLengthScaler, sideLengthScaler, false, false);
-				} else if(val > .60f) {
+				} else if(val > .66f) {
 					image = new Image("/WaterTile.png", sideLengthScaler, sideLengthScaler, false, false);
-				} else if (val > .40f){
+				} else if (val > .5f){
 					image = new Image("/DirtTile.png", sideLengthScaler, sideLengthScaler, false, false);
-				} else if (val > .20){
+				} else if (val > .33f){
 					image = new Image("/RiceTile.png", sideLengthScaler, sideLengthScaler, false, false);
-				} else {
+				} else if (val > .16f){
 					image = new Image("/TreesTile.png", sideLengthScaler, sideLengthScaler, false, false);
+				} else {
+					image = new Image("/HouseTile.png", sideLengthScaler, sideLengthScaler, false, false);
 				}
 				tile = new ImageView(image);
 				PerspectiveTransform pT = new PerspectiveTransform();
