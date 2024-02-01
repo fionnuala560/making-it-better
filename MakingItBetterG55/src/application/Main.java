@@ -20,10 +20,8 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			GridPane homeScreen = new GridPane();
-			
-			//Set this to your own URL or local directory for the background image file :)
-			homeScreen.setStyle("-fx-background-image: url('file:///C:/Users/Benjamin%20Keyes/Documents/JavaFX%20Workspace/MakingItBetter/src/images/woodbackground.jpg');");
-			
+			homeScreen.setStyle("-fx-background-image: url('/woodbackground.jpg');");
+		
 			Scene homeScene = new Scene(homeScreen, 1200, 800);
 
 			homeScreen.setGridLinesVisible(false);
@@ -62,11 +60,10 @@ public class Main extends Application {
 			quitButton.setPrefSize(320, 29);
 			//Adding the event to close the menu
 			quitButton.setOnAction(event -> {
-			    Scene tempPlaceholder = quitButton.getScene();
-			    homeScene.getWindow().hide();
-			});						
-			//Set this to your own URL or local directory for the setting wheel image file :)
-			ImageView settingsWheel = new ImageView("file:///C:/Users/Benjamin%20Keyes/Documents/JavaFX%20Workspace/MakingItBetter/src/images/setting.png");			
+				System.exit(0);
+			});	
+						
+			ImageView settingsWheel = new ImageView("/setting.png");			
 			settingsWheel.setStyle("-fx-cursor: hand;");
 			settingsWheel.setFitWidth(100);
 			settingsWheel.setFitHeight(100);
@@ -86,8 +83,6 @@ public class Main extends Application {
 			GridPane root = new GridPane();
 			Scene scene = new Scene(root,1200,800);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			primaryStage.setScene(homeScene);
-			primaryStage.show();
 			
 			//Will be moved into main screen aka stage/scene once that exists
 			BoardHandler boardHandler = new BoardHandler();
