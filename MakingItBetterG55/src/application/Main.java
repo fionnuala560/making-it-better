@@ -23,6 +23,10 @@ public class Main extends Application {
 			homeScreen.setStyle("-fx-background-image: url('/woodbackground.jpg');");
 		
 			Scene homeScene = new Scene(homeScreen, 1200, 800);
+			
+			GridPane root = new GridPane();
+			Scene mainScene = new Scene(root, 1200, 800);
+			mainScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 			homeScreen.setGridLinesVisible(false);
 	        final int numCols = 40;
@@ -47,11 +51,7 @@ public class Main extends Application {
 			playButton.setPrefSize(320, 29);
 			
 			playButton.setOnAction(event -> {
-			//Connecting to a blank scene for now - Replace with Start Screen
-			GridPane tempScene = new GridPane();
-			Scene newScene = new Scene(tempScene, 1200, 800);
-		    Stage stage = (Stage)playButton.getScene().getWindow();
-		    stage.setScene(newScene);
+		    primaryStage.setScene(mainScene);
 			});
 			
 			Button quitButton = new Button("Quit");
@@ -78,11 +78,6 @@ public class Main extends Application {
 			
 			primaryStage.setScene(homeScene);
 			primaryStage.show();
-			
-			//Scene to hold the BoardHandler object
-			GridPane root = new GridPane();
-			Scene scene = new Scene(root,1200,800);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			
 			//Will be moved into main screen aka stage/scene once that exists
 			BoardHandler boardHandler = new BoardHandler();
