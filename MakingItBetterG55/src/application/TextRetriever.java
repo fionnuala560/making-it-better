@@ -25,25 +25,14 @@ public class TextRetriever {
 
     //retrieves text based on provided index and language index
     public String getText(int index, int languageIndex){
-        if(index >= 0 && index < translations.size()){
-            if(languageIndex >= 0 && languageIndex < translations.get(0).length){
+        if(index >= 0 && index < translations.size() && languageIndex >= 0 && languageIndex < translations.get(0).length){
                 return translations.get(index)[languageIndex];
-            } else {
-                return "Invalid Text";
-            }
         } else {
-            return "Invalid text";
+                return "Invalid Text";
         }
     }
 
-    //changes the current language index
-    public void setLanguage(int languageIndex){
-        if(languageIndex >= 0 && languageIndex < translations.get(0).length){
-            currentLanguageIndex = languageIndex;
-        } else {
-            System.out.println("No language index found");
-        }
-    }
+
 
     //reads translations from the CSV file and returns a List of string arrays
     private List<String[]> readTranslationsFromCSV(String csvFilePath){
