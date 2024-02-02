@@ -14,6 +14,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class GameStartupScreen {
 
@@ -56,53 +58,70 @@ public class GameStartupScreen {
 	
 	public GameStartupScreen() {
 		GridPane gridPane = new GridPane();
-		gameStartupScene = new Scene(gridPane, 400, 400);
+		gameStartupScene = new Scene(gridPane, 1200, 600);
 		//Setting coordinates of label1 and add to scene
-		label1.setTranslateX(140);
+		label1.setFont(Font.font("SansSerif", FontWeight.BOLD, 50));
+		label1.setTranslateX(300);
 		label1.setTranslateY(0);
 		gridPane.add(label1, 0, 0);	
-		//set coordinates of label3 and add to scene
-		label6.setTranslateX(45);
-		label6.setTranslateY(30);
-		gridPane.add(label6, 0, 5);
+		//set coordinates of label6 and add to scene
+		label6.setFont(Font.font("SansSerif", FontWeight.BOLD, 16));
+		label6.setTranslateX(200);
+		label6.setTranslateY(360);
+		gridPane.add(label6, 0, 0);
 		//set coordinates of label7
-		label7.setTranslateX(60);
-		label7.setTranslateY(30);
-		gridPane.add(label7, 0, 6);
+		label7.setFont(Font.font("SansSerif", FontWeight.BOLD, 19));
+		label7.setTranslateX(120);
+		label7.setTranslateY(330);
+		gridPane.add(label7, 0, 0);
 		//set coordinates, size of settingsButton and add to scene
-		settingsButton.setMaxHeight(20);
-		settingsButton.setMaxWidth(35);
-		settingsButton.setTranslateX(0);
-		settingsButton.setTranslateY(30);
+		settingsButton.setMinHeight(20);
+		settingsButton.setMinWidth(35);
+		settingsButton.setTranslateX(20);
+		settingsButton.setTranslateY(400);
 		gridPane.add(settingsButton, 0, 7);
 		//set height of studentButton and add to scene
-		studentButton.setMaxHeight(20);
-		studentButton.setMaxWidth(140);
-		gridPane.add(studentButton, 0, 1);
+		studentButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 22));
+		studentButton.setMinHeight(20);
+		studentButton.setMinWidth(140);
+		studentButton.setTranslateX(0);
+		studentButton.setTranslateY(50);
+		gridPane.add(studentButton, 0, 0);
 		//set size of parentButton and add to scene
-		parentButton.setMaxHeight(20);
-		parentButton.setMaxWidth(140);
-		gridPane.add(parentButton, 0, 2);
+		parentButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 22));
+		parentButton.setMinHeight(20);
+		parentButton.setMinWidth(140);
+		parentButton.setTranslateX(0);
+		parentButton.setTranslateY(91);
+		gridPane.add(parentButton, 0, 0);
 		//set size of teacherButton and add to scene
-		teacherButton.setMaxHeight(20);
-		teacherButton.setMaxWidth(140);
-		gridPane.add(teacherButton, 0, 3);
+		teacherButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 22));
+		teacherButton.setMinHeight(20);
+		teacherButton.setMinWidth(140);
+		teacherButton.setTranslateX(0);
+		teacherButton.setTranslateY(132);
+		gridPane.add(teacherButton, 0, 0);
 		//set size of engineerButton and add to scene
-		engineerButton.setMaxHeight(20);
-		engineerButton.setMaxWidth(140);
-		gridPane.add(engineerButton, 0, 4);
+		engineerButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 22));
+		engineerButton.setMinHeight(20);
+		engineerButton.setMinWidth(140);
+		engineerButton.setTranslateX(0);
+		engineerButton.setTranslateY(173);
+		gridPane.add(engineerButton, 0, 0);
 		//set coordinates, size of startButton and add to scene
-		startButton.setMaxHeight(50);
-		startButton.setMaxWidth(100);
-		startButton.setTranslateX(60);
-		startButton.setTranslateY(30);
-		gridPane.add(startButton,3,7);
+		startButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 20));
+		startButton.setMinHeight(50);
+		startButton.setMinWidth(100);
+		startButton.setTranslateX(1000);
+		startButton.setTranslateY(450);
+		gridPane.add(startButton,0, 0);
 		
 		//create panes for when each player button is pressed
 		Pane studentPane = new Pane();
 		studentPane.getChildren().add(boxA);
-		boxA.setTranslateX(20);
-		boxA.setTranslateY(75);
+		boxA.setFont(Font.font("SansSerif", FontWeight.BOLD, 20));
+		boxA.setTranslateX(50);
+		boxA.setTranslateY(140);
 		boxA.setOnAction(e -> {
 			if(boxA.isSelected()) {
 				System.out.println("is selected");
@@ -114,17 +133,22 @@ public class GameStartupScreen {
 		});
 		//add objective
 		studentPane.getChildren().add(label8);
-		label8.setTranslateX(20);
-		label8.setTranslateY(105);
+		label8.setFont(Font.font("SansSerif", FontWeight.BOLD, 21));
+		label8.setTranslateX(470);
+		label8.setTranslateY(50);
 		//add Name: label
 		studentPane.getChildren().add(label2);
-		label2.setTranslateX(20);
-		label2.setTranslateY(40);
+		label2.setFont(Font.font("SansSerif", FontWeight.BOLD, 21));
+		label2.setTranslateX(50);
+		label2.setTranslateY(50);
 		//add name text field
 		studentPane.getChildren().add(textField1);
-		textField1.setTranslateX(80);
-		textField1.setTranslateY(37);
-		gridPane.add(studentPane,1,0);
+		textField1.setFont(Font.font("SansSerif", 21));
+		textField1.setTranslateX(150);
+		textField1.setTranslateY(45);
+		gridPane.add(studentPane,0,0);
+		studentPane.setTranslateX(141);
+		studentPane.setTranslateY(60);
 		studentPane.setVisible(false);
 		/*studentPane.getChildren().add(parentButton);
 		parentButton.setTranslateX(0);
@@ -134,8 +158,9 @@ public class GameStartupScreen {
 		
 		Pane parentPane = new Pane();
 		parentPane.getChildren().add(boxB);
-		boxB.setTranslateX(20);
-		boxB.setTranslateY(75);
+		boxB.setFont(Font.font("SansSerif", FontWeight.BOLD, 20));
+		boxB.setTranslateX(50);
+		boxB.setTranslateY(140);
 		boxB.setOnAction(e -> {
 			if(boxB.isSelected()) {
 				System.out.println("is selected");
@@ -147,23 +172,29 @@ public class GameStartupScreen {
 		});
 		//add objective
 		parentPane.getChildren().add(label9);
-		label9.setTranslateX(20);
-		label9.setTranslateY(105);
+		label9.setFont(Font.font("SansSerif", FontWeight.BOLD, 21));
+		label9.setTranslateX(470);
+		label9.setTranslateY(50);
 		//add Name: label
 		parentPane.getChildren().add(label3);
-		label3.setTranslateX(20);
-		label3.setTranslateY(40);
+		label3.setFont(Font.font("SansSerif", FontWeight.BOLD, 21));
+		label3.setTranslateX(50);
+		label3.setTranslateY(50);
 		//add name text field
 		parentPane.getChildren().add(textField2);
-		textField2.setTranslateX(80);
-		textField2.setTranslateY(37);
-		gridPane.add(parentPane,1,0);
+		textField2.setFont(Font.font("SansSerif", 21));
+		textField2.setTranslateX(150);
+		textField2.setTranslateY(45);
+		gridPane.add(parentPane,0,0);
+		parentPane.setTranslateX(141);
+		parentPane.setTranslateY(60);
 		parentPane.setVisible(false);
 		
 		Pane teacherPane = new Pane();
 		teacherPane.getChildren().add(boxC);
-		boxC.setTranslateX(20);
-		boxC.setTranslateY(75);
+		boxC.setFont(Font.font("SansSerif", FontWeight.BOLD, 20));
+		boxC.setTranslateX(50);
+		boxC.setTranslateY(140);
 		boxC.setOnAction(e -> {
 			if(boxC.isSelected()) {
 				System.out.println("is selected");
@@ -175,27 +206,35 @@ public class GameStartupScreen {
 		});
 		//add objective
 		teacherPane.getChildren().add(label10);
-		label10.setTranslateX(20);
-		label10.setTranslateY(105);
+		label10.setFont(Font.font("SansSerif", FontWeight.BOLD, 21));
+		label10.setTranslateX(470);
+		label10.setTranslateY(50);
 		//add Name: label
 		teacherPane.getChildren().add(label4);
-		label4.setTranslateX(20);
-		label4.setTranslateY(40);
+		label4.setFont(Font.font("SansSerif", FontWeight.BOLD, 21));
+		label4.setTranslateX(50);
+		label4.setTranslateY(50);
 		//add name text field
 		teacherPane.getChildren().add(textField3);
-		textField3.setTranslateX(80);
-		textField3.setTranslateY(37);
-		gridPane.add(teacherPane,1,0);
+		textField3.setFont(Font.font("SansSerif", 21));
+		textField3.setTranslateX(150);
+		textField3.setTranslateY(45);
+		gridPane.add(teacherPane,0,0);
+		teacherPane.setTranslateX(141);
+		teacherPane.setTranslateY(60);
 		teacherPane.setVisible(false);
 
 		
 		Pane engineerPane = new Pane();
 		engineerPane.getChildren().add(boxD);
-		boxD.setTranslateX(20);
-		boxD.setTranslateY(75);
+		boxD.setFont(Font.font("SansSerif", FontWeight.BOLD, 20));
+		boxD.setTranslateX(50);
+		boxD.setTranslateY(140);
 		boxD.setOnAction(e -> {
 			if(boxD.isSelected()) {
 				System.out.println("is selected");
+				String name = textField4.getText();
+				System.out.println(name);
 				isEngineerAI = true;
 			}else {
 				System.out.println("is not selected");
@@ -204,18 +243,23 @@ public class GameStartupScreen {
 		});
 		//add objective
 		engineerPane.getChildren().add(label11);
-		label11.setTranslateX(20);
-		label11.setTranslateY(105);
+		label11.setFont(Font.font("SansSerif", FontWeight.BOLD, 21));
+		label11.setTranslateX(470);
+		label11.setTranslateY(50);
 		
 		//add Name: label
 		engineerPane.getChildren().add(label5);
-		label5.setTranslateX(20);
-		label5.setTranslateY(40);
+		label5.setFont(Font.font("SansSerif", FontWeight.BOLD, 21));
+		label5.setTranslateX(50);
+		label5.setTranslateY(50);
 		//add name text field
 		engineerPane.getChildren().add(textField4);
-		textField4.setTranslateX(80);
-		textField4.setTranslateY(37);
-		gridPane.add(engineerPane,1,0);
+		textField4.setFont(Font.font("SansSerif", 21));
+		textField4.setTranslateX(150);
+		textField4.setTranslateY(45);
+		gridPane.add(engineerPane,0,0);
+		engineerPane.setTranslateX(141);
+		engineerPane.setTranslateY(60);
 		engineerPane.setVisible(false);
 		
 		//Show studentPane when studentButton is pressed
