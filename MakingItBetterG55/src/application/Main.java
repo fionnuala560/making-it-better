@@ -81,7 +81,7 @@ public class Main extends Application {
 			
 			//Will be moved into main screen aka stage/scene once that exists
 			BoardHandler boardHandler = new BoardHandler();
-			Pane board = boardHandler.makeSquareBallGroup(200, 9);
+			Pane board = boardHandler.makeSquareBallGroup(200);
 			root.add(board,0,0);
 			board.setTranslateX(550);
 			board.setTranslateY(400);

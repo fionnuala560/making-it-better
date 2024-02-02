@@ -1,5 +1,8 @@
 package application;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Random;
 
 import javafx.animation.AnimationTimer;
@@ -86,7 +89,8 @@ public class BoardHandler {
 
 	}
 
-	public Pane makeSquareBallGroup(float sideLengthScaler, int gridSize) {
+	public Pane makeSquareBallGroup(float sideLengthScaler) {
+		int gridSize = 9;
 		Pane ball = new Pane();
 		float[] origin = new float[] { gridSize / 2f, gridSize / 2f };
 		float[][][] points = new float[gridSize + 1][gridSize + 1][2];
@@ -97,26 +101,14 @@ public class BoardHandler {
 				points[i][j][1] = pos[1];
 			}
 		}
+		
+		final Image[][] tiles = getTiles(sideLengthScaler);
+		
 		for (int i = 0; i < gridSize; i++) {
 			for (int j = 0; j < gridSize; j++) {
 				Node tile;
 
-				Image image;
-				Random r = new Random();
-				float val = r.nextFloat();
-				if (val > .83f) {
-					image = new Image("/GrassTile.png", sideLengthScaler, sideLengthScaler, false, false);
-				} else if (val > .66f) {
-					image = new Image("/WaterTile.png", sideLengthScaler, sideLengthScaler, false, false);
-				} else if (val > .5f) {
-					image = new Image("/DirtTile.png", sideLengthScaler, sideLengthScaler, false, false);
-				} else if (val > .33f) {
-					image = new Image("/RiceTile.png", sideLengthScaler, sideLengthScaler, false, false);
-				} else if (val > .16f) {
-					image = new Image("/TreesTile.png", sideLengthScaler, sideLengthScaler, false, false);
-				} else {
-					image = new Image("/HouseTile.png", sideLengthScaler, sideLengthScaler, false, false);
-				}
+				Image image = tiles[i][j];
 				tile = new ImageView(image);
 				PerspectiveTransform pT = new PerspectiveTransform();
 				pT.setUlx((double) points[i][j][0]);
@@ -210,4 +202,50 @@ public class BoardHandler {
 	private float[] calculateBallPointPosition(float[] data) {
 		return calculateBallPointPosition(data[0], data[1], data[2], data[3], data[4]);
 	}
+	
+	private Image[][] getTiles(float sideLengthScaler){
+		
+		Image[][] tiles = new Image[9][9];
+
+		try(BufferedReader bufferedReader = new BufferedReader(new FileReader(System.getProperty("user.dir")+"/src/tiles.txt"))){
+			
+			final Image water = new Image("/WaterTile.png", sideLengthScaler, sideLengthScaler, false, false);
+			final Image grass = new Image("/GrassTile.png", sideLengthScaler, sideLengthScaler, false, false);
+			final Image trees = new Image("/TreesTile.png", sideLengthScaler, sideLengthScaler, false, false);
+			final Image dirt = new Image("/DirtTile.png", sideLengthScaler, sideLengthScaler, false, false);
+			final Image rice = new Image("/RiceTile.png", sideLengthScaler, sideLengthScaler, false, false);
+			final Image house = new Image("/HouseTile.png", sideLengthScaler, sideLengthScaler, false, false);
+			
+            String line = bufferedReader.readLine();
+            for (int i = 0; i < 9; i++) {
+            	line = bufferedReader.readLine();
+            	for(int j = 0; j < 9; j++) {
+            		switch (line.charAt(j)) {
+            		case '1':
+            			tiles[i][j] = water;
+            			break;
+            		case '2':
+            			tiles[i][j] = grass;
+            			break;
+            		case '3':
+            			tiles[i][j] = trees;
+            			break;
+            		case '4':
+            			tiles[i][j] = dirt;
+            			break;
+            		case '5':
+            			tiles[i][j] = rice;
+            			break;
+            		case '6':
+            			tiles[i][j] = house;
+            			break;
+            		}
+            	}
+            }
+        }  catch (IOException e){
+            e.printStackTrace();
+        }
+		return tiles;
+	}
+	
 }
