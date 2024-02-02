@@ -68,7 +68,15 @@ public class Main extends Application {
 			settingsWheel.setFitWidth(100);
 			settingsWheel.setFitHeight(100);
 
-			homeScreen.add(settingsWheel, 1, 32);
+			Button settings = new Button("");
+			settings.setGraphic(settingsWheel);
+			settings.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
+			settings.setOnAction(event -> {
+				OptionsMenu.options();
+			});
+			
+
+			homeScreen.add(settings, 1, 32);
 
 			homeScreen.add(title, 8, 0, 40, 20);
 			homeScreen.add(playButton, 14, 10, 40, 20);
