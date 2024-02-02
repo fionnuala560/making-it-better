@@ -12,15 +12,13 @@ public class TextRetriever {
     private static final String CSV_PATH = "MakingItBetterG55/src/making-it-better-text.csv";
 
     //list containing all text from the CSV
-    private List<String[]> translations;
+    private final List<String[]> translations;
 
-    //index representing current language
-    private int currentLanguageIndex;
+
 
     //class is initialised by converting the CSV values into a List and currentLanguageIndex set to 0
     public TextRetriever(){
         this.translations = readTranslationsFromCSV(CSV_PATH);
-        this.currentLanguageIndex = 0;
     }
 
     //retrieves text based on provided index and language index
