@@ -65,17 +65,92 @@ public abstract class OptionsMenu extends Application{
         optionsScreen.add(title, 16, 4);
         
         //back button
-		Button back = new Button("Back");
-		back.setStyle("-fx-cursor: hand; -fx-border-color: #152546; -fx-border-width: 14px; -fx-background-color: #536F7B; -fx-text-fill: white;");
-		back.setFont(Font.font("SansSerif", FontWeight.BOLD, 40));
-		back.setPrefSize(320, 29);
-		optionsScreen.add(back, 28, 32, 32, 32);
-		back.setOnAction(event -> {
-			stage.close();
-		});	
+	Button back = new Button("Back");
+	back.setStyle("-fx-cursor: hand; -fx-border-color: #152546; -fx-border-width: 14px; -fx-background-color: #536F7B; -fx-text-fill: white;");
+	back.setFont(Font.font("SansSerif", FontWeight.BOLD, 40));
+	back.setPrefSize(320, 29);
+	optionsScreen.add(back, 28, 32, 32, 32);
+	back.setOnAction(event -> {
+		stage.close();
+	});	
+
+	//colour blind
+	Text cb = new Text("Colourblind Mode");
+	cb.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
+	cb.setStyle("-fx-fill: white;");
+	optionsScreen.add(cb, 21, 13);
+	
+	MenuButton colours = new MenuButton("Colour Options");
+	colours.setMinSize(400, 62);
+	colours.setStyle("-fx-cursor: hand; -fx-border-color: #152546; -fx-border-width: 4px; -fx-background-color: #536F7B; -fx-text-fill: white;");
+	colours.setFont(Font.font("SansSerif", FontWeight.BOLD, 28));
+	MenuItem protanopia = new MenuItem("Protanopia (Red-Green)");
+	protanopia.setOnAction(event ->{
+		colours.setText("Protanopia (Red-Green)");
+	});
+	MenuItem deuteranopia = new MenuItem ("Deuteranopia (Red-Green)");
+	deuteranopia.setOnAction(event ->{
+		colours.setText("Deuteranopia (Red-Green)");
+	});
+	MenuItem tritanopia = new MenuItem("Tritanopia (Blue-Yellow)");
+	tritanopia.setOnAction(event ->{
+		colours.setText("Tritanopia (Blue-Yellow)");
+	});
+	colours.getItems().addAll(protanopia, deuteranopia, tritanopia);
+	optionsScreen.add(colours, 21, 16);
+	
+	//language
+	Text lang = new Text("Language");
+	lang.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
+	lang.setStyle("-fx-fill: white;");
+	optionsScreen.add(lang, 21, 22);
+	
+	MenuButton languages = new MenuButton("English");
+	languages.setMinSize(400, 62);
+	languages.setStyle("-fx-cursor: hand; -fx-border-color: #152546; -fx-border-width: 4px; -fx-background-color: #536F7B; -fx-text-fill: white;");
+	languages.setFont(Font.font("SansSerif", FontWeight.BOLD, 28));
+	MenuItem english = new MenuItem("English");
+	english.setOnAction(event ->{
+		languages.setText("English");
+	});
+	MenuItem spanish = new MenuItem("Spanish");
+	spanish.setOnAction(event ->{
+		languages.setText("Spanish");
+	});
+	MenuItem german = new MenuItem("German");
+	german.setOnAction(event ->{
+		languages.setText("German");
+	});
+	MenuItem italian = new MenuItem("Italian");
+	italian.setOnAction(event ->{
+		languages.setText("Italian");
+	});
+	languages.getItems().addAll(english, spanish, german, italian);
+	optionsScreen.add(languages, 21, 25);
+	
+	//fullscreen
+	Text fullscreen = new Text("Full Screen");
+	fullscreen.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
+	fullscreen.setStyle("-fx-fill: white;");
+	optionsScreen.add(fullscreen, 3, 14);
+	
+	CheckBox fsCheckBox = new CheckBox("");
+	optionsScreen.add(fsCheckBox, 2, 14);
+	fsCheckBox.setOnAction(event ->{
+		stage.setFullScreen(true);
+	});
+	
+	//music
+	Text music = new Text("Music");
+	music.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
+	music.setStyle("-fx-fill: white;");
+	optionsScreen.add(music, 3, 19);
+	
+	CheckBox musicCheckBox = new CheckBox("");
+	optionsScreen.add(musicCheckBox, 2, 19);
 		
-		stage.setTitle("Settings");
-		stage.setScene(optionsScene);
-		stage.showAndWait();
+	stage.setTitle("Settings");
+	stage.setScene(optionsScene);
+	stage.showAndWait();
 	}
 }
