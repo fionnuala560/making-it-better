@@ -21,12 +21,10 @@ public class Main extends Application {
 		try {
 			GridPane homeScreen = new GridPane();
 			homeScreen.setStyle("-fx-background-image: url('/woodbackground.jpg');");
-		
 			Scene homeScene = new Scene(homeScreen, 1200, 800);
 			
-			GridPane root = new GridPane();
-			Scene mainScene = new Scene(root, 1200, 800);
-			mainScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			MainSceneHandler mainSceneHandler = new MainSceneHandler();
+			Scene mainScene = mainSceneHandler.makeMainScene();
 
 			homeScreen.setGridLinesVisible(false);
 	        final int numCols = 40;
@@ -78,30 +76,6 @@ public class Main extends Application {
 			
 			primaryStage.setScene(homeScene);
 			primaryStage.show();
-			
-			//Will be moved into main screen aka stage/scene once that exists
-			BoardHandler boardHandler = new BoardHandler();
-			Pane board = boardHandler.makeSquareBallGroup(200);
-			root.add(board,0,0);
-			board.setTranslateX(550);
-			board.setTranslateY(400);
-			primaryStage.addEventHandler(KeyEvent.KEY_RELEASED,(KeyEvent event)->{
-
-	                if (event.getCode() == KeyCode.A) {
-	                	boardHandler.animateSquareBallMovement(board,0);
-	                }
-	                if (event.getCode() == KeyCode.W) {
-	                	boardHandler.animateSquareBallMovement(board,1);
-	                }
-	                if (event.getCode() == KeyCode.D) {
-	                	boardHandler.animateSquareBallMovement(board,2);
-	                }
-	                if (event.getCode() == KeyCode.S) {
-	                	boardHandler.animateSquareBallMovement(board,3);
-	                }
-	            
-	        });
-			// end of section for main screen
 			
 		} catch(Exception e) {
 			e.printStackTrace();
