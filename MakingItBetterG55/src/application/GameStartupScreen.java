@@ -2,20 +2,18 @@ package application;
 
 import java.util.Scanner;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBase;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class GameStartupScreen {
 
@@ -34,13 +32,14 @@ public class GameStartupScreen {
 	private Button parentButton = new Button("Parent");
 	private Button teacherButton = new Button("Teacher");
 	private Button engineerButton = new Button("Engineer");
-	private Button settingsButton = new Button();
+	private ImageView settingsButton = new ImageView("/setting.png");
 	private Button startButton = new Button("Start");
+	private Button backButton = new Button("<");
 	private CheckBox boxA = new CheckBox("AI Controlled");
 	private CheckBox boxB = new CheckBox("AI Controlled");
 	private CheckBox boxC = new CheckBox("AI Controlled");
 	private CheckBox boxD = new CheckBox("AI Controlled");
-	private Label label1= new Label("Game Startup Settings");
+	private Text title = new Text("Game Startup Settings");
 	private Label label2 = new Label("Name:");
 	private Label label3 = new Label("Name:");
 	private Label label4 = new Label("Name:");
@@ -56,29 +55,32 @@ public class GameStartupScreen {
 	private TextField textField3 = new TextField();
 	private TextField textField4 = new TextField();
 	
-	public GameStartupScreen() {
+	public GameStartupScreen(Scene mainScene, Scene homeScene) {
 		GridPane gridPane = new GridPane();
-		gameStartupScene = new Scene(gridPane, 1200, 600);
+		gridPane.setStyle("-fx-background-image: url('/woodbackground.jpg');");
+		gameStartupScene = new Scene(gridPane, 1200, 800);
 		//Setting coordinates of label1 and add to scene
-		label1.setFont(Font.font("SansSerif", FontWeight.BOLD, 50));
-		label1.setTranslateX(300);
-		label1.setTranslateY(0);
-		gridPane.add(label1, 0, 0);	
+		title.setFont(Font.font("SansSerif", FontWeight.BOLD, 50));
+		title.setStyle("-fx-fill: black; -fx-stroke: white; -fx-stroke-width: 1px;");
+		title.setTranslateX(300);
+		title.setTranslateY(0);
+		gridPane.add(title, 0, 0);	
 		//set coordinates of label6 and add to scene
 		label6.setFont(Font.font("SansSerif", FontWeight.BOLD, 16));
 		label6.setTranslateX(200);
-		label6.setTranslateY(360);
+		label6.setTranslateY(400);
 		gridPane.add(label6, 0, 0);
 		//set coordinates of label7
 		label7.setFont(Font.font("SansSerif", FontWeight.BOLD, 19));
 		label7.setTranslateX(120);
-		label7.setTranslateY(330);
+		label7.setTranslateY(430);
 		gridPane.add(label7, 0, 0);
 		//set coordinates, size of settingsButton and add to scene
-		settingsButton.setMinHeight(20);
-		settingsButton.setMinWidth(35);
-		settingsButton.setTranslateX(20);
-		settingsButton.setTranslateY(400);
+		settingsButton.setStyle("-fx-cursor: hand;");
+		settingsButton.setFitHeight(100);
+		settingsButton.setFitWidth(100);
+		settingsButton.setTranslateX(30);
+		settingsButton.setTranslateY(544);
 		gridPane.add(settingsButton, 0, 7);
 		//set height of studentButton and add to scene
 		studentButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 22));
@@ -109,12 +111,27 @@ public class GameStartupScreen {
 		engineerButton.setTranslateY(173);
 		gridPane.add(engineerButton, 0, 0);
 		//set coordinates, size of startButton and add to scene
-		startButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 20));
-		startButton.setMinHeight(50);
-		startButton.setMinWidth(100);
-		startButton.setTranslateX(1000);
-		startButton.setTranslateY(450);
+		startButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 30));
+		startButton.setStyle("-fx-cursor: hand; -fx-border-color: #152546; -fx-border-width: "
+				+ "14px; -fx-background-color: #536F7B; -fx-text-fill: white;");
+		startButton.setPrefSize(220, 29);
+		startButton.setTranslateX(900);
+		startButton.setTranslateY(650);
 		gridPane.add(startButton,0, 0);
+		startButton.setOnAction(e -> {
+			Stage tempStage = (Stage) startButton.getScene().getWindow();
+			tempStage.setScene(mainScene);
+		});
+		//set coordinates, size of backButton and add to scene
+		backButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 20));
+		backButton.setPrefSize(50, 10);
+		backButton.setTranslateX(5);
+		backButton.setTranslateY(0);
+		gridPane.add(backButton,0, 0);
+		backButton.setOnAction(e -> {
+			Stage tempMain = (Stage) backButton.getScene().getWindow();
+			tempMain.setScene(homeScene);
+				});
 		
 		//create panes for when each player button is pressed
 		Pane studentPane = new Pane();

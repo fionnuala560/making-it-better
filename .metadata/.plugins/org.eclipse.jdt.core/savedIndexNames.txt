@@ -8,5 +8,4 @@ INDEX VERSION 1.134+C:\Users\goske\GitContributions\making-it-better\.metadata\.
 38268909.index
 409988380.index
 3068766667.index
-2188161297.index
 1865797976.index
