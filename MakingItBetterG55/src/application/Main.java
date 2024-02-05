@@ -50,6 +50,7 @@ public class Main extends Application {
 			
 			playButton.setOnAction(event -> {
 		    primaryStage.setScene(mainScene);
+		    mainSceneHandler.handleTurn();
 			});
 			
 			Button quitButton = new Button("Quit");

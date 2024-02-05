@@ -3,7 +3,6 @@ package application;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Random;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.Node;
@@ -14,6 +13,11 @@ import javafx.scene.layout.Pane;
 
 public class BoardHandler {
 	private int shouldMove = 0;
+	private MainSceneHandler mainSceneHandler;
+	
+	public BoardHandler (MainSceneHandler mainSceneHandler) {
+		this.mainSceneHandler = mainSceneHandler;
+	}
 
 	public void animateSquareBallMovement(Pane ball, int direction) {
 		AnimationTimer animator = new AnimationTimer() {
@@ -24,6 +28,7 @@ public class BoardHandler {
 					shouldMove++;
 				} else {
 					shouldMove = 0;
+					mainSceneHandler.handleTurn();
 					this.stop();
 				}
 			}
