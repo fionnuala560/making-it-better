@@ -15,10 +15,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
+
 public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			TextRetriever textRetriever = new TextRetriever();
 			GridPane homeScreen = new GridPane();
 			homeScreen.setStyle("-fx-background-image: url('/woodbackground.jpg');");
 		
@@ -41,7 +43,7 @@ public class Main extends Application {
 	            rowConst.setPercentHeight(100.0 / numRows);
 	            homeScreen.getRowConstraints().add(rowConst);         
 	        }
-	        Text title = new Text("Making It Better");
+	        Text title = new Text(textRetriever.getText(1,1));
 	        title.setFont(Font.font("SansSerif", FontWeight.BOLD, 100));
 	        title.setStyle("-fx-fill: black; -fx-stroke: white; -fx-stroke-width: 4px;");
 
