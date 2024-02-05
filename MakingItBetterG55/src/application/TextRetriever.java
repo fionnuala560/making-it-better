@@ -9,7 +9,7 @@ import java.util.List;
 
 public class TextRetriever {
     //path to the CSV containing all text in the game
-    private static final String CSV_PATH = "MakingItBetterG55/src/making-it-better-text.csv";
+    private static final String CSV_PATH = System.getProperty("user.dir") + "/src/making-it-better-text.csv";
 
     //list containing all text from the CSV
     private final List<String[]> translations;
@@ -18,7 +18,7 @@ public class TextRetriever {
 
     //class is initialised by converting the CSV values into a List and currentLanguageIndex set to 0
     public TextRetriever(){
-        this.translations = readTranslationsFromCSV(CSV_PATH);
+        this.translations = readTranslationsFromCSV();
     }
 
     //retrieves text based on provided index and language index
@@ -33,17 +33,17 @@ public class TextRetriever {
 
 
     //reads translations from the CSV file and returns a List of string arrays
-    private List<String[]> readTranslationsFromCSV(String csvFilePath){
+    private List<String[]> readTranslationsFromCSV(){
         List<String[]> translations = new ArrayList<>();
 
-        try(BufferedReader reader = new BufferedReader(new FileReader(csvFilePath))){
+        try(BufferedReader reader = new BufferedReader(new FileReader(CSV_PATH))){
             String line;
             while((line = reader.readLine()) != null){
                 String[] row = line.split(",");
                 translations.add(row);
             }
         } catch (FileNotFoundException e) {
-            System.err.println("CSV file not found: " + csvFilePath);
+            System.err.println("CSV file not found: " + CSV_PATH);
             e.printStackTrace();
         } catch (IOException e){
             e.printStackTrace();
