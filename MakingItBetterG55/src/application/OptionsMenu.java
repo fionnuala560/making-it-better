@@ -148,6 +148,16 @@ public abstract class OptionsMenu extends Application{
 	
 	CheckBox musicCheckBox = new CheckBox("");
 	optionsScreen.add(musicCheckBox, 2, 19);
+
+	//volume
+	Text volume = new Text("Volume");
+	volume.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
+	volume.setStyle("-fx-fill: white;");
+	optionsScreen.add(volume, 2, 24);
+	
+	Slider slider = new Slider();
+	slider.setMinSize(200, 50);
+	optionsScreen.add(slider, 2, 27);
 		
 	stage.setTitle("Settings");
 	stage.setScene(optionsScene);
