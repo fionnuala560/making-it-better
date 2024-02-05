@@ -14,7 +14,6 @@ public class MainSceneHandler {
 	public void handleTurn() {
 		switch(turnNumber % 4) {
 		case 0:
-			System.out.println("holato");
 			break;
 		case 1:
 			break;
@@ -54,6 +53,9 @@ public class MainSceneHandler {
                 if (event.getCode() == KeyCode.S && canMove == true) {
                 	boardHandler.animateSquareBallMovement(board,3);
                 	canMove = false;
+                }
+                if (event.getCode() == KeyCode.P) {
+                	boardHandler.moveToNextPlayer(turnNumber % 4);
                 }
             
         });
