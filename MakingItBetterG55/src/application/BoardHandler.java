@@ -15,10 +15,10 @@ public class BoardHandler {
 	private int shouldMove = 0;
 	private MainSceneHandler mainSceneHandler;
 	private Pane ball;
-	private ImageView playerImageViews[] = { new ImageView(new Image("/EngineerBot.png", 186, 186, false, false)),
-			new ImageView(new Image("/TeacherBot.png", 186, 186, false, false)),
-			new ImageView(new Image("/ParentBot.png", 186, 186, false, false)),
-			new ImageView(new Image("/StudentBot.png", 186, 186, false, false)) };
+	private ImageView playerImageViews[] = { new ImageView(new Image("/EngineerBot.png", 185, 185, false, false)),
+			new ImageView(new Image("/TeacherBot.png", 185, 185, false, false)),
+			new ImageView(new Image("/ParentBot.png", 185, 185, false, false)),
+			new ImageView(new Image("/StudentBot.png", 185, 185, false, false)) };
 
 	public BoardHandler(MainSceneHandler mainSceneHandler) {
 		this.mainSceneHandler = mainSceneHandler;
@@ -42,11 +42,19 @@ public class BoardHandler {
 		animator.start();
 	}
 
-	private void animateMoveToPlayerHori(Pane ball, int direction, int numMoves, int direction2, int numMoves2) {
+	private void animateMoveToPlayerHori(Pane ball, int direction, int numMoves, int direction2, int numMoves2,
+			int currentPlayer) {
 		// direction 0 = left; 1 = up; 2 = right; 3 = down;
 		int numMovements = Math.abs(numMoves);
 		int numMovements2 = Math.abs(numMoves2);
-
+		if (numMovements <= 0) {
+			if (numMovements2 > 0) {
+				animateMoveToPlayerVerti(ball, direction2, numMovements2, currentPlayer);
+			} else {
+				setPlayersData(currentPlayer);
+			}
+			return;
+		}
 		AnimationTimer animator = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
@@ -57,19 +65,20 @@ public class BoardHandler {
 					shouldMove = 0;
 					this.stop();
 					if (numMovements > 1) {
-						animateMoveToPlayerHori(ball, direction, numMovements - 1, direction2, numMovements2);
-					} else if (numMovements2 > 0){
-						animateMoveToPlayerVerti(ball, direction2, numMovements2);
+						animateMoveToPlayerHori(ball, direction, numMovements - 1, direction2, numMovements2,
+								currentPlayer);
+					} else if (numMovements2 > 0) {
+						animateMoveToPlayerVerti(ball, direction2, numMovements2, currentPlayer);
 					} else {
-						
+						setPlayersData(currentPlayer);
 					}
 				}
 			}
 		};
 		animator.start();
 	}
-	
-	private void animateMoveToPlayerVerti(Pane ball, int direction, int numMoves) {
+
+	private void animateMoveToPlayerVerti(Pane ball, int direction, int numMoves, int currentPlayer) {
 		// direction 0 = left; 1 = up; 2 = right; 3 = down;
 		int numMovements = numMoves;
 		AnimationTimer animator = new AnimationTimer() {
@@ -82,9 +91,9 @@ public class BoardHandler {
 					shouldMove = 0;
 					this.stop();
 					if (numMovements > 1) {
-						animateMoveToPlayerVerti(ball, direction, numMovements - 1);
+						animateMoveToPlayerVerti(ball, direction, numMovements - 1, currentPlayer);
 					} else {
-						mainSceneHandler.handleTurn();
+						setPlayersData(currentPlayer);
 					}
 				}
 			}
@@ -93,10 +102,11 @@ public class BoardHandler {
 	}
 
 	public void moveToNextPlayer(int currentPlayer) {
+		setPlayersData(-1);
 		float[] previousPlayerData = (float[]) playerImageViews[(currentPlayer + 3) % 4].getUserData();
 		float[] currentPlayerData = (float[]) playerImageViews[currentPlayer].getUserData();
-		int iDifference = (int) currentPlayerData[0] - (int) previousPlayerData[0];
-		int jDifference = (int) currentPlayerData[1] - (int) previousPlayerData[1];
+		int iDifference = Math.round(currentPlayerData[0]) - Math.round(previousPlayerData[0]);
+		int jDifference = Math.round(currentPlayerData[1]) -  Math.round(previousPlayerData[1]);
 		int iDir = -1;
 		int jDir = -1;
 
@@ -110,7 +120,13 @@ public class BoardHandler {
 		} else {
 			jDir = 0;
 		}
-		animateMoveToPlayerHori(ball, jDir, jDifference, iDir, iDifference);
+		animateMoveToPlayerHori(ball, jDir, jDifference, iDir, iDifference, currentPlayer);
+	}
+
+	private void setPlayersData(int currentPlayer) {
+		for (int i = 0; i < 4; i++) {
+			((float[]) playerImageViews[i].getUserData())[6] = (currentPlayer == i) ? 1 : 0;
+		}
 	}
 
 	private void moveSquareBallGroup(Pane ball, int direction) {
@@ -118,54 +134,56 @@ public class BoardHandler {
 		for (Node p : ball.getChildren()) {
 
 			float[] data = (float[]) p.getUserData();
-			switch (direction) {
-			case 0:
-				data[1] += ROT_SPEED;
-				if (data[1] - data[3] > data[5] / 2) {
-					data[1] -= data[5];
-				}
-				break;
-			case 1:
-				data[0] += ROT_SPEED;
-				if (data[0] - data[4] > data[5] / 2) {
-					data[0] -= data[5];
-				}
-				break;
-			case 2:
-				data[1] -= ROT_SPEED;
-				if (data[3] - data[1] > data[5] / 2) {
-					data[1] += data[5];
-				}
-				break;
-			case 3:
-				data[0] -= ROT_SPEED;
-				if (data[4] - data[0] > data[5] / 2) {
-					data[0] += data[5];
-				}
-				break;
+			if (data.length != 7 || data[6] == 0) {
+				switch (direction) {
+				case 0:
+					data[1] += ROT_SPEED;
+					if (data[1] - data[3] > data[5] / 2) {
+						data[1] -= data[5];
+					}
+					break;
+				case 1:
+					data[0] += ROT_SPEED;
+					if (data[0] - data[4] > data[5] / 2) {
+						data[0] -= data[5];
+					}
+					break;
+				case 2:
+					data[1] -= ROT_SPEED;
+					if (data[3] - data[1] > data[5] / 2) {
+						data[1] += data[5];
+					}
+					break;
+				case 3:
+					data[0] -= ROT_SPEED;
+					if (data[4] - data[0] > data[5] / 2) {
+						data[0] += data[5];
+					}
+					break;
 
-			}
-			float[] data1 = data.clone();
-			data1[1]++;
-			float[] data2 = data.clone();
-			data2[0]++;
-			data2[1]++;
-			float[] data3 = data.clone();
-			data3[0]++;
-			PerspectiveTransform pT = (PerspectiveTransform) p.getEffect();
-			pT.setUlx((double) calculateBallPointPosition(data)[0]);
-			pT.setUly((double) calculateBallPointPosition(data)[1]);
-			pT.setUrx((double) calculateBallPointPosition(data1)[0]);
-			pT.setUry((double) calculateBallPointPosition(data1)[1]);
-			pT.setLrx((double) calculateBallPointPosition(data2)[0]);
-			pT.setLry((double) calculateBallPointPosition(data2)[1]);
-			pT.setLlx((double) calculateBallPointPosition(data3)[0]);
-			pT.setLly((double) calculateBallPointPosition(data3)[1]);
-			if (pT.getUrx() - pT.getLlx() < 1 || pT.getLry() - pT.getUly() < 1 || pT.getLrx() - pT.getUlx() < 1
-					|| pT.getLly() - pT.getUry() < 1) {
-				p.setVisible(false);
-			} else {
-				p.setVisible(true);
+				}
+				float[] data1 = data.clone();
+				data1[1]++;
+				float[] data2 = data.clone();
+				data2[0]++;
+				data2[1]++;
+				float[] data3 = data.clone();
+				data3[0]++;
+				PerspectiveTransform pT = (PerspectiveTransform) p.getEffect();
+				pT.setUlx((double) calculateBallPointPosition(data)[0]);
+				pT.setUly((double) calculateBallPointPosition(data)[1]);
+				pT.setUrx((double) calculateBallPointPosition(data1)[0]);
+				pT.setUry((double) calculateBallPointPosition(data1)[1]);
+				pT.setLrx((double) calculateBallPointPosition(data2)[0]);
+				pT.setLry((double) calculateBallPointPosition(data2)[1]);
+				pT.setLlx((double) calculateBallPointPosition(data3)[0]);
+				pT.setLly((double) calculateBallPointPosition(data3)[1]);
+				if (pT.getUrx() - pT.getLlx() < 1 || pT.getLry() - pT.getUly() < 1 || pT.getLrx() - pT.getUlx() < 1
+						|| pT.getLly() - pT.getUry() < 1) {
+					p.setVisible(false);
+				} else {
+					p.setVisible(true);
+				}
 			}
 		}
 
@@ -184,7 +202,7 @@ public class BoardHandler {
 			}
 		}
 
-		final Image[][] tiles = getTiles(sideLengthScaler);
+		final Image[][] tiles = getTiles();
 
 		for (int i = 0; i < gridSize; i++) {
 			for (int j = 0; j < gridSize; j++) {
@@ -216,28 +234,28 @@ public class BoardHandler {
 
 		for (int i = 0; i < 4; i++) {
 
-			Node tile = ball;
+			Node player = ball;
 			int a = 0;
 			int b = 0;
 
 			switch (i) {
 			case 0:
-				tile = playerImageViews[0];
+				player = playerImageViews[0];
 				a = 4;
 				b = 4;
 				break;
 			case 1:
-				tile = playerImageViews[1];
+				player = playerImageViews[1];
 				a = 2;
 				b = 2;
 				break;
 			case 2:
-				tile = playerImageViews[2];
+				player = playerImageViews[2];
 				a = 3;
 				b = 6;
 				break;
 			case 3:
-				tile = playerImageViews[3];
+				player = playerImageViews[3];
 				a = 1;
 				b = 3;
 				break;
@@ -251,16 +269,17 @@ public class BoardHandler {
 			pT.setLry((double) points[a + 1][b + 1][1]);
 			pT.setLlx((double) points[a + 1][b][0]);
 			pT.setLly((double) points[a + 1][b][1]);
-			tile.setEffect(pT);
+			player.setEffect(pT);
 			if (pT.getUrx() - pT.getLlx() < 1 || pT.getLry() - pT.getUly() < 1 || pT.getLrx() - pT.getUlx() < 1
 					|| pT.getLly() - pT.getUry() < 1) {
-				tile.setVisible(false);
+				player.setVisible(false);
 			} else {
-				tile.setVisible(true);
+				player.setVisible(true);
 			}
 
-			ball.getChildren().add(tile);
-			tile.setUserData(new float[] { a, b, sideLengthScaler, origin[0], origin[1], gridSize });
+			ball.getChildren().add(player);
+			player.setUserData(
+					new float[] { a, b, sideLengthScaler, origin[0], origin[1], gridSize, (i == 0) ? 1 : 0 });
 		}
 
 		return ball;
@@ -280,19 +299,19 @@ public class BoardHandler {
 		return calculateBallPointPosition(data[0], data[1], data[2], data[3], data[4]);
 	}
 
-	private Image[][] getTiles(float sideLengthScaler) {
+	private Image[][] getTiles() {
 
 		Image[][] tiles = new Image[9][9];
 
 		try (BufferedReader bufferedReader = new BufferedReader(
 				new FileReader(System.getProperty("user.dir") + "/src/tiles.txt"))) {
 
-			final Image water = new Image("/WaterTile.png", sideLengthScaler, sideLengthScaler, false, false);
-			final Image grass = new Image("/GrassTile.png", sideLengthScaler, sideLengthScaler, false, false);
-			final Image trees = new Image("/TreesTile.png", sideLengthScaler, sideLengthScaler, false, false);
-			final Image dirt = new Image("/DirtTile.png", sideLengthScaler, sideLengthScaler, false, false);
-			final Image rice = new Image("/RiceTile.png", sideLengthScaler, sideLengthScaler, false, false);
-			final Image house = new Image("/HouseTile.png", sideLengthScaler, sideLengthScaler, false, false);
+			final Image water = new Image("/WaterTile.png", 256, 256, false, false);
+			final Image grass = new Image("/GrassTile.png", 256, 256, false, false);
+			final Image trees = new Image("/TreesTile.png", 256, 256, false, false);
+			final Image dirt = new Image("/DirtTile.png", 256, 256, false, false);
+			final Image rice = new Image("/RiceTile.png", 256, 256, false, false);
+			final Image house = new Image("/HouseTile.png", 256, 256, false, false);
 
 			String line = bufferedReader.readLine();
 			for (int i = 0; i < 9; i++) {

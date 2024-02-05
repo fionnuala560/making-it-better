@@ -10,8 +10,12 @@ public class MainSceneHandler {
 	
 	private int turnNumber = 0;
 	private boolean canMove = true;
+	private BoardHandler boardHandler;
 	
 	public void handleTurn() {
+		if(turnNumber > 0) {
+			boardHandler.moveToNextPlayer(turnNumber % 4);
+		}
 		switch(turnNumber % 4) {
 		case 0:
 			break;
@@ -31,7 +35,7 @@ public class MainSceneHandler {
 		Scene mainScene = new Scene(root, 1200, 800);
 		mainScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		
-		BoardHandler boardHandler = new BoardHandler(this);
+		boardHandler = new BoardHandler(this);
 		Pane board = boardHandler.makeSquareBallGroup(200);
 		root.add(board,0,0);
 		board.setTranslateX(550);
@@ -54,8 +58,9 @@ public class MainSceneHandler {
                 	boardHandler.animateSquareBallMovement(board,3);
                 	canMove = false;
                 }
-                if (event.getCode() == KeyCode.P) {
+                if (event.getCode() == KeyCode.P && canMove == true) {
                 	boardHandler.moveToNextPlayer(turnNumber % 4);
+                	canMove = true;
                 }
             
         });
