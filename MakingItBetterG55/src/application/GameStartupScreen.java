@@ -18,14 +18,6 @@ import javafx.stage.Stage;
 public class GameStartupScreen {
 
 	Scanner scanner = new Scanner(System.in);
-	private String student;
-	private String parent;
-	private String teacher;
-	private String engineer;
-	private boolean isStudentAI;
-	private boolean isParentAI;
-	private boolean isTeacherAI;
-	private boolean isEngineerAI;
 	
 	private Scene gameStartupScene;
 	private Button studentButton = new Button("Student");
@@ -54,6 +46,20 @@ public class GameStartupScreen {
 	private TextField textField2 = new TextField();
 	private TextField textField3 = new TextField();
 	private TextField textField4 = new TextField();
+	
+	private boolean isStudentAI;
+	private boolean isParentAI;
+	private boolean isTeacherAI;
+	private boolean isEngineerAI;
+	private String studentName;
+	private String parentName;
+	private String teacherName;
+	private String engineerName;	
+	
+	private Button test1 = new Button("test");
+	private Button test2 = new Button("test");
+	private Button test3 = new Button("test");
+	private Button test4 = new Button("test");
 	
 	public GameStartupScreen(Scene mainScene, Scene homeScene) {
 		GridPane gridPane = new GridPane();
@@ -163,6 +169,11 @@ public class GameStartupScreen {
 		textField1.setFont(Font.font("SansSerif", 21));
 		textField1.setTranslateX(150);
 		textField1.setTranslateY(45);
+		studentPane.getChildren().add(test1);
+		test1.setOnAction(e ->{
+			studentName = textField1.getText();
+			System.out.println(studentName);
+		});
 		gridPane.add(studentPane,0,0);
 		studentPane.setTranslateX(141);
 		studentPane.setTranslateY(60);
@@ -202,6 +213,11 @@ public class GameStartupScreen {
 		textField2.setFont(Font.font("SansSerif", 21));
 		textField2.setTranslateX(150);
 		textField2.setTranslateY(45);
+		parentPane.getChildren().add(test2);
+		test2.setOnAction(e ->{
+			parentName = textField2.getText();
+			System.out.println(parentName);
+		});
 		gridPane.add(parentPane,0,0);
 		parentPane.setTranslateX(141);
 		parentPane.setTranslateY(60);
@@ -236,6 +252,11 @@ public class GameStartupScreen {
 		textField3.setFont(Font.font("SansSerif", 21));
 		textField3.setTranslateX(150);
 		textField3.setTranslateY(45);
+		teacherPane.getChildren().add(test3);
+		test3.setOnAction(e ->{
+			teacherName = textField3.getText();
+			System.out.println(teacherName);
+		});
 		gridPane.add(teacherPane,0,0);
 		teacherPane.setTranslateX(141);
 		teacherPane.setTranslateY(60);
@@ -250,8 +271,6 @@ public class GameStartupScreen {
 		boxD.setOnAction(e -> {
 			if(boxD.isSelected()) {
 				System.out.println("is selected");
-				String name = textField4.getText();
-				System.out.println(name);
 				isEngineerAI = true;
 			}else {
 				System.out.println("is not selected");
@@ -278,6 +297,11 @@ public class GameStartupScreen {
 		engineerPane.setTranslateX(141);
 		engineerPane.setTranslateY(60);
 		engineerPane.setVisible(false);
+		engineerPane.getChildren().add(test4);
+		test4.setOnAction(e ->{
+			engineerName = textField4.getText();
+			System.out.println(engineerName);
+		});
 		
 		//Show studentPane when studentButton is pressed
 		studentButton.setOnAction(e -> {
