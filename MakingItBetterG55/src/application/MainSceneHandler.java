@@ -26,8 +26,11 @@ public class MainSceneHandler {
 		case 3:
 			break;
 		}
-		canMove = true;
 		turnNumber++;
+	}
+	
+	public void setCanMove(boolean canMove) {
+		this.canMove = canMove;
 	}
 	
 	public Scene makeMainScene() {
@@ -60,7 +63,6 @@ public class MainSceneHandler {
                 }
                 if (event.getCode() == KeyCode.P && canMove == true) {
                 	boardHandler.moveToNextPlayer(turnNumber % 4);
-                	canMove = true;
                 }
             
         });
