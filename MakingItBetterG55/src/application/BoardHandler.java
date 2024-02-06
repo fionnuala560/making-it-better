@@ -12,6 +12,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
 public class BoardHandler {
+	private final float TOTAL_ROT_TICKS = 100.0f;
+	private final float ROT_FACTOR = 3.0f;
 	private int shouldMove = 0;
 	private MainSceneHandler mainSceneHandler;
 	private Pane ball;
@@ -27,16 +29,32 @@ public class BoardHandler {
 	public void animateSquareBallMovement(Pane ball, int direction) {
 		// direction 0 = left; 1 = up; 2 = right; 3 = down;
 		AnimationTimer animator = new AnimationTimer() {
+
+			private long lastUpdate;
+
+			@Override
+			public void start() {
+				lastUpdate = System.nanoTime();
+				super.start();
+			}
+
 			@Override
 			public void handle(long now) {
-				if (shouldMove != 50) {
-					moveSquareBallGroup(ball, direction);
-					shouldMove++;
+				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
+
+				if (shouldMove != TOTAL_ROT_TICKS) {
+					int ticks = (int) ((Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) + shouldMove > TOTAL_ROT_TICKS)
+							? TOTAL_ROT_TICKS - shouldMove
+							: (Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
+									: Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS));
+					moveSquareBallGroup(ball, direction, ticks);
+					shouldMove += ticks;
 				} else {
 					shouldMove = 0;
 					mainSceneHandler.handleTurn();
 					this.stop();
 				}
+				lastUpdate = now;
 			}
 		};
 		animator.start();
@@ -52,15 +70,30 @@ public class BoardHandler {
 				animateMoveToPlayerVerti(ball, direction2, numMovements2, currentPlayer);
 			} else {
 				setPlayersData(currentPlayer);
+				mainSceneHandler.setCanMove(true);
 			}
 			return;
 		}
 		AnimationTimer animator = new AnimationTimer() {
+			private long lastUpdate;
+
+			@Override
+			public void start() {
+				lastUpdate = System.nanoTime();
+				super.start();
+			}
+
 			@Override
 			public void handle(long now) {
-				if (shouldMove != 50) {
-					moveSquareBallGroup(ball, direction);
-					shouldMove++;
+				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
+
+				if (shouldMove != TOTAL_ROT_TICKS) {
+					int ticks = (int) ((Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) + shouldMove > TOTAL_ROT_TICKS)
+							? TOTAL_ROT_TICKS - shouldMove
+							: (Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
+									: Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS));
+					moveSquareBallGroup(ball, direction, ticks);
+					shouldMove += ticks;
 				} else {
 					shouldMove = 0;
 					this.stop();
@@ -71,8 +104,10 @@ public class BoardHandler {
 						animateMoveToPlayerVerti(ball, direction2, numMovements2, currentPlayer);
 					} else {
 						setPlayersData(currentPlayer);
+						mainSceneHandler.setCanMove(true);
 					}
 				}
+				lastUpdate = now;
 			}
 		};
 		animator.start();
@@ -82,11 +117,25 @@ public class BoardHandler {
 		// direction 0 = left; 1 = up; 2 = right; 3 = down;
 		int numMovements = numMoves;
 		AnimationTimer animator = new AnimationTimer() {
+			private long lastUpdate;
+
+			@Override
+			public void start() {
+				lastUpdate = System.nanoTime();
+				super.start();
+			}
+
 			@Override
 			public void handle(long now) {
-				if (shouldMove != 50) {
-					moveSquareBallGroup(ball, direction);
-					shouldMove++;
+				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
+
+				if (shouldMove != TOTAL_ROT_TICKS) {
+					int ticks = (int) ((Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) + shouldMove > TOTAL_ROT_TICKS)
+							? TOTAL_ROT_TICKS - shouldMove
+							: (Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
+									: Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS));
+					moveSquareBallGroup(ball, direction, ticks);
+					shouldMove += ticks;
 				} else {
 					shouldMove = 0;
 					this.stop();
@@ -94,8 +143,10 @@ public class BoardHandler {
 						animateMoveToPlayerVerti(ball, direction, numMovements - 1, currentPlayer);
 					} else {
 						setPlayersData(currentPlayer);
+						mainSceneHandler.setCanMove(true);
 					}
 				}
+				lastUpdate = now;
 			}
 		};
 		animator.start();
@@ -106,7 +157,7 @@ public class BoardHandler {
 		float[] previousPlayerData = (float[]) playerImageViews[(currentPlayer + 3) % 4].getUserData();
 		float[] currentPlayerData = (float[]) playerImageViews[currentPlayer].getUserData();
 		int iDifference = Math.round(currentPlayerData[0]) - Math.round(previousPlayerData[0]);
-		int jDifference = Math.round(currentPlayerData[1]) -  Math.round(previousPlayerData[1]);
+		int jDifference = Math.round(currentPlayerData[1]) - Math.round(previousPlayerData[1]);
 		int iDir = -1;
 		int jDir = -1;
 
@@ -129,33 +180,33 @@ public class BoardHandler {
 		}
 	}
 
-	private void moveSquareBallGroup(Pane ball, int direction) {
-		final float ROT_SPEED = .02f;
+	private void moveSquareBallGroup(Pane ball, int direction, int ticks) {
+		final float ROT_SPEED = .01f;
 		for (Node p : ball.getChildren()) {
 
 			float[] data = (float[]) p.getUserData();
 			if (data.length != 7 || data[6] == 0) {
 				switch (direction) {
 				case 0:
-					data[1] += ROT_SPEED;
+					data[1] += ROT_SPEED * ticks;
 					if (data[1] - data[3] > data[5] / 2) {
 						data[1] -= data[5];
 					}
 					break;
 				case 1:
-					data[0] += ROT_SPEED;
+					data[0] += ROT_SPEED * ticks;
 					if (data[0] - data[4] > data[5] / 2) {
 						data[0] -= data[5];
 					}
 					break;
 				case 2:
-					data[1] -= ROT_SPEED;
+					data[1] -= ROT_SPEED * ticks;
 					if (data[3] - data[1] > data[5] / 2) {
 						data[1] += data[5];
 					}
 					break;
 				case 3:
-					data[0] -= ROT_SPEED;
+					data[0] -= ROT_SPEED * ticks;
 					if (data[4] - data[0] > data[5] / 2) {
 						data[0] += data[5];
 					}
@@ -186,7 +237,6 @@ public class BoardHandler {
 				}
 			}
 		}
-
 	}
 
 	public Pane makeSquareBallGroup(float sideLengthScaler) {
