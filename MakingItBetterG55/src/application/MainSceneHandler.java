@@ -73,41 +73,73 @@ public class MainSceneHandler {
 
 		});
 
-		HBox bottomPlayerBox = createPlayerPanel(new Player('e', "Joe", false));
-		HBox topPlayerBox = createPlayerPanel(new Player('t', "Player1", false));
-		VBox rightPlayerBox = createPlayerPanelSides(new Player('p', "Player2", false));
-		VBox leftPlayerBox = createPlayerPanelSides(new Player('s', "Player3", false));
 
-		// Set positions and sizes for the player boxes
+		Player Engineer = new Player('e', "Homer", false);
+		Player Teacher = new Player('t', "Marge", false);
+		Player Parent = new Player('p', "Bart", false);
+		Player Student = new Player('s', "Lisa", false);
 
-		//bottom box
-		HBox.setHgrow(root, Priority.ALWAYS);
-		bottomPlayerBox.setMaxWidth(1000);
-		bottomPlayerBox.setPrefHeight(100);
-		root.setBottom(bottomPlayerBox);
-		BorderPane.setAlignment(bottomPlayerBox,Pos.CENTER);
+		Player[] allPlayers  = new Player[]{Engineer, Teacher, Parent, Student};
 
-		//top box
-		topPlayerBox.setPrefHeight(60);
-		topPlayerBox.setMaxWidth(500);
-		root.setTop(topPlayerBox);
-		BorderPane.setAlignment(topPlayerBox, Pos.TOP_CENTER);
 
-		//right box
-		VBox.setVgrow(root, Priority.ALWAYS);
-		rightPlayerBox.setMaxHeight(500);
-		rightPlayerBox.setPrefWidth(70);
-		root.setRight(rightPlayerBox);
-		BorderPane.setAlignment(rightPlayerBox, Pos.CENTER_RIGHT);
+		HBox bottomPlayerBox = createPlayerPanel(allPlayers[0]);
+		VBox rightPlayerBox = createPlayerPanelSides(allPlayers[1]);
+		HBox topPlayerBox = createPlayerPanel(allPlayers[2]);
+		VBox leftPlayerBox = createPlayerPanelSides(allPlayers[3]);
 
-		//left box
-		VBox.setVgrow(root, Priority.ALWAYS);
-		leftPlayerBox.setMaxHeight(500);
-		leftPlayerBox.setPrefWidth(70);
-		root.setLeft(leftPlayerBox);
-		BorderPane.setAlignment(leftPlayerBox, Pos.CENTER_LEFT);
+		formatBottomPanel(bottomPlayerBox, root);
+		formatRightPanel(rightPlayerBox, root);
+		formatTopPanel(topPlayerBox, root);
+		formatLeftPanel(leftPlayerBox, root);
+
+
+		mainScene.addEventHandler(KeyEvent.KEY_PRESSED,(KeyEvent event)->{
+			if (event.getCode() == KeyCode.Q && canMove == true) {
+				HBox newBottomPlayerBox = createPlayerPanel(allPlayers[1]);
+				VBox newRightPlayerBox = createPlayerPanelSides(allPlayers[2]);
+				HBox newTopPlayerBox = createPlayerPanel(allPlayers[3]);
+				VBox newLeftPlayerBox = createPlayerPanelSides(allPlayers[0]);
+
+				formatBottomPanel(newBottomPlayerBox, root);
+				formatRightPanel(newRightPlayerBox, root);
+				formatTopPanel(newTopPlayerBox, root);
+				formatLeftPanel(newLeftPlayerBox,root);
+
+			}
+		});
 
 		return mainScene;
+	}
+
+	private void formatLeftPanel(VBox box, BorderPane root){
+		VBox.setVgrow(root, Priority.ALWAYS);
+		box.setMaxHeight(500);
+		box.setPrefWidth(70);
+		root.setLeft(box);
+		BorderPane.setAlignment(box, Pos.CENTER_LEFT);
+	}
+
+	private void formatRightPanel(VBox box, BorderPane root){
+		VBox.setVgrow(root, Priority.ALWAYS);
+		box.setMaxHeight(500);
+		box.setPrefWidth(70);
+		root.setRight(box);
+		BorderPane.setAlignment(box, Pos.CENTER_RIGHT);
+	}
+
+	private void formatTopPanel(HBox box, BorderPane root){
+		box.setPrefHeight(60);
+		box.setMaxWidth(500);
+		root.setTop(box);
+		BorderPane.setAlignment(box, Pos.TOP_CENTER);
+	}
+
+	private void formatBottomPanel(HBox box, BorderPane root){
+		HBox.setHgrow(root, Priority.ALWAYS);
+		box.setMaxWidth(1000);
+		box.setPrefHeight(100);
+		root.setBottom(box);
+		BorderPane.setAlignment(box,Pos.CENTER);
 	}
 
 	private HBox createPlayerPanel(Player currentPlayer){
@@ -123,6 +155,7 @@ public class MainSceneHandler {
 		playerPanel.setPadding(new Insets(5));
 
 		//creates a label for each player resource
+		Label nameLabel = new Label(currentPlayer.getPlayerName());
 		Label scoreLabel = new Label(Integer.toString(currentPlayer.getscore()));
 		Label moneyLabel = new Label(Integer.toString(currentPlayer.getMoney()));
 		Label goodsLabel = new Label(Integer.toString(currentPlayer.getGoods()));
@@ -130,7 +163,7 @@ public class MainSceneHandler {
 		Label healthLabel = new Label(Integer.toString(currentPlayer.getHealth()));
 
 		//adds all of the player resources to the player panel box
-		playerPanel.getChildren().addAll(scoreLabel, moneyLabel, goodsLabel, educationsLabel, healthLabel);
+		playerPanel.getChildren().addAll(nameLabel, scoreLabel, moneyLabel, goodsLabel, educationsLabel, healthLabel);
 
 		return playerPanel;
 	}
@@ -145,6 +178,7 @@ public class MainSceneHandler {
 		playerPanel.setPadding(new Insets(5));
 
 		//creates a label for each player resource
+		Label nameLabel = new Label(currentPlayer.getPlayerName());
 		Label scoreLabel = new Label(Integer.toString(currentPlayer.getscore()));
 		Label moneyLabel = new Label(Integer.toString(currentPlayer.getMoney()));
 		Label goodsLabel = new Label(Integer.toString(currentPlayer.getGoods()));
@@ -152,7 +186,7 @@ public class MainSceneHandler {
 		Label healthLabel = new Label(Integer.toString(currentPlayer.getHealth()));
 
 		//adds all of the player resources to the player panel box
-		playerPanel.getChildren().addAll(scoreLabel, moneyLabel, goodsLabel, educationsLabel, healthLabel);
+		playerPanel.getChildren().addAll(nameLabel, scoreLabel, moneyLabel, goodsLabel, educationsLabel, healthLabel);
 
 		return playerPanel;
 	}
@@ -186,6 +220,10 @@ public class MainSceneHandler {
 
 		return null;
 	}
+
+
+
+
 
 
 }
