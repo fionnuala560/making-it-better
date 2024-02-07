@@ -17,6 +17,10 @@ public class BoardHandler {
 	private int shouldMove = 0;
 	private MainSceneHandler mainSceneHandler;
 	private Pane ball;
+	private Image[] tileImages = { new Image("/WaterTile.png", 256, 256, false, false),
+			new Image("/GrassTile.png", 256, 256, false, false), new Image("/TreesTile.png", 256, 256, false, false),
+			new Image("/DirtTile.png", 256, 256, false, false), new Image("/RiceTile.png", 256, 256, false, false),
+			new Image("/HouseTile.png", 256, 256, false, false) };
 	private ImageView playerImageViews[] = { new ImageView(new Image("/EngineerBot.png", 185, 185, false, false)),
 			new ImageView(new Image("/TeacherBot.png", 185, 185, false, false)),
 			new ImageView(new Image("/ParentBot.png", 185, 185, false, false)),
@@ -26,7 +30,7 @@ public class BoardHandler {
 		this.mainSceneHandler = mainSceneHandler;
 	}
 
-	public void animateSquareBallMovement(Pane ball, int direction) {
+	private void animateSquareBallMovement(Pane ball, int direction) {
 		// direction 0 = left; 1 = up; 2 = right; 3 = down;
 		AnimationTimer animator = new AnimationTimer() {
 
@@ -43,15 +47,16 @@ public class BoardHandler {
 				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
 
 				if (shouldMove != TOTAL_ROT_TICKS) {
-					int ticks = (int) ((Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) + shouldMove > TOTAL_ROT_TICKS)
-							? TOTAL_ROT_TICKS - shouldMove
-							: (Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
-									: Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS));
+					int ticks = (int) ((Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS)
+							+ shouldMove > TOTAL_ROT_TICKS) ? TOTAL_ROT_TICKS - shouldMove
+									: (Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
+											: Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS));
 					moveSquareBallGroup(ball, direction, ticks);
 					shouldMove += ticks;
 				} else {
 					shouldMove = 0;
 					mainSceneHandler.handleTurn();
+					roundAllCoords();
 					this.stop();
 				}
 				lastUpdate = now;
@@ -70,6 +75,7 @@ public class BoardHandler {
 				animateMoveToPlayerVerti(ball, direction2, numMovements2, currentPlayer);
 			} else {
 				setPlayersData(currentPlayer);
+				roundAllCoords();
 				mainSceneHandler.setCanMove(true);
 			}
 			return;
@@ -88,10 +94,10 @@ public class BoardHandler {
 				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
 
 				if (shouldMove != TOTAL_ROT_TICKS) {
-					int ticks = (int) ((Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) + shouldMove > TOTAL_ROT_TICKS)
-							? TOTAL_ROT_TICKS - shouldMove
-							: (Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
-									: Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS));
+					int ticks = (int) ((Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS)
+							+ shouldMove > TOTAL_ROT_TICKS) ? TOTAL_ROT_TICKS - shouldMove
+									: (Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
+											: Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS));
 					moveSquareBallGroup(ball, direction, ticks);
 					shouldMove += ticks;
 				} else {
@@ -104,6 +110,7 @@ public class BoardHandler {
 						animateMoveToPlayerVerti(ball, direction2, numMovements2, currentPlayer);
 					} else {
 						setPlayersData(currentPlayer);
+						roundAllCoords();
 						mainSceneHandler.setCanMove(true);
 					}
 				}
@@ -130,10 +137,10 @@ public class BoardHandler {
 				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
 
 				if (shouldMove != TOTAL_ROT_TICKS) {
-					int ticks = (int) ((Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) + shouldMove > TOTAL_ROT_TICKS)
-							? TOTAL_ROT_TICKS - shouldMove
-							: (Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
-									: Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS));
+					int ticks = (int) ((Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS)
+							+ shouldMove > TOTAL_ROT_TICKS) ? TOTAL_ROT_TICKS - shouldMove
+									: (Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
+											: Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS));
 					moveSquareBallGroup(ball, direction, ticks);
 					shouldMove += ticks;
 				} else {
@@ -143,6 +150,7 @@ public class BoardHandler {
 						animateMoveToPlayerVerti(ball, direction, numMovements - 1, currentPlayer);
 					} else {
 						setPlayersData(currentPlayer);
+						roundAllCoords();
 						mainSceneHandler.setCanMove(true);
 					}
 				}
@@ -176,8 +184,64 @@ public class BoardHandler {
 
 	private void setPlayersData(int currentPlayer) {
 		for (int i = 0; i < 4; i++) {
-			((float[]) playerImageViews[i].getUserData())[6] = (currentPlayer == i) ? 1 : 0;
+			((float[]) playerImageViews[i].getUserData())[7] = (currentPlayer == i) ? 1 : 0;
 		}
+	}
+	
+	private void roundAllCoords() {
+		for(Node n : ball.getChildren()) {
+			float[] nodeData = (float[]) n.getUserData();
+			nodeData[0] = Math.round(nodeData[0]);
+			nodeData[1] = Math.round(nodeData[1]);
+		}
+	}
+
+	public boolean tryToMove(Pane ball, int direction) {
+		ImageView currentPlayerIV = null;
+		for (int i = 0; i < 4; i++) {
+			if (((float[]) playerImageViews[i].getUserData())[7] == 1) {
+				currentPlayerIV = playerImageViews[i];
+			}
+		}
+		float[] currentPlayerData = (float[]) currentPlayerIV.getUserData();
+
+		for (Node n : ball.getChildren()) {
+			float[] nodeData = (float[]) n.getUserData();
+			boolean willHit = false;
+			
+			switch (direction) {
+			case 0:
+				willHit = (nodeData[0] == currentPlayerData[0] && nodeData[1] == currentPlayerData[1]-1);
+				break;
+			case 1:
+				willHit = (nodeData[0] == currentPlayerData[0]-1 && nodeData[1] == currentPlayerData[1]);
+				break;
+			case 2:
+				willHit = (nodeData[0] == currentPlayerData[0] && nodeData[1] == currentPlayerData[1]+1);
+				break;
+			case 3:
+				willHit = (nodeData[0] == currentPlayerData[0]+1 && nodeData[1] == currentPlayerData[1]);
+				break;
+			}
+			
+			if (willHit) {
+				switch ((int) nodeData[6]) {
+				case 0:
+					return false;
+				case 1:
+					break;
+				case 2:
+					break;
+				case 3:
+					break;
+				case 69:
+					return false;
+				}
+			}
+		}
+
+		animateSquareBallMovement(ball, direction);
+		return true;
 	}
 
 	private void moveSquareBallGroup(Pane ball, int direction, int ticks) {
@@ -185,7 +249,7 @@ public class BoardHandler {
 		for (Node p : ball.getChildren()) {
 
 			float[] data = (float[]) p.getUserData();
-			if (data.length != 7 || data[6] == 0) {
+			if (data.length != 8 || data[7] == 0) {
 				switch (direction) {
 				case 0:
 					data[1] += ROT_SPEED * ticks;
@@ -252,13 +316,13 @@ public class BoardHandler {
 			}
 		}
 
-		final Image[][] tiles = getTiles();
+		final int[][] tileTypes = getTileTypes();
 
 		for (int i = 0; i < gridSize; i++) {
 			for (int j = 0; j < gridSize; j++) {
 				Node tile;
 
-				Image image = tiles[i][j];
+				Image image = tileImages[tileTypes[i][j]];
 				tile = new ImageView(image);
 				PerspectiveTransform pT = new PerspectiveTransform();
 				pT.setUlx((double) points[i][j][0]);
@@ -278,7 +342,8 @@ public class BoardHandler {
 				}
 
 				ball.getChildren().add(tile);
-				tile.setUserData(new float[] { i, j, sideLengthScaler, origin[0], origin[1], gridSize });
+				tile.setUserData(
+						new float[] { i, j, sideLengthScaler, origin[0], origin[1], gridSize, tileTypes[i][j] });
 			}
 		}
 
@@ -329,7 +394,7 @@ public class BoardHandler {
 
 			ball.getChildren().add(player);
 			player.setUserData(
-					new float[] { a, b, sideLengthScaler, origin[0], origin[1], gridSize, (i == 0) ? 1 : 0 });
+					new float[] { a, b, sideLengthScaler, origin[0], origin[1], gridSize, 69, (i == 0) ? 1 : 0 });
 		}
 
 		return ball;
@@ -349,50 +414,24 @@ public class BoardHandler {
 		return calculateBallPointPosition(data[0], data[1], data[2], data[3], data[4]);
 	}
 
-	private Image[][] getTiles() {
+	private int[][] getTileTypes() {
 
-		Image[][] tiles = new Image[9][9];
+		int[][] tileTypes = new int[9][9];
 
 		try (BufferedReader bufferedReader = new BufferedReader(
 				new FileReader(System.getProperty("user.dir") + "/src/tiles.txt"))) {
-
-			final Image water = new Image("/WaterTile.png", 256, 256, false, false);
-			final Image grass = new Image("/GrassTile.png", 256, 256, false, false);
-			final Image trees = new Image("/TreesTile.png", 256, 256, false, false);
-			final Image dirt = new Image("/DirtTile.png", 256, 256, false, false);
-			final Image rice = new Image("/RiceTile.png", 256, 256, false, false);
-			final Image house = new Image("/HouseTile.png", 256, 256, false, false);
 
 			String line = bufferedReader.readLine();
 			for (int i = 0; i < 9; i++) {
 				line = bufferedReader.readLine();
 				for (int j = 0; j < 9; j++) {
-					switch (line.charAt(j)) {
-					case '1':
-						tiles[i][j] = water;
-						break;
-					case '2':
-						tiles[i][j] = grass;
-						break;
-					case '3':
-						tiles[i][j] = trees;
-						break;
-					case '4':
-						tiles[i][j] = dirt;
-						break;
-					case '5':
-						tiles[i][j] = rice;
-						break;
-					case '6':
-						tiles[i][j] = house;
-						break;
-					}
+					tileTypes[i][j] = Character.getNumericValue(line.charAt(j));
 				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return tiles;
+		return tileTypes;
 	}
 
 }
