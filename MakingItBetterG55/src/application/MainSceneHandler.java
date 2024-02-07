@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 public class MainSceneHandler {
 
@@ -41,10 +42,10 @@ public class MainSceneHandler {
 		mainScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 		boardHandler = new BoardHandler(this);
-		Pane board = boardHandler.makeSquareBallGroup(200);
+		Pane board = boardHandler.makeSquareBallGroup(150);
 		root.setCenter(board);
-		board.setTranslateX(550);
-		board.setTranslateY(400);
+		board.setTranslateX(500);
+		board.setTranslateY(300);
 
 
 		mainScene.addEventHandler(KeyEvent.KEY_RELEASED,(KeyEvent event)->{
@@ -72,80 +73,119 @@ public class MainSceneHandler {
 
 		});
 
-
-
-		HBox bottomPlayerBox = createPlayerPanel(new Player('s', "Joe", false));
-		HBox topPlayerBox = createPlayerPanel(new Player('s', "Player1", false));
-		VBox rightPlayerBox = createPlayerPanelSides(new Player('s', "Player2", false));
+		HBox bottomPlayerBox = createPlayerPanel(new Player('e', "Joe", false));
+		HBox topPlayerBox = createPlayerPanel(new Player('t', "Player1", false));
+		VBox rightPlayerBox = createPlayerPanelSides(new Player('p', "Player2", false));
 		VBox leftPlayerBox = createPlayerPanelSides(new Player('s', "Player3", false));
 
-		// Set positions for the player HBoxes
+		// Set positions and sizes for the player boxes
+
+		//bottom box
 		HBox.setHgrow(root, Priority.ALWAYS);
 		bottomPlayerBox.setMaxWidth(1000);
-		bottomPlayerBox.setPrefHeight(75);
+		bottomPlayerBox.setPrefHeight(100);
 		root.setBottom(bottomPlayerBox);
-
 		BorderPane.setAlignment(bottomPlayerBox,Pos.CENTER);
 
-
+		//top box
 		topPlayerBox.setPrefHeight(60);
+		topPlayerBox.setMaxWidth(500);
 		root.setTop(topPlayerBox);
 		BorderPane.setAlignment(topPlayerBox, Pos.TOP_CENTER);
 
+		//right box
 		VBox.setVgrow(root, Priority.ALWAYS);
 		rightPlayerBox.setMaxHeight(500);
 		rightPlayerBox.setPrefWidth(70);
 		root.setRight(rightPlayerBox);
 		BorderPane.setAlignment(rightPlayerBox, Pos.CENTER_RIGHT);
 
-
+		//left box
 		VBox.setVgrow(root, Priority.ALWAYS);
 		leftPlayerBox.setMaxHeight(500);
 		leftPlayerBox.setPrefWidth(70);
 		root.setLeft(leftPlayerBox);
 		BorderPane.setAlignment(leftPlayerBox, Pos.CENTER_LEFT);
 
-
-
-
 		return mainScene;
 	}
 
 	private HBox createPlayerPanel(Player currentPlayer){
-		HBox playerPanel = new HBox(10);
-		playerPanel.setPadding(new Insets(10));
 
-		Label playerName = new Label(currentPlayer.getPlayerName() + ", " + currentPlayer.getPlayerType());
-		String playerStatsString = currentPlayer.getscore() + " " + currentPlayer.getMoney() + " " + currentPlayer.getGoods() + " " + currentPlayer.getEducation() + " " + currentPlayer.getHealth();
-		Label playerStats = new Label(playerStatsString);
+		String backgroundColor = getPlayerColor(currentPlayer.getPlayerType());
+		String borderColor = getBorderColor(currentPlayer.getPlayerType());
 
-		playerPanel.getChildren().addAll(playerName,playerStats);
+		//creates a horizontal box (for the top/bottom of the screen
+		HBox playerPanel = new HBox();
+		playerPanel.setStyle("-fx-background-color: " +  backgroundColor + ";-fx-border-color: " + borderColor + ";-fx-border-width: 5px;");
 
-		playerPanel.setMaxWidth(500);
-		playerPanel.setMaxHeight(1000);
-		playerPanel.setStyle("-fx-background-color: lightgreen;-fx-border-color: darkgreen; -fx-border-width: 5px;");
 
-		HBox.setHgrow(playerPanel,Priority.NEVER);
+		playerPanel.setPadding(new Insets(5));
+
+		//creates a label for each player resource
+		Label scoreLabel = new Label(Integer.toString(currentPlayer.getscore()));
+		Label moneyLabel = new Label(Integer.toString(currentPlayer.getMoney()));
+		Label goodsLabel = new Label(Integer.toString(currentPlayer.getGoods()));
+		Label educationsLabel = new Label(Integer.toString(currentPlayer.getEducation()));
+		Label healthLabel = new Label(Integer.toString(currentPlayer.getHealth()));
+
+		//adds all of the player resources to the player panel box
+		playerPanel.getChildren().addAll(scoreLabel, moneyLabel, goodsLabel, educationsLabel, healthLabel);
 
 		return playerPanel;
 	}
 
 	private VBox createPlayerPanelSides(Player currentPlayer){
+
+		String backgroundColor = getPlayerColor(currentPlayer.getPlayerType());
+		String borderColor = getBorderColor(currentPlayer.getPlayerType());
+		//creates a vertical box (for the left/right of the screen)
 		VBox playerPanel = new VBox();
-		playerPanel.setStyle("-fx-background-color: lightgreen;-fx-border-color: darkgreen; -fx-border-width: 5px;");
+		playerPanel.setStyle("-fx-background-color: " +  backgroundColor + ";-fx-border-color: " + borderColor + ";-fx-border-width: 5px;");
 		playerPanel.setPadding(new Insets(5));
 
-		Label playerName = new Label(currentPlayer.getPlayerName() + ", " + currentPlayer.getPlayerType());
-		String playerStatsString = currentPlayer.getscore() + " " + currentPlayer.getMoney() + " " + currentPlayer.getGoods() + " " + currentPlayer.getEducation() + " " + currentPlayer.getHealth();
-		Label playerStats = new Label(playerStatsString);
+		//creates a label for each player resource
+		Label scoreLabel = new Label(Integer.toString(currentPlayer.getscore()));
+		Label moneyLabel = new Label(Integer.toString(currentPlayer.getMoney()));
+		Label goodsLabel = new Label(Integer.toString(currentPlayer.getGoods()));
+		Label educationsLabel = new Label(Integer.toString(currentPlayer.getEducation()));
+		Label healthLabel = new Label(Integer.toString(currentPlayer.getHealth()));
 
-
-
-		playerPanel.getChildren().addAll(playerName,playerStats);
-
-		playerPanel.setMaxWidth(100);
-
+		//adds all of the player resources to the player panel box
+		playerPanel.getChildren().addAll(scoreLabel, moneyLabel, goodsLabel, educationsLabel, healthLabel);
 
 		return playerPanel;
 	}
+
+	private String getPlayerColor(char playerType){
+		switch(playerType){
+			case 'e':
+				return "lightskyblue";
+			case 't':
+				return "lightgreen";
+			case 'p':
+				return "lightpink";
+			case 's':
+				return "mediumpurple";
+		}
+
+		return null;
+	}
+
+	private String getBorderColor(char playerType){
+		switch(playerType){
+			case 'e':
+				return "darkblue";
+			case 't':
+				return "darkgreen";
+			case 'p':
+				return "deeppink";
+			case 's':
+				return "indigo";
+		}
+
+		return null;
+	}
+
+
 }
