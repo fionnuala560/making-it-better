@@ -17,14 +17,10 @@ public class BoardHandler {
 	private int shouldMove = 0;
 	private MainSceneHandler mainSceneHandler;
 	private Pane ball;
-	private Image[] tileImages = {
-			new Image("/WaterTile.png", 256, 256, false, false),
-			new Image("/GrassTile.png", 256, 256, false, false),
-			new Image("/TreesTile.png", 256, 256, false, false),
-			new Image("/DirtTile.png", 256, 256, false, false),
-			new Image("/RiceTile.png", 256, 256, false, false),
-			new Image("/HouseTile.png", 256, 256, false, false)
-	};
+	private Image[] tileImages = { new Image("/WaterTile.png", 256, 256, false, false),
+			new Image("/GrassTile.png", 256, 256, false, false), new Image("/TreesTile.png", 256, 256, false, false),
+			new Image("/DirtTile.png", 256, 256, false, false), new Image("/RiceTile.png", 256, 256, false, false),
+			new Image("/HouseTile.png", 256, 256, false, false) };
 	private ImageView playerImageViews[] = { new ImageView(new Image("/EngineerBot.png", 185, 185, false, false)),
 			new ImageView(new Image("/TeacherBot.png", 185, 185, false, false)),
 			new ImageView(new Image("/ParentBot.png", 185, 185, false, false)),
@@ -34,7 +30,7 @@ public class BoardHandler {
 		this.mainSceneHandler = mainSceneHandler;
 	}
 
-	public void animateSquareBallMovement(Pane ball, int direction) {
+	private void animateSquareBallMovement(Pane ball, int direction) {
 		// direction 0 = left; 1 = up; 2 = right; 3 = down;
 		AnimationTimer animator = new AnimationTimer() {
 
@@ -51,15 +47,16 @@ public class BoardHandler {
 				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
 
 				if (shouldMove != TOTAL_ROT_TICKS) {
-					int ticks = (int) ((Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) + shouldMove > TOTAL_ROT_TICKS)
-							? TOTAL_ROT_TICKS - shouldMove
-							: (Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
-									: Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS));
+					int ticks = (int) ((Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS)
+							+ shouldMove > TOTAL_ROT_TICKS) ? TOTAL_ROT_TICKS - shouldMove
+									: (Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
+											: Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS));
 					moveSquareBallGroup(ball, direction, ticks);
 					shouldMove += ticks;
 				} else {
 					shouldMove = 0;
 					mainSceneHandler.handleTurn();
+					roundAllCoords();
 					this.stop();
 				}
 				lastUpdate = now;
@@ -78,6 +75,7 @@ public class BoardHandler {
 				animateMoveToPlayerVerti(ball, direction2, numMovements2, currentPlayer);
 			} else {
 				setPlayersData(currentPlayer);
+				roundAllCoords();
 				mainSceneHandler.setCanMove(true);
 			}
 			return;
@@ -96,10 +94,10 @@ public class BoardHandler {
 				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
 
 				if (shouldMove != TOTAL_ROT_TICKS) {
-					int ticks = (int) ((Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) + shouldMove > TOTAL_ROT_TICKS)
-							? TOTAL_ROT_TICKS - shouldMove
-							: (Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
-									: Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS));
+					int ticks = (int) ((Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS)
+							+ shouldMove > TOTAL_ROT_TICKS) ? TOTAL_ROT_TICKS - shouldMove
+									: (Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
+											: Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS));
 					moveSquareBallGroup(ball, direction, ticks);
 					shouldMove += ticks;
 				} else {
@@ -112,6 +110,7 @@ public class BoardHandler {
 						animateMoveToPlayerVerti(ball, direction2, numMovements2, currentPlayer);
 					} else {
 						setPlayersData(currentPlayer);
+						roundAllCoords();
 						mainSceneHandler.setCanMove(true);
 					}
 				}
@@ -138,10 +137,10 @@ public class BoardHandler {
 				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
 
 				if (shouldMove != TOTAL_ROT_TICKS) {
-					int ticks = (int) ((Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) + shouldMove > TOTAL_ROT_TICKS)
-							? TOTAL_ROT_TICKS - shouldMove
-							: (Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
-									: Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS));
+					int ticks = (int) ((Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS)
+							+ shouldMove > TOTAL_ROT_TICKS) ? TOTAL_ROT_TICKS - shouldMove
+									: (Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
+											: Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS));
 					moveSquareBallGroup(ball, direction, ticks);
 					shouldMove += ticks;
 				} else {
@@ -151,6 +150,7 @@ public class BoardHandler {
 						animateMoveToPlayerVerti(ball, direction, numMovements - 1, currentPlayer);
 					} else {
 						setPlayersData(currentPlayer);
+						roundAllCoords();
 						mainSceneHandler.setCanMove(true);
 					}
 				}
@@ -186,6 +186,62 @@ public class BoardHandler {
 		for (int i = 0; i < 4; i++) {
 			((float[]) playerImageViews[i].getUserData())[7] = (currentPlayer == i) ? 1 : 0;
 		}
+	}
+	
+	private void roundAllCoords() {
+		for(Node n : ball.getChildren()) {
+			float[] nodeData = (float[]) n.getUserData();
+			nodeData[0] = Math.round(nodeData[0]);
+			nodeData[1] = Math.round(nodeData[1]);
+		}
+	}
+
+	public boolean tryToMove(Pane ball, int direction) {
+		ImageView currentPlayerIV = null;
+		for (int i = 0; i < 4; i++) {
+			if (((float[]) playerImageViews[i].getUserData())[7] == 1) {
+				currentPlayerIV = playerImageViews[i];
+			}
+		}
+		float[] currentPlayerData = (float[]) currentPlayerIV.getUserData();
+
+		for (Node n : ball.getChildren()) {
+			float[] nodeData = (float[]) n.getUserData();
+			boolean willHit = false;
+			
+			switch (direction) {
+			case 0:
+				willHit = (nodeData[0] == currentPlayerData[0] && nodeData[1] == currentPlayerData[1]-1);
+				break;
+			case 1:
+				willHit = (nodeData[0] == currentPlayerData[0]-1 && nodeData[1] == currentPlayerData[1]);
+				break;
+			case 2:
+				willHit = (nodeData[0] == currentPlayerData[0] && nodeData[1] == currentPlayerData[1]+1);
+				break;
+			case 3:
+				willHit = (nodeData[0] == currentPlayerData[0]+1 && nodeData[1] == currentPlayerData[1]);
+				break;
+			}
+			
+			if (willHit) {
+				switch ((int) nodeData[6]) {
+				case 0:
+					return false;
+				case 1:
+					break;
+				case 2:
+					break;
+				case 3:
+					break;
+				case 69:
+					return false;
+				}
+			}
+		}
+
+		animateSquareBallMovement(ball, direction);
+		return true;
 	}
 
 	private void moveSquareBallGroup(Pane ball, int direction, int ticks) {
@@ -286,7 +342,8 @@ public class BoardHandler {
 				}
 
 				ball.getChildren().add(tile);
-				tile.setUserData(new float[] { i, j, sideLengthScaler, origin[0], origin[1], gridSize, tileTypes[i][j] });
+				tile.setUserData(
+						new float[] { i, j, sideLengthScaler, origin[0], origin[1], gridSize, tileTypes[i][j] });
 			}
 		}
 

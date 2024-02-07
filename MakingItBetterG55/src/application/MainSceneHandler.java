@@ -46,20 +46,24 @@ public class MainSceneHandler {
 		mainScene.addEventHandler(KeyEvent.KEY_RELEASED,(KeyEvent event)->{
 
                 if (event.getCode() == KeyCode.A && canMove == true) {
-                	boardHandler.animateSquareBallMovement(board,0);
-                	canMove = false;
+                	if(boardHandler.tryToMove(board, 0)) {
+                		canMove = false;
+                	}
                 }
                 if (event.getCode() == KeyCode.W && canMove == true) {
-                	boardHandler.animateSquareBallMovement(board,1);
-                	canMove = false;
+                	if(boardHandler.tryToMove(board, 1)) {
+                		canMove = false;
+                	}
                 }
                 if (event.getCode() == KeyCode.D && canMove == true) {
-                	boardHandler.animateSquareBallMovement(board,2);
-                	canMove = false;
+                	if(boardHandler.tryToMove(board, 2)) {
+                		canMove = false;
+                	}
                 }
                 if (event.getCode() == KeyCode.S && canMove == true) {
-                	boardHandler.animateSquareBallMovement(board,3);
-                	canMove = false;
+                	if(boardHandler.tryToMove(board, 3)) {
+                		canMove = false;
+                	}
                 }
                 if (event.getCode() == KeyCode.P && canMove == true) {
                 	boardHandler.moveToNextPlayer(turnNumber % 4);
