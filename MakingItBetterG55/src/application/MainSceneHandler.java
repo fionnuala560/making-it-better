@@ -37,6 +37,7 @@ public class MainSceneHandler {
 	public Scene makeMainScene() {
 		BorderPane root = new BorderPane();
 		Scene mainScene = new Scene(root, 1200, 800);
+		root.setStyle("-fx-background-image: url('/woodbackground.jpg');");
 		mainScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 		boardHandler = new BoardHandler(this);
@@ -71,22 +72,36 @@ public class MainSceneHandler {
 
 		});
 
+
+
 		HBox bottomPlayerBox = createPlayerPanel(new Player('s', "Joe", false));
 		HBox topPlayerBox = createPlayerPanel(new Player('s', "Player1", false));
 		VBox rightPlayerBox = createPlayerPanelSides(new Player('s', "Player2", false));
 		VBox leftPlayerBox = createPlayerPanelSides(new Player('s', "Player3", false));
 
 		// Set positions for the player HBoxes
+		HBox.setHgrow(root, Priority.ALWAYS);
+		bottomPlayerBox.setMaxWidth(1000);
+		bottomPlayerBox.setPrefHeight(75);
 		root.setBottom(bottomPlayerBox);
+
 		BorderPane.setAlignment(bottomPlayerBox,Pos.CENTER);
 
+
+		topPlayerBox.setPrefHeight(60);
 		root.setTop(topPlayerBox);
 		BorderPane.setAlignment(topPlayerBox, Pos.TOP_CENTER);
 
+		VBox.setVgrow(root, Priority.ALWAYS);
+		rightPlayerBox.setMaxHeight(500);
+		rightPlayerBox.setPrefWidth(70);
 		root.setRight(rightPlayerBox);
 		BorderPane.setAlignment(rightPlayerBox, Pos.CENTER_RIGHT);
 
 
+		VBox.setVgrow(root, Priority.ALWAYS);
+		leftPlayerBox.setMaxHeight(500);
+		leftPlayerBox.setPrefWidth(70);
 		root.setLeft(leftPlayerBox);
 		BorderPane.setAlignment(leftPlayerBox, Pos.CENTER_LEFT);
 
@@ -98,7 +113,6 @@ public class MainSceneHandler {
 
 	private HBox createPlayerPanel(Player currentPlayer){
 		HBox playerPanel = new HBox(10);
-		playerPanel.setStyle("-fx-background-color: lightgreen");
 		playerPanel.setPadding(new Insets(10));
 
 		Label playerName = new Label(currentPlayer.getPlayerName() + ", " + currentPlayer.getPlayerType());
@@ -108,6 +122,8 @@ public class MainSceneHandler {
 		playerPanel.getChildren().addAll(playerName,playerStats);
 
 		playerPanel.setMaxWidth(500);
+		playerPanel.setMaxHeight(1000);
+		playerPanel.setStyle("-fx-background-color: lightgreen;-fx-border-color: darkgreen; -fx-border-width: 5px;");
 
 		HBox.setHgrow(playerPanel,Priority.NEVER);
 
@@ -116,17 +132,19 @@ public class MainSceneHandler {
 
 	private VBox createPlayerPanelSides(Player currentPlayer){
 		VBox playerPanel = new VBox();
-		playerPanel.setStyle("-fx-background-color: lightgreen");
-		playerPanel.setPadding(new Insets(10));
+		playerPanel.setStyle("-fx-background-color: lightgreen;-fx-border-color: darkgreen; -fx-border-width: 5px;");
+		playerPanel.setPadding(new Insets(5));
 
 		Label playerName = new Label(currentPlayer.getPlayerName() + ", " + currentPlayer.getPlayerType());
 		String playerStatsString = currentPlayer.getscore() + " " + currentPlayer.getMoney() + " " + currentPlayer.getGoods() + " " + currentPlayer.getEducation() + " " + currentPlayer.getHealth();
 		Label playerStats = new Label(playerStatsString);
 
+
+
 		playerPanel.getChildren().addAll(playerName,playerStats);
 
-		playerPanel.setMaxWidth(50);
-		;
+		playerPanel.setMaxWidth(100);
+
 
 		return playerPanel;
 	}
