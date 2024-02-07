@@ -100,7 +100,7 @@ public class EventDisplayer {
 			Label goodsLabel = new Label("+1");
 			goodsLabel.setStyle("-fx-text-fill: white;");
 			goodsLabel.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
-			ImageView goodsSymbol = new ImageView("goods.png");
+			ImageView goodsSymbol = new ImageView("/goods.png");
 			goodsSymbol.setFitWidth(25);
 			goodsSymbol.setFitHeight(25);
 
