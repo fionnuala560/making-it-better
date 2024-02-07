@@ -22,25 +22,9 @@ public class EventDisplayer {
 	// a graphical foundation for the event popup system.
 	public EventDisplayer(String title, String description, String[] options) {
 		this.title = title;
-		this.desc = splitDesc(description);
+		this.desc = description;
 		this.options = options;
 		openPopup(title, desc, options);
-	}
-
-	// Splitting up the description with a new line every 7 words
-	public String splitDesc(String description) {
-		String[] words = description.split(" ");
-		StringBuilder newDesc = new StringBuilder();
-
-		for (int i = 0; i < words.length; i++) {
-			newDesc.append(words[i]).append(" ");
-
-			if ((i + 1) % 7 == 0) {
-				newDesc.append("\n");
-			}
-		}
-		String updatedDesc = newDesc.toString();
-		return updatedDesc;
 	}
 
 	private void openPopup(String eventTitle, String eventDesc, String[] options) {
@@ -63,6 +47,8 @@ public class EventDisplayer {
 		Label descriptionLabel = new Label(eventDesc);
 		descriptionLabel.setStyle("-fx-text-fill: white;");
 		descriptionLabel.setFont(Font.font("SansSerif", FontWeight.BOLD, 18));
+		descriptionLabel.setPrefWidth(300);
+		descriptionLabel.setWrapText(true);
 		AnchorPane.setTopAnchor(descriptionLabel, 80.0);
 		AnchorPane.setLeftAnchor(descriptionLabel, 20.0);
 		AnchorPane.setRightAnchor(descriptionLabel, 20.0);
