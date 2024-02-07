@@ -17,6 +17,14 @@ public class BoardHandler {
 	private int shouldMove = 0;
 	private MainSceneHandler mainSceneHandler;
 	private Pane ball;
+	private Image[] tileImages = {
+			new Image("/WaterTile.png", 256, 256, false, false),
+			new Image("/GrassTile.png", 256, 256, false, false),
+			new Image("/TreesTile.png", 256, 256, false, false),
+			new Image("/DirtTile.png", 256, 256, false, false),
+			new Image("/RiceTile.png", 256, 256, false, false),
+			new Image("/HouseTile.png", 256, 256, false, false)
+	};
 	private ImageView playerImageViews[] = { new ImageView(new Image("/EngineerBot.png", 185, 185, false, false)),
 			new ImageView(new Image("/TeacherBot.png", 185, 185, false, false)),
 			new ImageView(new Image("/ParentBot.png", 185, 185, false, false)),
@@ -176,7 +184,7 @@ public class BoardHandler {
 
 	private void setPlayersData(int currentPlayer) {
 		for (int i = 0; i < 4; i++) {
-			((float[]) playerImageViews[i].getUserData())[6] = (currentPlayer == i) ? 1 : 0;
+			((float[]) playerImageViews[i].getUserData())[7] = (currentPlayer == i) ? 1 : 0;
 		}
 	}
 
@@ -185,7 +193,7 @@ public class BoardHandler {
 		for (Node p : ball.getChildren()) {
 
 			float[] data = (float[]) p.getUserData();
-			if (data.length != 7 || data[6] == 0) {
+			if (data.length != 8 || data[7] == 0) {
 				switch (direction) {
 				case 0:
 					data[1] += ROT_SPEED * ticks;
@@ -252,13 +260,13 @@ public class BoardHandler {
 			}
 		}
 
-		final Image[][] tiles = getTiles();
+		final int[][] tileTypes = getTileTypes();
 
 		for (int i = 0; i < gridSize; i++) {
 			for (int j = 0; j < gridSize; j++) {
 				Node tile;
 
-				Image image = tiles[i][j];
+				Image image = tileImages[tileTypes[i][j]];
 				tile = new ImageView(image);
 				PerspectiveTransform pT = new PerspectiveTransform();
 				pT.setUlx((double) points[i][j][0]);
@@ -278,7 +286,7 @@ public class BoardHandler {
 				}
 
 				ball.getChildren().add(tile);
-				tile.setUserData(new float[] { i, j, sideLengthScaler, origin[0], origin[1], gridSize });
+				tile.setUserData(new float[] { i, j, sideLengthScaler, origin[0], origin[1], gridSize, tileTypes[i][j] });
 			}
 		}
 
@@ -329,7 +337,7 @@ public class BoardHandler {
 
 			ball.getChildren().add(player);
 			player.setUserData(
-					new float[] { a, b, sideLengthScaler, origin[0], origin[1], gridSize, (i == 0) ? 1 : 0 });
+					new float[] { a, b, sideLengthScaler, origin[0], origin[1], gridSize, 69, (i == 0) ? 1 : 0 });
 		}
 
 		return ball;
@@ -349,50 +357,24 @@ public class BoardHandler {
 		return calculateBallPointPosition(data[0], data[1], data[2], data[3], data[4]);
 	}
 
-	private Image[][] getTiles() {
+	private int[][] getTileTypes() {
 
-		Image[][] tiles = new Image[9][9];
+		int[][] tileTypes = new int[9][9];
 
 		try (BufferedReader bufferedReader = new BufferedReader(
 				new FileReader(System.getProperty("user.dir") + "/src/tiles.txt"))) {
-
-			final Image water = new Image("/WaterTile.png", 256, 256, false, false);
-			final Image grass = new Image("/GrassTile.png", 256, 256, false, false);
-			final Image trees = new Image("/TreesTile.png", 256, 256, false, false);
-			final Image dirt = new Image("/DirtTile.png", 256, 256, false, false);
-			final Image rice = new Image("/RiceTile.png", 256, 256, false, false);
-			final Image house = new Image("/HouseTile.png", 256, 256, false, false);
 
 			String line = bufferedReader.readLine();
 			for (int i = 0; i < 9; i++) {
 				line = bufferedReader.readLine();
 				for (int j = 0; j < 9; j++) {
-					switch (line.charAt(j)) {
-					case '1':
-						tiles[i][j] = water;
-						break;
-					case '2':
-						tiles[i][j] = grass;
-						break;
-					case '3':
-						tiles[i][j] = trees;
-						break;
-					case '4':
-						tiles[i][j] = dirt;
-						break;
-					case '5':
-						tiles[i][j] = rice;
-						break;
-					case '6':
-						tiles[i][j] = house;
-						break;
-					}
+					tileTypes[i][j] = Character.getNumericValue(line.charAt(j));
 				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return tiles;
+		return tileTypes;
 	}
 
 }
