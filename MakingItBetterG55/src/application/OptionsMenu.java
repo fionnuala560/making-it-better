@@ -137,7 +137,20 @@ public abstract class OptionsMenu extends Application{
 	CheckBox fsCheckBox = new CheckBox("");
 	optionsScreen.add(fsCheckBox, 2, 14);
 	fsCheckBox.setOnAction(event ->{
-		stage.setFullScreen(true);
+		if (fsCheckBox.isSelected()) {
+			stage.setFullScreen(true);
+			r1.setWidth(stage.getWidth());
+			r1.setHeight(stage.getHeight() / 40);
+			r2.setWidth(stage.getWidth());
+			r2.setHeight(stage.getHeight()*3 / 8);
+		}
+		if (!(fsCheckBox.isSelected())) {
+			stage.setFullScreen(false);
+			r1.setWidth(1200);
+			r1.setHeight(20);
+			r2.setWidth(1200);
+			r2.setHeight(300);
+		}
 	});
 	
 	//music
