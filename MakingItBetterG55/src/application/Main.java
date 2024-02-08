@@ -25,6 +25,12 @@ public class Main extends Application {
 			MainSceneHandler mainSceneHandler = new MainSceneHandler();
 			Scene mainScene = mainSceneHandler.makeMainScene();
 
+			GridPane root = new GridPane();
+			Scene optionsScene = new Scene(root, 1200, 800);
+			optionsScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			OptionsMenu om = new OptionsMenu(mainScene, homeScene, primaryStage);
+			Scene oMScene = om.getOptionsMenu();
+
 			homeScreen.setGridLinesVisible(false);
 	        final int numCols = 40;
 	        final int numRows = 40;
@@ -70,7 +76,7 @@ public class Main extends Application {
 			settings.setGraphic(settingsWheel);
 			settings.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
 			settings.setOnAction(event -> {
-				OptionsMenu.options();
+				primaryStage.setScene(oMScene);
 			});
 			
 
