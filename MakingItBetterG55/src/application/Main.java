@@ -11,22 +11,25 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
+
 
 public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			TextRetriever textRetriever = new TextRetriever();
 			GridPane homeScreen = new GridPane();
 			homeScreen.setStyle("-fx-background-image: url('/woodbackground.jpg');");
 			Scene homeScene = new Scene(homeScreen, 1200, 800);
 			
 			MainSceneHandler mainSceneHandler = new MainSceneHandler();
 			Scene mainScene = mainSceneHandler.makeMainScene();
-			
+
 			GridPane root = new GridPane();
+			Scene optionsScene = new Scene(root, 1200, 800);
+			optionsScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			OptionsMenu om = new OptionsMenu(mainScene, homeScene, primaryStage);
+			Scene oMScene = om.getOptionsMenu();
 
 			homeScreen.setGridLinesVisible(false);
 	        final int numCols = 40;
@@ -41,7 +44,7 @@ public class Main extends Application {
 	            rowConst.setPercentHeight(100.0 / numRows);
 	            homeScreen.getRowConstraints().add(rowConst);         
 	        }
-	        Text title = new Text("Making It Better");
+	        Text title = new Text(textRetriever.getText(1,1));
 	        title.setFont(Font.font("SansSerif", FontWeight.BOLD, 100));
 	        title.setStyle("-fx-fill: black; -fx-stroke: white; -fx-stroke-width: 4px;");
 
@@ -51,7 +54,7 @@ public class Main extends Application {
 			playButton.setPrefSize(320, 29);
 			
 			playButton.setOnAction(event -> {
-			primaryStage.setScene(mainScene);
+		    primaryStage.setScene(mainScene);
 		    mainSceneHandler.handleTurn();
 			});
 			
@@ -69,7 +72,15 @@ public class Main extends Application {
 			settingsWheel.setFitWidth(100);
 			settingsWheel.setFitHeight(100);
 
-			homeScreen.add(settingsWheel, 1, 32);
+			Button settings = new Button("");
+			settings.setGraphic(settingsWheel);
+			settings.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
+			settings.setOnAction(event -> {
+				primaryStage.setScene(oMScene);
+			});
+			
+
+			homeScreen.add(settings, 1, 32);
 
 			homeScreen.add(title, 8, 0, 40, 20);
 			homeScreen.add(playButton, 14, 10, 40, 20);
@@ -79,30 +90,6 @@ public class Main extends Application {
 			
 			primaryStage.setScene(homeScene);
 			primaryStage.show();
-			
-			//Will be moved into main screen aka stage/scene once that exists
-			BoardHandler boardHandler = new BoardHandler();
-			Pane board = boardHandler.makeSquareBallGroup(200);
-			root.add(board,0,0);
-			board.setTranslateX(550);
-			board.setTranslateY(400);
-			primaryStage.addEventHandler(KeyEvent.KEY_RELEASED,(KeyEvent event)->{
-
-	                if (event.getCode() == KeyCode.A) {
-	                	boardHandler.animateSquareBallMovement(board,0);
-	                }
-	                if (event.getCode() == KeyCode.W) {
-	                	boardHandler.animateSquareBallMovement(board,1);
-	                }
-	                if (event.getCode() == KeyCode.D) {
-	                	boardHandler.animateSquareBallMovement(board,2);
-	                }
-	                if (event.getCode() == KeyCode.S) {
-	                	boardHandler.animateSquareBallMovement(board,3);
-	                }
-	            
-	        });
-			// end of section for main screen
 			
 		} catch(Exception e) {
 			e.printStackTrace();
