@@ -1,6 +1,7 @@
 package application;
 
 import javafx.animation.AnimationTimer;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -70,17 +71,20 @@ public class MainSceneHandler {
 		double diceY = 450;
 		
 		ImageView diceBar = new ImageView(new Image("/riceTile.png", 128, 32, false, false));
-		ImageView dice = new ImageView(new Image("/HouseTile.png", 128, 128, false, false));
+		ImageView dice = new ImageView();
+		dice. setImage(new Image("/die.png"));
+		dice.setViewport(new Rectangle2D(0,0,128,128));
 		diceBar.setVisible(false);
+		double [] diceBarScaler = {0};
 
-		AnimationTimer diceBarAnimator = new AnimationTimer() {
+		AnimationTimer diceBarAnimation = new AnimationTimer() {
 			private long lastUpdate;
-			double diceBarScaler = 0;
 			double translateX = 0;
 			double shakeFactor = 10;
 
 			@Override
 			public void start() {
+				diceBarScaler[0] = 0;
 				lastUpdate = System.nanoTime();
 				translateX = originalBarX - 64;
 				diceBar.setScaleX(0);
@@ -91,23 +95,22 @@ public class MainSceneHandler {
 			@Override
 			public void handle(long now) {
 				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
-				if ((diceBarScaler + elaspedSeconds) > 1) {
-					diceBarScaler = 1;
+				if ((diceBarScaler[0] + elaspedSeconds) > 1) {
+					diceBarScaler[0] = 1;
 					translateX = originalBarX;
 				} else {
 					translateX += (64 * elaspedSeconds);
-					diceBarScaler += elaspedSeconds;
+					diceBarScaler[0] += elaspedSeconds;
 				}
-				dice.setTranslateX(diceX + ((Math.random() * shakeFactor * diceBarScaler) - (shakeFactor / 2 * diceBarScaler)));
-				dice.setTranslateY(diceY + ((Math.random() * shakeFactor * diceBarScaler) - (shakeFactor / 2 * diceBarScaler)));
-				diceBar.setScaleX(diceBarScaler);
+				dice.setTranslateX(diceX + ((Math.random() * shakeFactor * diceBarScaler[0]) - (shakeFactor / 2 * diceBarScaler[0])));
+				dice.setTranslateY(diceY + ((Math.random() * shakeFactor * diceBarScaler[0]) - (shakeFactor / 2 * diceBarScaler[0])));
+				diceBar.setScaleX(diceBarScaler[0]);
 				diceBar.setTranslateX(translateX);
 				lastUpdate = now;
 			}
 
 			@Override
 			public void stop() {
-				diceBarScaler = 0;
 				diceBar.setVisible(false);
 				dice.setTranslateX(diceX);
 				dice.setTranslateY(diceY);
@@ -115,15 +118,59 @@ public class MainSceneHandler {
 				super.stop();
 			}
 		};
+		
+		AnimationTimer rollAnimation = new AnimationTimer() {
+			private long lastUpdate;
+			double scaler;
+			double rotateFactor;
+			double shakeFactor;
+			int tempMovement = 1;
+
+			@Override
+			public void start() {
+				rotateFactor = 720 + (720 * diceBarScaler[0]);
+				shakeFactor = 5 + (10 * diceBarScaler[0]);
+				scaler = 0;
+				lastUpdate = System.nanoTime();
+				super.start();
+			}
+
+			@Override
+			public void handle(long now) {
+				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
+				scaler += elaspedSeconds;
+				if(Math.round(scaler * 100) % 10 == 0) {
+					tempMovement = (int) (Math.random() * 6) + 1;
+					dice.setViewport(new Rectangle2D((tempMovement * 128) - 128, 0, 128, 128));
+				}
+				dice.setTranslateX(diceX + ((Math.random() * shakeFactor) - (shakeFactor / 2)));
+				dice.setTranslateY(diceY + ((Math.random() * shakeFactor) - (shakeFactor / 2 )));
+				dice.setRotate(scaler * rotateFactor);
+				lastUpdate = now;
+				if ((scaler + elaspedSeconds) > 1) {
+					scaler = 1;
+					stop();
+				}
+			}
+
+			@Override
+			public void stop() {
+				dice.setRotate(0);
+				dice.setTranslateX(diceX);
+				dice.setTranslateY(diceY);
+				movement = tempMovement;
+				canMove = true;
+				movementText.setText(Integer.toString(movement));
+				super.stop();
+			}
+		};
 
 		dice.setOnMousePressed(e -> {
-			diceBarAnimator.start();
+			diceBarAnimation.start();
 		});
 		dice.setOnMouseReleased(e -> {
-			diceBarAnimator.stop();
-			movement = (int) (Math.random() * 6) + 1;
-			canMove = true;
-			movementText.setText(Integer.toString(movement));
+			diceBarAnimation.stop();
+			rollAnimation.start();
 		});
 
 		root.add(dice, 0, 0);
