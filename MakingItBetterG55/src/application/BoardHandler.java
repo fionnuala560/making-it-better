@@ -44,13 +44,13 @@ public class BoardHandler {
 
 			@Override
 			public void handle(long now) {
-				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
+				double elapsedSeconds = (now - lastUpdate) / 1_000_000_000.0;
 
 				if (shouldMove != TOTAL_ROT_TICKS) {
-					int ticks = (int) ((Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS)
+					int ticks = (int) ((Math.round(ROT_FACTOR * elapsedSeconds * TOTAL_ROT_TICKS)
 							+ shouldMove > TOTAL_ROT_TICKS) ? TOTAL_ROT_TICKS - shouldMove
-									: (Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
-											: Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS));
+									: (Math.round(ROT_FACTOR * elapsedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
+											: Math.round(ROT_FACTOR * elapsedSeconds * TOTAL_ROT_TICKS));
 					moveSquareBallGroup(ball, direction, ticks);
 					shouldMove += ticks;
 				} else {
@@ -91,13 +91,13 @@ public class BoardHandler {
 
 			@Override
 			public void handle(long now) {
-				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
+				double elapsedSeconds = (now - lastUpdate) / 1_000_000_000.0;
 
 				if (shouldMove != TOTAL_ROT_TICKS) {
-					int ticks = (int) ((Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS)
+					int ticks = (int) ((Math.round(ROT_FACTOR * elapsedSeconds * TOTAL_ROT_TICKS)
 							+ shouldMove > TOTAL_ROT_TICKS) ? TOTAL_ROT_TICKS - shouldMove
-									: (Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
-											: Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS));
+									: (Math.round(ROT_FACTOR * elapsedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
+											: Math.round(ROT_FACTOR * elapsedSeconds * TOTAL_ROT_TICKS));
 					moveSquareBallGroup(ball, direction, ticks);
 					shouldMove += ticks;
 				} else {
@@ -134,13 +134,13 @@ public class BoardHandler {
 
 			@Override
 			public void handle(long now) {
-				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
+				double elapsedSeconds = (now - lastUpdate) / 1_000_000_000.0;
 
 				if (shouldMove != TOTAL_ROT_TICKS) {
-					int ticks = (int) ((Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS)
+					int ticks = (int) ((Math.round(ROT_FACTOR * elapsedSeconds * TOTAL_ROT_TICKS)
 							+ shouldMove > TOTAL_ROT_TICKS) ? TOTAL_ROT_TICKS - shouldMove
-									: (Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
-											: Math.round(ROT_FACTOR * elaspedSeconds * TOTAL_ROT_TICKS));
+									: (Math.round(ROT_FACTOR * elapsedSeconds * TOTAL_ROT_TICKS) == 0) ? 1
+											: Math.round(ROT_FACTOR * elapsedSeconds * TOTAL_ROT_TICKS));
 					moveSquareBallGroup(ball, direction, ticks);
 					shouldMove += ticks;
 				} else {
@@ -187,9 +187,9 @@ public class BoardHandler {
 			((float[]) playerImageViews[i].getUserData())[7] = (currentPlayer == i) ? 1 : 0;
 		}
 	}
-	
+
 	private void roundAllCoords() {
-		for(Node n : ball.getChildren()) {
+		for (Node n : ball.getChildren()) {
 			float[] nodeData = (float[]) n.getUserData();
 			nodeData[0] = Math.round(nodeData[0]);
 			nodeData[1] = Math.round(nodeData[1]);
@@ -197,7 +197,7 @@ public class BoardHandler {
 	}
 
 	public int tryToMove(Pane ball, int direction, int movement) {
-		
+
 		int changeInMovement = 0;
 		ImageView currentPlayerIV = null;
 		for (int i = 0; i < 4; i++) {
@@ -210,22 +210,22 @@ public class BoardHandler {
 		for (Node n : ball.getChildren()) {
 			float[] nodeData = (float[]) n.getUserData();
 			boolean willHit = false;
-			
+
 			switch (direction) {
 			case 0:
-				willHit = (nodeData[0] == currentPlayerData[0] && nodeData[1] == currentPlayerData[1]-1);
+				willHit = (nodeData[0] == currentPlayerData[0] && nodeData[1] == currentPlayerData[1] - 1);
 				break;
 			case 1:
-				willHit = (nodeData[0] == currentPlayerData[0]-1 && nodeData[1] == currentPlayerData[1]);
+				willHit = (nodeData[0] == currentPlayerData[0] - 1 && nodeData[1] == currentPlayerData[1]);
 				break;
 			case 2:
-				willHit = (nodeData[0] == currentPlayerData[0] && nodeData[1] == currentPlayerData[1]+1);
+				willHit = (nodeData[0] == currentPlayerData[0] && nodeData[1] == currentPlayerData[1] + 1);
 				break;
 			case 3:
-				willHit = (nodeData[0] == currentPlayerData[0]+1 && nodeData[1] == currentPlayerData[1]);
+				willHit = (nodeData[0] == currentPlayerData[0] + 1 && nodeData[1] == currentPlayerData[1]);
 				break;
 			}
-			
+
 			if (willHit) {
 				switch ((int) nodeData[6]) {
 				case 0:
@@ -234,7 +234,7 @@ public class BoardHandler {
 					changeInMovement = 1;
 					break;
 				case 2:
-					if(movement >= 2) {
+					if (movement >= 2) {
 						changeInMovement = 2;
 					} else {
 						return -1;

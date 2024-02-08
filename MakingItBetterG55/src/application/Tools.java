@@ -34,8 +34,8 @@ public abstract class Tools {
 
 			@Override
 			public void handle(long now) {
-				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
-				scaler += elaspedSeconds;
+				double elapsedSeconds = (now - lastUpdate) / 1_000_000_000.0;
+				scaler += elapsedSeconds;
 				if (isFadeIn) {
 					n.setOpacity(scaler / fadeSeconds);
 				} else {

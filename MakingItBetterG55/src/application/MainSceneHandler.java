@@ -33,6 +33,7 @@ public class MainSceneHandler {
 		case 0:
 			break;
 		case 1:
+			EventDisplayer.openPopup("Text", "holato holato", new String[]{"hi","bye"});
 			break;
 		case 2:
 			break;
@@ -123,13 +124,13 @@ public class MainSceneHandler {
 
 			@Override
 			public void handle(long now) {
-				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
-				if ((diceBarScaler[0] + elaspedSeconds) > 1) {
+				double elapsedSeconds = (now - lastUpdate) / 1_000_000_000.0;
+				if ((diceBarScaler[0] + elapsedSeconds) > 1) {
 					diceBarScaler[0] = 1;
 					translateX = originalBarX;
 				} else {
-					translateX += (64 * elaspedSeconds);
-					diceBarScaler[0] += elaspedSeconds;
+					translateX += (64 * elapsedSeconds);
+					diceBarScaler[0] += elapsedSeconds;
 				}
 				dice.setTranslateX(diceX
 						+ ((Math.random() * shakeFactor * diceBarScaler[0]) - (shakeFactor / 2 * diceBarScaler[0])));
@@ -170,8 +171,8 @@ public class MainSceneHandler {
 
 			@Override
 			public void handle(long now) {
-				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
-				scaler += elaspedSeconds;
+				double elapsedSeconds = (now - lastUpdate) / 1_000_000_000.0;
+				scaler += elapsedSeconds;
 				if (Math.round(scaler * 100) % 10 == 0) {
 					tempMovement = (int) (Math.random() * 6) + 1;
 					dice.setViewport(new Rectangle2D((tempMovement * 128) - 128, 0, 128, 128));
@@ -179,7 +180,7 @@ public class MainSceneHandler {
 				dice.setTranslateX(diceX + ((Math.random() * shakeFactor) - (shakeFactor / 2)));
 				dice.setTranslateY(diceY + ((Math.random() * shakeFactor) - (shakeFactor / 2)));
 				dice.setRotate(scaler * rotateFactor);
-				if ((scaler + elaspedSeconds) > 1) {
+				if ((scaler + elapsedSeconds) > 1) {
 					scaler = 1;
 					stop();
 				}

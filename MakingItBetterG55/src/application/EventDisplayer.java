@@ -14,20 +14,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class EventDisplayer {
-	private String title;
-	private String desc;
-	private String[] options;
-
-	// Feel free to change as much as this as you want, the primary goal was to serve as
-	// a graphical foundation for the event popup system.
-	public EventDisplayer(String title, String description, String[] options) {
-		this.title = title;
-		this.desc = description;
-		this.options = options;
-		openPopup(title, desc, options);
-	}
-
-	private void openPopup(String eventTitle, String eventDesc, String[] options) {
+	
+public static void openPopup(String eventTitle, String eventDesc, String[] options) {
 		Stage eventStage = new Stage();
 		eventStage.initModality(Modality.APPLICATION_MODAL);
 		eventStage.initStyle(StageStyle.UNDECORATED);
