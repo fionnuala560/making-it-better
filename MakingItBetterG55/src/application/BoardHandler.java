@@ -55,7 +55,7 @@ public class BoardHandler {
 					shouldMove += ticks;
 				} else {
 					shouldMove = 0;
-					mainSceneHandler.handleTurn();
+					mainSceneHandler.landed();
 					roundAllCoords();
 					this.stop();
 				}
@@ -76,7 +76,7 @@ public class BoardHandler {
 			} else {
 				setPlayersData(currentPlayer);
 				roundAllCoords();
-				mainSceneHandler.setCanMove(true);
+				mainSceneHandler.landedNextTurn();
 			}
 			return;
 		}
@@ -111,7 +111,7 @@ public class BoardHandler {
 					} else {
 						setPlayersData(currentPlayer);
 						roundAllCoords();
-						mainSceneHandler.setCanMove(true);
+						mainSceneHandler.landedNextTurn();
 					}
 				}
 				lastUpdate = now;
@@ -151,7 +151,7 @@ public class BoardHandler {
 					} else {
 						setPlayersData(currentPlayer);
 						roundAllCoords();
-						mainSceneHandler.setCanMove(true);
+						mainSceneHandler.landedNextTurn();
 					}
 				}
 				lastUpdate = now;
@@ -196,7 +196,9 @@ public class BoardHandler {
 		}
 	}
 
-	public boolean tryToMove(Pane ball, int direction) {
+	public int tryToMove(Pane ball, int direction, int movement) {
+		
+		int changeInMovement = 0;
 		ImageView currentPlayerIV = null;
 		for (int i = 0; i < 4; i++) {
 			if (((float[]) playerImageViews[i].getUserData())[7] == 1) {
@@ -227,21 +229,30 @@ public class BoardHandler {
 			if (willHit) {
 				switch ((int) nodeData[6]) {
 				case 0:
-					return false;
+					return -1;
 				case 1:
+					changeInMovement = 1;
 					break;
 				case 2:
+					if(movement >= 2) {
+						changeInMovement = 2;
+					} else {
+						return -1;
+					}
 					break;
 				case 3:
+					changeInMovement = 1;
 					break;
 				case 69:
-					return false;
+					return -1;
+				default:
+					changeInMovement = 1;
 				}
 			}
 		}
 
 		animateSquareBallMovement(ball, direction);
-		return true;
+		return changeInMovement;
 	}
 
 	private void moveSquareBallGroup(Pane ball, int direction, int ticks) {
