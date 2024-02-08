@@ -2,7 +2,6 @@ package application;
 
 import java.util.Scanner;
 
-import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -84,6 +83,9 @@ public class GameStartupScreen {
 		gameStartupScene = new Scene(gridPane, 1200, 800);
 		RowConstraints row1 = new RowConstraints();
 		row1.setPercentHeight(50);
+		
+		MainSceneHandler mainSceneHandler = new MainSceneHandler();
+		Scene tempMainScene = mainSceneHandler.makeMainScene();
 		/*RowConstraints row2 = new RowConstraints();
 		row2.setPercentHeight(8);
 		RowConstraints row3 = new RowConstraints();
@@ -170,8 +172,10 @@ public class GameStartupScreen {
 		startButton.setOnAction(e -> {
 			Player[] player = {new Player('e', engineerName, isEngineerAI), new Player('t', teacherName, isTeacherAI),
 					new Player('p', parentName, isParentAI), new Player('s', studentName, isStudentAI)};
+			//Stage tempStage = (Stage) startButton.getScene().getWindow();
 			Stage tempStage = (Stage) startButton.getScene().getWindow();
-			tempStage.setScene(mainScene);
+			tempStage.setScene(tempMainScene);
+			mainSceneHandler.handleTurn();
 		});
 		//set coordinates, size of backButton and add to scene
 		backButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 20));
