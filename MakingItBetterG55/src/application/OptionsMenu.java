@@ -4,6 +4,10 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -24,7 +28,7 @@ public class OptionsMenu {
 	public OptionsMenu(Scene optionsScene, Scene homeScene, Stage primaryStage) {
 		GridPane optionsScreen = new GridPane();
 		optionsScreen.setStyle("-fx-background-image: url('/woodbackground.jpg');");
-		Scene optionsScene = new Scene(optionsScreen, 1200, 800);
+		scene = new Scene(optionsScreen, 1200, 800);
 		
 		optionsScreen.setGridLinesVisible(false);
 	        final int numCols = 40;
@@ -137,14 +141,14 @@ public class OptionsMenu {
 		optionsScreen.add(fsCheckBox, 2, 14);
 		fsCheckBox.setOnAction(event ->{
 			if (fsCheckBox.isSelected()) {
-				stage.setFullScreen(true);
+				primaryStage.setFullScreen(true);
 				r1.setWidth(primaryStage.getWidth());
 				r1.setHeight(primaryStage.getHeight() / 40);
 				r2.setWidth(primaryStage.getWidth());
 				r2.setHeight(primaryStage.getHeight()*3 / 8);
 			}
 			if (!(fsCheckBox.isSelected())) {
-				stage.setFullScreen(false);
+				primaryStage.setFullScreen(false);
 				r1.setWidth(1200);
 				r1.setHeight(20);
 				r2.setWidth(1200);
