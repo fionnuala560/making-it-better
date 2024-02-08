@@ -11,6 +11,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class MainSceneHandler {
 
 	private int turnNumber = 0;
@@ -92,13 +94,17 @@ public class MainSceneHandler {
 		formatTopPanel(topPlayerBox, root);
 		formatLeftPanel(leftPlayerBox, root);
 
+		int[] currentPlayerIndex = {turnNumber%4 -1};
+
 
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED,(KeyEvent event)->{
 			if (event.getCode() == KeyCode.Q && canMove == true) {
-				HBox newBottomPlayerBox = createPlayerPanel(allPlayers[1]);
-				VBox newRightPlayerBox = createPlayerPanelSides(allPlayers[2]);
-				HBox newTopPlayerBox = createPlayerPanel(allPlayers[3]);
-				VBox newLeftPlayerBox = createPlayerPanelSides(allPlayers[0]);
+
+				currentPlayerIndex[0] = (currentPlayerIndex[0]+1)%4;
+				HBox newBottomPlayerBox = createPlayerPanel(allPlayers[currentPlayerIndex[0]]);
+				VBox newRightPlayerBox = createPlayerPanelSides(allPlayers[(currentPlayerIndex[0] + 1) % 4]);
+				HBox newTopPlayerBox = createPlayerPanel(allPlayers[(currentPlayerIndex[0] + 2) % 4]);
+				VBox newLeftPlayerBox = createPlayerPanelSides(allPlayers[(currentPlayerIndex[0] + 3) % 4]);
 
 				formatBottomPanel(newBottomPlayerBox, root);
 				formatRightPanel(newRightPlayerBox, root);
