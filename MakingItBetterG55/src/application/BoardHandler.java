@@ -234,7 +234,11 @@ public class BoardHandler {
 					changeInMovement = 1;
 					break;
 				case 2:
-					changeInMovement = 1;
+					if(movement >= 2) {
+						changeInMovement = 2;
+					} else {
+						return -1;
+					}
 					break;
 				case 3:
 					changeInMovement = 1;
