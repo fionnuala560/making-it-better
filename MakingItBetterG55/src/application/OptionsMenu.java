@@ -19,6 +19,7 @@ import javafx.scene.shape.Rectangle;
 
 public class OptionsMenu {
 	private Scene scene;
+	private String font;
 	
 	public OptionsMenu(Scene optionsScene, Scene homeScene, Stage primaryStage) {
 		GridPane optionsScreen = new GridPane();
@@ -38,6 +39,8 @@ public class OptionsMenu {
 	            rowConst.setPercentHeight(100.0 / numRows);
 	            optionsScreen.getRowConstraints().add(rowConst);         
 	        }
+
+		font = "SansSerif";
 	        
 	        //lower banner
 	        Rectangle r1 = new Rectangle();
@@ -62,7 +65,7 @@ public class OptionsMenu {
 	        //back button
 		Button back = new Button("Back");
 		back.setStyle("-fx-cursor: hand; -fx-border-color: #152546; -fx-border-width: 14px; -fx-background-color: #536F7B; -fx-text-fill: white;");
-		back.setFont(Font.font("SansSerif", FontWeight.BOLD, 40));
+		//back.setFont(Font.font("SansSerif", FontWeight.BOLD, 40));
 		back.setPrefSize(320, 29);
 		optionsScreen.add(back, 28, 32, 32, 32);
 		back.setOnAction(event -> {
@@ -72,14 +75,14 @@ public class OptionsMenu {
 
 		//colour blind
 		Text cb = new Text("Colourblind Mode");
-		cb.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
+		//cb.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
 		cb.setStyle("-fx-fill: white;");
 		optionsScreen.add(cb, 21, 13);
 	
 		MenuButton colours = new MenuButton("Colour Options");
 		colours.setMinSize(400, 62);
 		colours.setStyle("-fx-cursor: hand; -fx-border-color: #152546; -fx-border-width: 4px; -fx-background-color: #536F7B; -fx-text-fill: white;");
-		colours.setFont(Font.font("SansSerif", FontWeight.BOLD, 28));
+		//colours.setFont(Font.font("SansSerif", FontWeight.BOLD, 28));
 		MenuItem protanopia = new MenuItem("Protanopia (Red-Green)");
 		protanopia.setOnAction(event ->{
 			colours.setText("Protanopia (Red-Green)");
@@ -97,14 +100,14 @@ public class OptionsMenu {
 	
 		//language
 		Text lang = new Text("Language");
-		lang.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
+		//lang.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
 		lang.setStyle("-fx-fill: white;");
 		optionsScreen.add(lang, 21, 22);
 		
 		MenuButton languages = new MenuButton("English");
 		languages.setMinSize(400, 62);
 		languages.setStyle("-fx-cursor: hand; -fx-border-color: #152546; -fx-border-width: 4px; -fx-background-color: #536F7B; -fx-text-fill: white;");
-		languages.setFont(Font.font("SansSerif", FontWeight.BOLD, 28));
+		//languages.setFont(Font.font("SansSerif", FontWeight.BOLD, 28));
 		MenuItem english = new MenuItem("English");
 		english.setOnAction(event ->{
 			languages.setText("English");
@@ -126,7 +129,7 @@ public class OptionsMenu {
 	
 		//fullscreen
 		Text fullscreen = new Text("Full Screen");
-		fullscreen.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
+		//fullscreen.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
 		fullscreen.setStyle("-fx-fill: white;");
 		optionsScreen.add(fullscreen, 3, 14);
 		
@@ -151,7 +154,7 @@ public class OptionsMenu {
 	
 		//music
 		Text music = new Text("Music");
-		music.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
+		//music.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
 		music.setStyle("-fx-fill: white;");
 		optionsScreen.add(music, 3, 19);
 		
@@ -160,17 +163,64 @@ public class OptionsMenu {
 
 		//volume
 		Text volume = new Text("Volume");
-		volume.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
+		///volume.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
 		volume.setStyle("-fx-fill: white;");
 		optionsScreen.add(volume, 2, 24);
 		
 		Slider slider = new Slider();
 		slider.setMinSize(200, 50);
 		optionsScreen.add(slider, 2, 27);
+
+		//fonts
+		Text fonts = new Text("Fonts");
+		//fonts.setFont(Font.font(font, FontWeight.BOLD, 32));
+		fonts.setStyle("-fx-fill: white;");
+		optionsScreen.add(fonts, 2, 30);
+		
+		MenuButton fontMenu = new MenuButton(font);
+		fontMenu.setMinSize(400, 62);
+		fontMenu.setStyle("-fx-cursor: hand; -fx-border-color: #152546; -fx-border-width: 4px; -fx-background-color: #536F7B; -fx-text-fill: white;");
+		fontMenu.setFont(Font.font(font, FontWeight.BOLD, 28));
+		
+		MenuItem sansSerif = new MenuItem("SansSerif");
+		sansSerif.setOnAction(event ->{
+			font = "SansSerif";
+			setFont(font, title, back, cb, colours, lang, languages, fullscreen, fsCheckBox, music, volume, fonts, fontMenu);
+			fontMenu.setText("SansSerif");
+		});
+		MenuItem Verdana = new MenuItem("Verdana");
+		Verdana.setOnAction(event ->{
+			font = "Verdana";
+			setFont(font, title, back, cb, colours, lang, languages, fullscreen, fsCheckBox, music, volume, fonts, fontMenu);
+			fontMenu.setText("Verdana");
+		});
+		MenuItem Helvetica = new MenuItem("Helvetica");
+		Helvetica.setOnAction(event ->{
+			font = "Helvetica";
+			setFont(font, title, back, cb, colours, lang, languages, fullscreen, fsCheckBox, music, volume, fonts, fontMenu);
+			fontMenu.setText("Helvetica");
+		});
+		fontMenu.getItems().addAll(sansSerif, Verdana, Helvetica);
+		optionsScreen.add(fontMenu, 2, 33);
+		
+		setFont(font, title, back, cb, colours, lang, languages, fullscreen, fsCheckBox, music, volume, fonts, fontMenu);
 	}
 
 	public Scene getOptionsMenu() {
 		return scene;
 	}
-	
+
+	public void setFont(String font, Text title, Button back, Text cb, MenuButton colours, Text lang, MenuButton languages, Text fullscreen, CheckBox fsCheckBox, Text music, Text volume, Text fonts, MenuButton fontMenu) {
+		title.setFont(Font.font(font, FontWeight.BOLD, 64));
+		back.setFont(Font.font(font, FontWeight.BOLD, 40));
+		cb.setFont(Font.font(font, FontWeight.BOLD, 32));
+		colours.setFont(Font.font(font, FontWeight.BOLD, 28));
+		lang.setFont(Font.font(font, FontWeight.BOLD, 32));
+		languages.setFont(Font.font(font, FontWeight.BOLD, 28));
+		fullscreen.setFont(Font.font(font, FontWeight.BOLD, 32));
+		music.setFont(Font.font(font, FontWeight.BOLD, 32));
+		volume.setFont(Font.font(font, FontWeight.BOLD, 32));
+		fonts.setFont(Font.font(font, FontWeight.BOLD, 32));
+		fontMenu.setFont(Font.font(font, FontWeight.BOLD, 28));
+	}	
 }
