@@ -23,12 +23,10 @@ public class Main extends Application {
 			homeScreen.setStyle("-fx-background-image: url('/woodbackground.jpg');");
 			Scene homeScene = new Scene(homeScreen, 1200, 800);
 			
-			GridPane root = new GridPane();
-			Scene mainScene = new Scene(root, 1200, 800);
-			mainScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			MainSceneHandler mainSceneHandler = new MainSceneHandler();
+			Scene mainScene = mainSceneHandler.makeMainScene();
 			
-			GameStartupScreen gSS = new GameStartupScreen(mainScene, homeScene);
-			Scene gSSScene = gSS.getGameStartupScreen();
+			GridPane root = new GridPane();
 
 			homeScreen.setGridLinesVisible(false);
 	        final int numCols = 40;
@@ -53,7 +51,8 @@ public class Main extends Application {
 			playButton.setPrefSize(320, 29);
 			
 			playButton.setOnAction(event -> {
-				primaryStage.setScene(gSSScene);
+			primaryStage.setScene(mainScene);
+		    mainSceneHandler.handleTurn();
 			});
 			
 			Button quitButton = new Button("Quit");
