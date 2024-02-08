@@ -304,7 +304,7 @@ public class BoardHandler {
 		Image[][] tiles = new Image[9][9];
 
 		try (BufferedReader bufferedReader = new BufferedReader(
-				new FileReader(System.getProperty("user.dir") + "/MakingItBetterG55/src/tiles.txt"))) {
+				new FileReader(System.getProperty("user.dir") + "/src/tiles.txt"))) {
 
 			final Image water = new Image("/WaterTile.png", 256, 256, false, false);
 			final Image grass = new Image("/GrassTile.png", 256, 256, false, false);

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class TextRetriever {
     //path to the CSV containing all text in the game
-    private static final String CSV_PATH = System.getProperty("user.dir") + "/MakingItBetterG55/src/making-it-better-text.csv";
+    private static final String CSV_PATH = System.getProperty("user.dir") + "/src/making-it-better-text.csv";
 
     //list containing all text from the CSV
     private final List<String[]> translations;
