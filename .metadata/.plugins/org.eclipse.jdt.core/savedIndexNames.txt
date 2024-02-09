@@ -1,0 +1,11 @@
+INDEX VERSION 1.134+C:\Users\goske\GitContributions\making-it-better\.metadata\.plugins\org.eclipse.jdt.core
+1865797976.index
+60275701.index
+4167281606.index
+589121924.index
+3155886441.index
+2975983217.index
+409988380.index
+38268909.index
+3068766667.index
+1082603920.index
