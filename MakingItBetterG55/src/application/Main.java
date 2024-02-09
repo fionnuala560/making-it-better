@@ -24,6 +24,9 @@ public class Main extends Application {
 			
 			MainSceneHandler mainSceneHandler = new MainSceneHandler();
 			Scene mainScene = mainSceneHandler.makeMainScene();
+			
+			GameStartupScreen gSS = new GameStartupScreen(mainScene, homeScene);
+			Scene gSSScene = gSS.getGameStartupScreen();
 
 			GridPane root = new GridPane();
 			Scene optionsScene = new Scene(root, 1200, 800);
@@ -54,8 +57,7 @@ public class Main extends Application {
 			playButton.setPrefSize(320, 29);
 			
 			playButton.setOnAction(event -> {
-		    primaryStage.setScene(mainScene);
-		    mainSceneHandler.handleTurn();
+		    primaryStage.setScene(gSSScene);
 			});
 			
 			Button quitButton = new Button("Quit");
