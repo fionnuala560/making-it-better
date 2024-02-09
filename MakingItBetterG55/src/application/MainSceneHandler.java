@@ -25,9 +25,15 @@ public class MainSceneHandler {
 	private boolean canRoll = true;
 	private BoardHandler boardHandler;
 	private ImageView dice = new ImageView();
+	private BorderPane root;
 	private Text diceText = new Text("Click To Roll!");
 	private Button endTurnButton = new Button("End Turn");
 	int[] currentPlayerIndex = {0};
+	Player[] players;
+	
+	public MainSceneHandler (Player[] players) {
+		this.players = players;
+	}
 
 	public void handleTurn() {
 		if (turnNumber > 0) {
@@ -59,12 +65,13 @@ public class MainSceneHandler {
 		if (movement > 0) {
 			this.canMove = true;
 		} else {
+			switchPlayer(players, root);
 			handleTurn();
 		}
 	}
 
 	public Scene makeMainScene() {
-		BorderPane root  = new BorderPane();
+		root  = new BorderPane();
 		GridPane grid = new GridPane();
 		root.setCenter(grid);
 		Scene mainScene = new Scene(root, 1200, 800);
@@ -101,7 +108,7 @@ public class MainSceneHandler {
 			}
 		});
 
-		double originalBarX = 950;
+		double originalBarX = 850;
 		double diceX = 850;
 		double diceY = 250;
 
@@ -228,9 +235,9 @@ public class MainSceneHandler {
 		dice.setTranslateX(diceX);
 		dice.setTranslateY(diceY);
 		diceBar.setTranslateX(originalBarX);
-		diceBar.setTranslateY(550);
+		diceBar.setTranslateY(350);
 		diceBarBorder.setTranslateX(originalBarX);
-		diceBarBorder.setTranslateY(550);
+		diceBarBorder.setTranslateY(350);
 		endTurnButton.setTranslateX(850);
 		endTurnButton.setTranslateY(350);
 
@@ -253,18 +260,10 @@ public class MainSceneHandler {
 
 		});
 
-		Player Engineer = new Player('e', "Homer", false);
-		Player Teacher = new Player('t', "Marge", false);
-		Player Parent = new Player('p', "Bart", false);
-		Player Student = new Player('s', "Lisa", false);
-
-		Player[] allPlayers  = new Player[]{Engineer, Teacher, Parent, Student};
-		endTurnButton.setOnAction(event -> switchPlayer(allPlayers, root));
-
-		HBox bottomPlayerBox = createPlayerPanel(allPlayers[0]);
-		VBox rightPlayerBox = createPlayerPanelSides(allPlayers[1]);
-		HBox topPlayerBox = createPlayerPanel(allPlayers[2]);
-		VBox leftPlayerBox = createPlayerPanelSides(allPlayers[3]);
+		HBox bottomPlayerBox = createPlayerPanel(players[0]);
+		VBox rightPlayerBox = createPlayerPanelSides(players[1]);
+		HBox topPlayerBox = createPlayerPanel(players[2]);
+		VBox leftPlayerBox = createPlayerPanelSides(players[3]);
 
 		formatBottomPanel(bottomPlayerBox, root);
 		formatRightPanel(rightPlayerBox, root);

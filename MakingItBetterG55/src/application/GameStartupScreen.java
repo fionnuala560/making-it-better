@@ -77,24 +77,16 @@ public class GameStartupScreen {
 	private String teacherName;
 	private String engineerName;	
 	
-	public GameStartupScreen(Scene mainScene, Scene homeScene) {
+	public GameStartupScreen(Scene homeScene) {
+		
 		GridPane gridPane = new GridPane();
 		gridPane.setStyle("-fx-background-image: url('/woodbackground.jpg');");
 		gameStartupScene = new Scene(gridPane, 1200, 800);
 		RowConstraints row1 = new RowConstraints();
 		row1.setPercentHeight(50);
 		
-		MainSceneHandler mainSceneHandler = new MainSceneHandler();
-		Scene tempMainScene = mainSceneHandler.makeMainScene();
-		/*RowConstraints row2 = new RowConstraints();
-		row2.setPercentHeight(8);
-		RowConstraints row3 = new RowConstraints();
-		row3.setPercentHeight(80);*/
-		//RowConstraints row5 = new RowConstraints();
-		//row5.setPercentHeight(5);
-		//RowConstraints row6 = new RowConstraints();
-		//row6.setPercentHeight(30);
 		gridPane.getRowConstraints().addAll(row1);
+		
 		//Setting coordinates of label1 and add to scene
 		title.setFont(Font.font("SansSerif", FontWeight.BOLD, 50));
 		title.setStyle("-fx-fill: black; -fx-stroke: white; -fx-stroke-width: 1px;");
@@ -102,9 +94,11 @@ public class GameStartupScreen {
 		title.setTranslateY(20);
 		gridPane.setValignment(title, VPos.TOP);
 		gridPane.add(title, 0, 0);	
+		
 		//set coordinates of label6 and add to scene
 		label6.setFont(Font.font("SansSerif", FontWeight.BOLD, 16));
 		label6.setStyle("-fx-text-fill: white;");
+		
 		//label6.setStyle("-fx-border-color: #152546;");
 		label6.setMaxHeight(500);
 		label6.setMaxWidth(800);
@@ -113,6 +107,7 @@ public class GameStartupScreen {
 		label6.setTranslateY(330);
 		gridPane.setValignment(label6, VPos.TOP);
 		gridPane.add(label6, 0, 0);
+		
 		//set coordinates of label7
 		label7.setFont(Font.font("SansSerif", FontWeight.BOLD, 19));
 		label7.setStyle("-fx-text-fill: white;");
@@ -120,6 +115,7 @@ public class GameStartupScreen {
 		label7.setTranslateY(370);
 		gridPane.setValignment(label7, VPos.TOP);
 		gridPane.add(label7, 0, 0);
+		
 		//set coordinates, size of settingsButton and add to scene
 		settingsButton.setStyle("-fx-cursor: hand;");
 		settingsButton.setFitHeight(100);
@@ -128,6 +124,7 @@ public class GameStartupScreen {
 		settingsButton.setTranslateY(635);
 		gridPane.setValignment(settingsButton, VPos.TOP);
 		gridPane.add(settingsButton, 0, 0);
+		
 		//set height of studentButton and add to scene
 		studentButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 22));
 		studentButton.setMinHeight(20);
@@ -136,6 +133,7 @@ public class GameStartupScreen {
 		studentButton.setTranslateY(91);
 		gridPane.setValignment(studentButton, VPos.TOP);
 		gridPane.add(studentButton, 0, 0);
+		
 		//set size of parentButton and add to scene
 		parentButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 22));
 		parentButton.setMinHeight(20);
@@ -144,6 +142,7 @@ public class GameStartupScreen {
 		parentButton.setTranslateY(132);
 		gridPane.setValignment(parentButton, VPos.TOP);
 		gridPane.add(parentButton, 0, 0);
+		
 		//set size of teacherButton and add to scene
 		teacherButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 22));
 		teacherButton.setMinHeight(20);
@@ -152,6 +151,7 @@ public class GameStartupScreen {
 		teacherButton.setTranslateY(173);
 		gridPane.setValignment(teacherButton, VPos.TOP);
 		gridPane.add(teacherButton, 0, 0);
+		
 		//set size of engineerButton and add to scene
 		engineerButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 22));
 		engineerButton.setMinHeight(20);
@@ -160,6 +160,7 @@ public class GameStartupScreen {
 		engineerButton.setTranslateY(214);
 		gridPane.setValignment(engineerButton, VPos.TOP);
 		gridPane.add(engineerButton, 0, 0);
+		
 		//set coordinates, size of startButton and add to scene
 		startButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 25));
 		startButton.setStyle("-fx-cursor: hand; -fx-border-color: #152546; -fx-border-width: "
@@ -169,14 +170,7 @@ public class GameStartupScreen {
 		startButton.setTranslateY(650);
 		gridPane.setValignment(startButton, VPos.TOP);
 		gridPane.add(startButton,0, 0);
-		startButton.setOnAction(e -> {
-			Player[] player = {new Player('e', engineerName, isEngineerAI), new Player('t', teacherName, isTeacherAI),
-					new Player('p', parentName, isParentAI), new Player('s', studentName, isStudentAI)};
-			//Stage tempStage = (Stage) startButton.getScene().getWindow();
-			Stage tempStage = (Stage) startButton.getScene().getWindow();
-			tempStage.setScene(tempMainScene);
-			mainSceneHandler.handleTurn();
-		});
+		
 		//set coordinates, size of backButton and add to scene
 		backButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 20));
 		backButton.setPrefSize(50, 10);
@@ -203,6 +197,7 @@ public class GameStartupScreen {
 				isStudentAI = false;
 			}
 		});
+		
 		//add objective
 		studentPane.getChildren().add(label8);
 		label8.setFont(Font.font("SansSerif", FontWeight.BOLD, 21));
@@ -212,12 +207,14 @@ public class GameStartupScreen {
 		label8.setMaxHeight(400);
 		label8.setMaxWidth(450);
 		label8.setWrapText(true);
+		
 		//add Name: label
 		studentPane.getChildren().add(label2);
 		label2.setFont(Font.font("SansSerif", FontWeight.BOLD, 21));
 		label2.setStyle("-fx-text-fill: white;");
 		label2.setTranslateX(50);
 		label2.setTranslateY(50);
+		
 		//add name text field
 		studentPane.getChildren().add(textField1);
 		textField1.setFont(Font.font("SansSerif", 21));
@@ -241,6 +238,7 @@ public class GameStartupScreen {
 				isParentAI = false;
 			}
 		});
+		
 		//add objective
 		parentPane.getChildren().add(label9);
 		label9.setFont(Font.font("SansSerif", FontWeight.BOLD, 21));
@@ -250,12 +248,14 @@ public class GameStartupScreen {
 		label9.setMaxHeight(400);
 		label9.setMaxWidth(450);
 		label9.setWrapText(true);
+		
 		//add Name: label
 		parentPane.getChildren().add(label3);
 		label3.setFont(Font.font("SansSerif", FontWeight.BOLD, 21));
 		label3.setStyle("-fx-text-fill: white;");
 		label3.setTranslateX(50);
 		label3.setTranslateY(50);
+		
 		//add name text field
 		parentPane.getChildren().add(textField2);
 		textField2.setFont(Font.font("SansSerif", 21));
@@ -279,6 +279,7 @@ public class GameStartupScreen {
 				isTeacherAI = false;
 			}
 		});
+		
 		//add objective
 		teacherPane.getChildren().add(label10);
 		label10.setFont(Font.font("SansSerif", FontWeight.BOLD, 21));
@@ -288,12 +289,14 @@ public class GameStartupScreen {
 		label10.setMaxHeight(400);
 		label10.setMaxWidth(450);
 		label10.setWrapText(true);
+		
 		//add Name: label
 		teacherPane.getChildren().add(label4);
 		label4.setFont(Font.font("SansSerif", FontWeight.BOLD, 21));
 		label4.setStyle("-fx-text-fill: white;");
 		label4.setTranslateX(50);
 		label4.setTranslateY(50);
+		
 		//add name text field
 		teacherPane.getChildren().add(textField3);
 		textField3.setFont(Font.font("SansSerif", 21));
@@ -318,6 +321,7 @@ public class GameStartupScreen {
 				isEngineerAI = false;
 			}
 		});
+		
 		//add objective
 		engineerPane.getChildren().add(label11);
 		label11.setFont(Font.font("SansSerif", FontWeight.BOLD, 21));
@@ -327,12 +331,14 @@ public class GameStartupScreen {
 		label11.setMaxHeight(400);
 		label11.setMaxWidth(450);
 		label11.setWrapText(true);
+		
 		//add Name: label
 		engineerPane.getChildren().add(label5);
 		label5.setFont(Font.font("SansSerif", FontWeight.BOLD, 21));
 		label5.setStyle("-fx-text-fill: white;");
 		label5.setTranslateX(50);
 		label5.setTranslateY(50);
+		
 		//add name text field
 		engineerPane.getChildren().add(textField4);
 		textField4.setFont(Font.font("SansSerif", 21));
@@ -374,6 +380,17 @@ public class GameStartupScreen {
 			parentPane.setVisible(false);
 			teacherPane.setVisible(false);
 			engineerPane.setVisible(true);
+		});
+		
+		startButton.setOnAction(e -> {
+			Player[] players = {new Player('e', textField4.getText(), isEngineerAI), new Player('t', textField3.getText(), isTeacherAI),
+					new Player('p', textField2.getText(), isParentAI), new Player('s', textField1.getText(), isStudentAI)};
+			
+			Stage tempStage = (Stage) startButton.getScene().getWindow();
+			MainSceneHandler mainSceneHandler = new MainSceneHandler(players);
+			Scene mainScene = mainSceneHandler.makeMainScene();
+			tempStage.setScene(mainScene);
+			mainSceneHandler.handleTurn();
 		});
 	}
 	

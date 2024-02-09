@@ -22,16 +22,13 @@ public class Main extends Application {
 			homeScreen.setStyle("-fx-background-image: url('/woodbackground.jpg');");
 			Scene homeScene = new Scene(homeScreen, 1200, 800);
 			
-			MainSceneHandler mainSceneHandler = new MainSceneHandler();
-			Scene mainScene = mainSceneHandler.makeMainScene();
-			
-			GameStartupScreen gSS = new GameStartupScreen(mainScene, homeScene);
+			GameStartupScreen gSS = new GameStartupScreen(homeScene);
 			Scene gSSScene = gSS.getGameStartupScreen();
 
 			GridPane root = new GridPane();
 			Scene optionsScene = new Scene(root, 1200, 800);
 			optionsScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			OptionsMenu om = new OptionsMenu(mainScene, homeScene, primaryStage);
+			OptionsMenu om = new OptionsMenu(homeScene, primaryStage);
 			Scene oMScene = om.getOptionsMenu();
 
 			homeScreen.setGridLinesVisible(false);

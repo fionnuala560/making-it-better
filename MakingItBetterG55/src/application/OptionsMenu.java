@@ -20,7 +20,7 @@ public class OptionsMenu {
 	private Scene scene;
 	private String font;
 	
-	public OptionsMenu(Scene optionsScene, Scene homeScene, Stage primaryStage) {
+	public OptionsMenu(Scene callingScene, Stage primaryStage) {
 		GridPane optionsScreen = new GridPane();
 		optionsScreen.setStyle("-fx-background-image: url('/woodbackground.jpg');");
 		scene = new Scene(optionsScreen, 1200, 800);
@@ -69,7 +69,7 @@ public class OptionsMenu {
 		optionsScreen.add(back, 28, 32, 32, 32);
 		back.setOnAction(event -> {
 			Stage tempMain = (Stage) back.getScene().getWindow();
-			tempMain.setScene(homeScene);
+			tempMain.setScene(callingScene);
 		});	
 
 		//colour blind
