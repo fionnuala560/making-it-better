@@ -28,6 +28,9 @@ public class Main extends Application {
 			GameStartupScreen gSS = new GameStartupScreen(mainScene, homeScene);
 			Scene gSSScene = gSS.getGameStartupScreen();
 
+			EpilogueScreen epilogueScreen = new EpilogueScreen();
+			Scene epilogueScene = epilogueScreen.
+
 			GridPane root = new GridPane();
 			Scene optionsScene = new Scene(root, 1200, 800);
 			optionsScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
