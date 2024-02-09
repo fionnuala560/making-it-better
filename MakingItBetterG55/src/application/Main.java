@@ -28,8 +28,8 @@ public class Main extends Application {
 			GameStartupScreen gSS = new GameStartupScreen(mainScene, homeScene);
 			Scene gSSScene = gSS.getGameStartupScreen();
 
-			EpilogueScreen epilogueScreen = new EpilogueScreen();
-			Scene epilogueScene = epilogueScreen.
+			EpilogueScreen epilogueScreen = new EpilogueScreen(/*homeScene*/);
+			Scene epScene = epilogueScreen.getEpilogueScene();
 
 			GridPane root = new GridPane();
 			Scene optionsScene = new Scene(root, 1200, 800);
