@@ -42,3 +42,4 @@ java.io.FileNotFoundException: C:\Users\goske\GitContributions\making-it-better\
 	at org.eclipse.core.internal.resources.SaveManager.save(SaveManager.java:1205)
 	at org.eclipse.core.internal.resources.DelayedSnapshotJob.run(DelayedSnapshotJob.java:51)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+2024-02-08 21:03:46,558 [Worker-8: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.

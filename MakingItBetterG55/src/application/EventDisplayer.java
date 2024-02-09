@@ -1,7 +1,6 @@
 package application;
 
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -9,16 +8,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class EventDisplayer {
 	
-public static void openPopup(String eventTitle, String eventDesc, String[] options) {
-		Stage eventStage = new Stage();
-		eventStage.initModality(Modality.APPLICATION_MODAL);
-		eventStage.initStyle(StageStyle.UNDECORATED);
+public static BorderPane openPopup(String eventTitle, String eventDesc, String[] options) {
 
 		AnchorPane eventLayout = new AnchorPane();
 		eventLayout.setStyle(
@@ -202,8 +195,6 @@ public static void openPopup(String eventTitle, String eventDesc, String[] optio
 		outerLayout.setStyle("-fx-border-color: black; -fx-border-width: 12px;");
 		outerLayout.setCenter(eventLayout);
 
-		Scene eventScene = new Scene(outerLayout, 480, 480);
-		eventStage.setScene(eventScene);
-		eventStage.showAndWait();
+		return outerLayout;
 	}
 }

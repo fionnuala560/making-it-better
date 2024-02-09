@@ -1,9 +1,10 @@
 package application;
 
 import javafx.animation.AnimationTimer;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.*;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,11 +12,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-
+import javafx.stage.Stage;
 
 public class MainSceneHandler {
 
@@ -23,16 +29,18 @@ public class MainSceneHandler {
 	private int movement = 0;
 	private boolean canMove = false;
 	private boolean canRoll = true;
+
 	private BoardHandler boardHandler;
+	private OptionsMenu optionsMenu;
 	private ImageView dice = new ImageView();
 	private BorderPane root;
 	private Text diceText = new Text("Click To Roll!");
 	private Button endTurnButton = new Button("End Turn");
-	int[] currentPlayerIndex = {0};
-	Player[] players;
-	
-	public MainSceneHandler (Player[] players) {
+	private Player[] players;
+
+	public MainSceneHandler(OptionsMenu optionsMenu, Player[] players) {
 		this.players = players;
+		this.optionsMenu = optionsMenu;
 	}
 
 	public void handleTurn() {
@@ -43,7 +51,7 @@ public class MainSceneHandler {
 		case 0:
 			break;
 		case 1:
-			EventDisplayer.openPopup("Text", "holato holato", new String[]{"hi","bye"});
+			EventDisplayer.openPopup("Text", "holato holato", new String[] { "hi", "bye" });
 			break;
 		case 2:
 			break;
@@ -65,23 +73,24 @@ public class MainSceneHandler {
 		if (movement > 0) {
 			this.canMove = true;
 		} else {
-			switchPlayer(players, root);
+			switchPlayerUI(players, root);
 			handleTurn();
 		}
 	}
 
 	public Scene makeMainScene() {
-		root  = new BorderPane();
+		root = new BorderPane();
+		root.setStyle("-fx-background-image: url('/woodbackground.jpg');");
 		GridPane grid = new GridPane();
 		root.setCenter(grid);
 		Scene mainScene = new Scene(root, 1200, 800);
 		mainScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 		boardHandler = new BoardHandler(this);
-		Pane board = boardHandler.makeSquareBallGroup(150);
+		Pane board = boardHandler.makeSquareBallGroup(165);
 		grid.add(board, 0, 0);
 		board.setTranslateX(500);
-		board.setTranslateY(300);
+		board.setTranslateY(320);
 
 		diceText.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 
@@ -241,8 +250,6 @@ public class MainSceneHandler {
 		endTurnButton.setTranslateX(850);
 		endTurnButton.setTranslateY(350);
 
-
-
 		mainScene.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
 
 			if (event.getCode() == KeyCode.A && canMove == true) {
@@ -260,78 +267,76 @@ public class MainSceneHandler {
 
 		});
 
-		HBox bottomPlayerBox = createPlayerPanel(players[0]);
-		VBox rightPlayerBox = createPlayerPanelSides(players[1]);
-		HBox topPlayerBox = createPlayerPanel(players[2]);
-		VBox leftPlayerBox = createPlayerPanelSides(players[3]);
+		Node bottomPlayerBox = createPlayerPanel(turnNumber % 4);
+		Node rightPlayerBox = createPlayerPanel((turnNumber + 1) % 4);
+		Node topPlayerBox = createPlayerPanel((turnNumber + 2) % 4);
+		Node leftPlayerBox = createPlayerPanel((turnNumber + 3) % 4);
 
-		formatBottomPanel(bottomPlayerBox, root);
-		formatRightPanel(rightPlayerBox, root);
-		formatTopPanel(topPlayerBox, root);
-		formatLeftPanel(leftPlayerBox, root);
+		formatPlayerPanel(bottomPlayerBox, 0);
+		formatPlayerPanel(rightPlayerBox, 1);
+		formatPlayerPanel(topPlayerBox, 2);
+		formatPlayerPanel(leftPlayerBox, 3);
+
+		ImageView settingsButton = new ImageView(new Image("/setting.png", 64, 64, false, false));
+		settingsButton.setStyle("-fx-cursor: hand;");
+		settingsButton.setTranslateX(-50);
+		settingsButton.setTranslateY(550);
+		grid.add(settingsButton, 0, 0);
+		settingsButton.setOnMouseClicked(e -> {
+			Stage tempMain = (Stage) settingsButton.getScene().getWindow();
+			tempMain.setScene(optionsMenu.getOptionsMenu(settingsButton.getScene()));
+		});
 
 		return mainScene;
 	}
 
-	private void switchPlayer(Player[] allPlayers, BorderPane root){
-		currentPlayerIndex[0] = (currentPlayerIndex[0]+1)%4;
-		HBox newBottomPlayerBox = createPlayerPanel(allPlayers[currentPlayerIndex[0]]);
-		VBox newRightPlayerBox = createPlayerPanelSides(allPlayers[(currentPlayerIndex[0] + 1) % 4]);
-		HBox newTopPlayerBox = createPlayerPanel(allPlayers[(currentPlayerIndex[0] + 2) % 4]);
-		VBox newLeftPlayerBox = createPlayerPanelSides(allPlayers[(currentPlayerIndex[0] + 3) % 4]);
+	private void switchPlayerUI(Player[] allPlayers, BorderPane root) {
+		Node newBottomPlayerBox = createPlayerPanel(turnNumber % 4);
+		Node newRightPlayerBox = createPlayerPanel((turnNumber + 1) % 4);
+		Node newTopPlayerBox = createPlayerPanel((turnNumber + 2) % 4);
+		Node newLeftPlayerBox = createPlayerPanel((turnNumber + 3) % 4);
 
-		formatBottomPanel(newBottomPlayerBox, root);
-		formatRightPanel(newRightPlayerBox, root);
-		formatTopPanel(newTopPlayerBox, root);
-		formatLeftPanel(newLeftPlayerBox,root);
+		formatPlayerPanel(newBottomPlayerBox, 0);
+		formatPlayerPanel(newRightPlayerBox, 1);
+		formatPlayerPanel(newTopPlayerBox, 2);
+		formatPlayerPanel(newLeftPlayerBox, 3);
 	}
 
-
-
-	private void formatLeftPanel(VBox box, BorderPane root){
-		VBox.setVgrow(root, Priority.ALWAYS);
-		box.setMaxHeight(500);
-		box.setPrefWidth(70);
-		root.setLeft(box);
-		BorderPane.setAlignment(box, Pos.CENTER_LEFT);
+	private void formatPlayerPanel(Node box, int panelIndex) {
+		if (panelIndex % 2 == 0) {
+			HBox.setHgrow(root, Priority.ALWAYS);
+			((HBox) box).setMaxWidth((panelIndex == 0) ? 1000 : 500);
+			((HBox) box).setPrefHeight((panelIndex == 0) ? 100 : 60);
+			BorderPane.setAlignment(box, (panelIndex == 0) ? Pos.BOTTOM_CENTER : Pos.TOP_CENTER);
+		} else {
+			VBox.setVgrow(root, Priority.ALWAYS);
+			((VBox) box).setMaxHeight(500);
+			((VBox) box).setPrefWidth(70);
+			BorderPane.setAlignment(box, (panelIndex == 1) ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
+		}
+		switch (panelIndex) {
+		case 0:
+			root.setBottom(box);
+			break;
+		case 1:
+			root.setRight(box);
+			break;
+		case 2:
+			root.setTop(box);
+			break;
+		case 3:
+			root.setLeft(box);
+		}
 	}
 
-	private void formatRightPanel(VBox box, BorderPane root){
-		VBox.setVgrow(root, Priority.ALWAYS);
-		box.setMaxHeight(500);
-		box.setPrefWidth(70);
-		root.setRight(box);
-		BorderPane.setAlignment(box, Pos.CENTER_RIGHT);
-	}
+	private Node createPlayerPanel(int playerIndex) {
 
-	private void formatTopPanel(HBox box, BorderPane root){
-		box.setPrefHeight(60);
-		box.setMaxWidth(500);
-		root.setTop(box);
-		BorderPane.setAlignment(box, Pos.TOP_CENTER);
-	}
+		Player currentPlayer = players[playerIndex];
+		String[] colors = {"lightskyblue", "lightgreen", "lightpink", "mediumpurple", "darkblue", "darkgreen", "deeppink", "indigo"};
+		String backgroundColor = colors[playerIndex];
+		String borderColor = colors[playerIndex + 4];
 
-	private void formatBottomPanel(HBox box, BorderPane root){
-		HBox.setHgrow(root, Priority.ALWAYS);
-		box.setMaxWidth(1000);
-		box.setPrefHeight(100);
-		root.setBottom(box);
-		BorderPane.setAlignment(box, Pos.BOTTOM_CENTER);
-	}
-
-	private HBox createPlayerPanel(Player currentPlayer){
-
-		String backgroundColor = getPlayerColor(currentPlayer.getPlayerType());
-		String borderColor = getBorderColor(currentPlayer.getPlayerType());
-
-		//creates a horizontal box (for the top/bottom of the screen
-		HBox playerPanel = new HBox();
-		playerPanel.setStyle("-fx-background-color: " +  backgroundColor + ";-fx-border-color: " + borderColor + ";-fx-border-width: 5px;");
-
-
-		playerPanel.setPadding(new Insets(5));
-
-		//creates a label for each player resource
+		// creates a label for each player resource
 		Label nameLabel = new Label(currentPlayer.getPlayerName());
 		Label scoreLabel = new Label(Integer.toString(currentPlayer.getscore()));
 		Label moneyLabel = new Label(Integer.toString(currentPlayer.getMoney()));
@@ -339,64 +344,25 @@ public class MainSceneHandler {
 		Label educationsLabel = new Label(Integer.toString(currentPlayer.getEducation()));
 		Label healthLabel = new Label(Integer.toString(currentPlayer.getHealth()));
 
-		//adds all of the player resources to the player panel box
-		playerPanel.getChildren().addAll(nameLabel, scoreLabel, moneyLabel, goodsLabel, educationsLabel, healthLabel);
+		Node playerPanel;
+
+		if (Math.abs(playerIndex - turnNumber) % 2 == 0) {
+			HBox hBox = new HBox();
+			hBox.setPadding(new Insets(5));
+			hBox.getChildren().addAll(nameLabel, scoreLabel, moneyLabel, goodsLabel, educationsLabel, healthLabel);
+			playerPanel = hBox;
+		} else {
+			VBox vBox = new VBox();
+			vBox.setPadding(new Insets(5));
+			vBox.getChildren().addAll(nameLabel, scoreLabel, moneyLabel, goodsLabel, educationsLabel, healthLabel);
+			playerPanel = vBox;
+		}
+		playerPanel.setStyle("-fx-background-color: " + backgroundColor + ";-fx-border-color: " + borderColor
+				+ ";-fx-border-width: 5px;");
 
 		return playerPanel;
 	}
 
-	private VBox createPlayerPanelSides(Player currentPlayer){
-
-		String backgroundColor = getPlayerColor(currentPlayer.getPlayerType());
-		String borderColor = getBorderColor(currentPlayer.getPlayerType());
-		//creates a vertical box (for the left/right of the screen)
-		VBox playerPanel = new VBox();
-		playerPanel.setStyle("-fx-background-color: " +  backgroundColor + ";-fx-border-color: " + borderColor + ";-fx-border-width: 5px;");
-		playerPanel.setPadding(new Insets(5));
-
-		//creates a label for each player resource
-		Label nameLabel = new Label(currentPlayer.getPlayerName());
-		Label scoreLabel = new Label(Integer.toString(currentPlayer.getscore()));
-		Label moneyLabel = new Label(Integer.toString(currentPlayer.getMoney()));
-		Label goodsLabel = new Label(Integer.toString(currentPlayer.getGoods()));
-		Label educationsLabel = new Label(Integer.toString(currentPlayer.getEducation()));
-		Label healthLabel = new Label(Integer.toString(currentPlayer.getHealth()));
-
-		//adds all of the player resources to the player panel box
-		playerPanel.getChildren().addAll(nameLabel, scoreLabel, moneyLabel, goodsLabel, educationsLabel, healthLabel);
-
-		return playerPanel;
-	}
-
-	private String getPlayerColor(char playerType){
-		switch(playerType){
-		case 'e':
-			return "lightskyblue";
-		case 't':
-			return "lightgreen";
-		case 'p':
-			return "lightpink";
-		case 's':
-			return "mediumpurple";
-		}
-
-		return null;
-	}
-
-	private String getBorderColor(char playerType){
-		switch(playerType){
-		case 'e':
-			return "darkblue";
-		case 't':
-			return "darkgreen";
-		case 'p':
-			return "deeppink";
-		case 's':
-			return "indigo";
-		}
-
-		return null;
-	}
 	private void processMoveInput(Pane board, int direction) {
 		int changeInMovement = boardHandler.tryToMove(board, direction, movement);
 		if (changeInMovement != -1) {
