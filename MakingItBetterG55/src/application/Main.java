@@ -83,7 +83,18 @@ public class Main extends Application {
 			settings.setOnAction(event -> {
 				primaryStage.setScene(oMScene);
 			});
-			
+
+			Button epilogueButton = new Button("Epilogue");
+			epilogueButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 40));
+			epilogueButton.setStyle("-fx-cursor: hand; -fx-border-color: #152546; -fx-border-width: 14px; -fx-background-color: #536F7B; -fx-text-fill: white;");
+			epilogueButton.setPrefSize(320, 29);
+
+			epilogueButton.setOnAction(event -> {
+				primaryStage.setScene(epScene);
+			});
+			homeScreen.add(epilogueButton, 14, 30, 40, 40);
+
+
 
 			homeScreen.add(settings, 1, 32);
 
