@@ -43,3 +43,8 @@ java.io.FileNotFoundException: C:\Users\goske\GitContributions\making-it-better\
 	at org.eclipse.core.internal.resources.DelayedSnapshotJob.run(DelayedSnapshotJob.java:51)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
 2024-02-08 21:03:46,558 [Worker-8: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2024-02-09 00:26:18,217 [Start Help Server] INFO  org.eclipse.jetty.server.Server - jetty-10.0.15; built: 2023-04-11T17:25:14.480Z; git: 68017dbd00236bb7e187330d7585a059610f661d; jvm 17.0.9+9
+2024-02-09 00:26:18,291 [Start Help Server] INFO  o.e.j.s.s.DefaultSessionIdManager - Session workerName=node0
+2024-02-09 00:26:18,362 [Start Help Server] INFO  o.e.j.server.handler.ContextHandler - Started o.e.j.s.ServletContextHandler@536be78e{/help,null,AVAILABLE}
+2024-02-09 00:26:18,401 [Start Help Server] INFO  o.e.jetty.server.AbstractConnector - Started ServerConnector@1ca789cd{HTTP/1.1, (http/1.1)}{127.0.0.1:58721}
+2024-02-09 00:26:18,408 [Start Help Server] INFO  org.eclipse.jetty.server.Server - Started Server@529b07ad{STARTING}[10.0.15,sto=0] @12164553ms

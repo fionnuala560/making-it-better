@@ -5,7 +5,7 @@ public class Event {
 	private String title;
 	private String textBody;
 	private EventOption[] options;
-	private EventOption cancelOption = new EventOption("Cancel", new int[] {0,0,0,0}, new int[] {0,0,0,0});
+	private static EventOption cancelOption = new EventOption("Cancel", new int[] {0,0,0,0}, new int[] {0,0,0,0});
 	
 	public Event(String title, String textBody, EventOption[] options, boolean isOptional) {
 		this.title = title;
@@ -17,6 +17,7 @@ public class Event {
 			for(int i = 0; i < options.length; i++) {
 				allOptions[i+1] = options[i];
 			}
+			this.options = allOptions;
 		} else {
 			this.options = options;
 		}

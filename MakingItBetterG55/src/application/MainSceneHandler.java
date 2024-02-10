@@ -37,10 +37,13 @@ public class MainSceneHandler {
 	private Text diceText = new Text("Click To Roll!");
 	private Button endTurnButton = new Button("End Turn");
 	private Player[] players;
+	private BorderPane eventPane;
+	private EventDisplayer eventDisplayer;
 
 	public MainSceneHandler(OptionsMenu optionsMenu, Player[] players) {
 		this.players = players;
 		this.optionsMenu = optionsMenu;
+		eventDisplayer = new EventDisplayer(players);
 	}
 
 	public void handleTurn() {
@@ -51,7 +54,6 @@ public class MainSceneHandler {
 		case 0:
 			break;
 		case 1:
-			EventDisplayer.openPopup("Text", "holato holato", new String[] { "hi", "bye" });
 			break;
 		case 2:
 			break;
@@ -286,6 +288,13 @@ public class MainSceneHandler {
 			Stage tempMain = (Stage) settingsButton.getScene().getWindow();
 			tempMain.setScene(optionsMenu.getOptionsMenu(settingsButton.getScene()));
 		});
+		
+		eventPane = eventDisplayer.openEventPopup( new Event("title", "body Body", new EventOption[]{
+				new EventOption("option", new int[] {1, 2, 3, -4}, new int [] {1,2,3,4}),
+				new EventOption("option", new int[] {1, 2, 3, -4}, new int [] {1,2,3,4}),
+				new EventOption("option", new int[] {1, 2, 3, -4}, new int [] {1,2,3,4})
+				}, true), turnNumber % 4);
+		grid.add(eventPane, 0, 0);
 
 		return mainScene;
 	}
@@ -338,23 +347,22 @@ public class MainSceneHandler {
 
 		// creates a label for each player resource
 		Label nameLabel = new Label(currentPlayer.getPlayerName());
-		Label scoreLabel = new Label(Integer.toString(currentPlayer.getscore()));
-		Label moneyLabel = new Label(Integer.toString(currentPlayer.getMoney()));
-		Label goodsLabel = new Label(Integer.toString(currentPlayer.getGoods()));
-		Label educationsLabel = new Label(Integer.toString(currentPlayer.getEducation()));
 		Label healthLabel = new Label(Integer.toString(currentPlayer.getHealth()));
+		Label educationLabel = new Label(Integer.toString(currentPlayer.getEducation()));
+		Label goodsLabel = new Label(Integer.toString(currentPlayer.getGoods()));
+		Label moneyLabel = new Label(Integer.toString(currentPlayer.getMoney()));
 
 		Node playerPanel;
 
 		if (Math.abs(playerIndex - turnNumber) % 2 == 0) {
 			HBox hBox = new HBox();
 			hBox.setPadding(new Insets(5));
-			hBox.getChildren().addAll(nameLabel, scoreLabel, moneyLabel, goodsLabel, educationsLabel, healthLabel);
+			hBox.getChildren().addAll(nameLabel, healthLabel, educationLabel, goodsLabel, moneyLabel);
 			playerPanel = hBox;
 		} else {
 			VBox vBox = new VBox();
 			vBox.setPadding(new Insets(5));
-			vBox.getChildren().addAll(nameLabel, scoreLabel, moneyLabel, goodsLabel, educationsLabel, healthLabel);
+			vBox.getChildren().addAll(nameLabel, healthLabel, educationLabel, goodsLabel, moneyLabel);
 			playerPanel = vBox;
 		}
 		playerPanel.setStyle("-fx-background-color: " + backgroundColor + ";-fx-border-color: " + borderColor
