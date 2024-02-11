@@ -1,42 +1,34 @@
 package application;
 
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class EventDisplayer {
-	private String title;
-	private String desc;
-	private String[] options;
 
-	// Feel free to change as much as this as you want, the primary goal was to serve as
-	// a graphical foundation for the event popup system.
-	public EventDisplayer(String title, String description, String[] options) {
-		this.title = title;
-		this.desc = description;
-		this.options = options;
-		openPopup(title, desc, options);
+	private Player[] players;
+
+	public EventDisplayer(Player[] players) {
+		this.players = players;
 	}
 
-	private void openPopup(String eventTitle, String eventDesc, String[] options) {
-		Stage eventStage = new Stage();
-		eventStage.initModality(Modality.APPLICATION_MODAL);
-		eventStage.initStyle(StageStyle.UNDECORATED);
+	public BorderPane openEventPopup(Event event, int currentPlayer, MainSceneHandler mainSceneHandler) {
 
 		AnchorPane eventLayout = new AnchorPane();
-		eventLayout.setStyle(
-				"-fx-border-color: #E1005C; -fx-border-width: 18px; -fx-background-color: #F79FC7; -fx-text-fill: white;");
+		String[] colors = { "lightskyblue", "lightgreen", "lightpink", "mediumpurple", "darkblue", "darkgreen",
+				"deeppink", "indigo" };
+		String backgroundColor = colors[currentPlayer];
+		String borderColor = colors[currentPlayer + 4];
+		eventLayout.setStyle("-fx-border-color:" + borderColor + "; -fx-border-width: 9px; -fx-background-color: "
+				+ backgroundColor + "; -fx-text-fill: white;");
 
-		Label titleLabel = new Label(eventTitle);
+		Label titleLabel = new Label(event.getTitle());
 		titleLabel.setStyle("-fx-text-fill: white;");
 		titleLabel.setFont(Font.font("SansSerif", FontWeight.BOLD, 40));
 		AnchorPane.setTopAnchor(titleLabel, 10.0);
@@ -44,7 +36,7 @@ public class EventDisplayer {
 		AnchorPane.setRightAnchor(titleLabel, 10.0);
 		titleLabel.setAlignment(Pos.TOP_CENTER);
 
-		Label descriptionLabel = new Label(eventDesc);
+		Label descriptionLabel = new Label(event.getTextBody());
 		descriptionLabel.setStyle("-fx-text-fill: white;");
 		descriptionLabel.setFont(Font.font("SansSerif", FontWeight.BOLD, 18));
 		descriptionLabel.setPrefWidth(300);
@@ -56,166 +48,91 @@ public class EventDisplayer {
 
 		eventLayout.getChildren().addAll(titleLabel, descriptionLabel);
 
+		Image healthImage = new Image("/health.png", 20, 20, false, false);
+		Image educationImage = new Image("/education.png", 20, 20, false, false);
+		Image goodsImage = new Image("/goods.png", 20, 20, false, false);
+		Image moneyImage = new Image("/money.png", 20, 20, false, false);
+		EventOption[] eventOptions = event.getOptions();
+		boolean[] hasClickedAnOption = { false };
+		int indexShownOptions = 0;
+
 		// For every option passed, create a button
-		for (int i = 0; i < options.length; i++) {
-			// can identify which button is clicked based on text
-			final String buttonText = options[i];
-			Button button = new Button();
-			button.setText(buttonText);
-			button.setPrefSize(155, 60);
-			button.setFont(Font.font("SansSerif", FontWeight.BOLD, 11));
-			button.setStyle(
-					"-fx-border-color: #E1005C, black; -fx-border-width: 12px, 6px; -fx-background-color: #F79FC7; -fx-border-radius: 5px; -fx-text-fill: white; -fx-cursor: hand;");
-			// Education stat changes
-			Label educationLabel = new Label("+10");
-			educationLabel.setStyle("-fx-text-fill: white;");
-			educationLabel.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
-			ImageView educationSymbol = new ImageView("/education.png");
-			educationSymbol.setFitWidth(35);
-			educationSymbol.setFitHeight(35);
+		for (int i = 0; i < eventOptions.length; i++) {
 
-			// Health stat changes
-			Label healthLabel = new Label("-27");
-			healthLabel.setStyle("-fx-text-fill: white;");
-			healthLabel.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
-			ImageView healthSymbol = new ImageView("/health.png");
-			healthSymbol.setFitWidth(20);
-			healthSymbol.setFitHeight(20);
+			if (eventOptions[i].getPlayersVisableTo()[currentPlayer]) {
+				Button optionButton = new Button();
+				optionButton.setText(eventOptions[i].getText());
+				optionButton.setPrefSize(155, 60);
+				optionButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 11));
+				optionButton.setStyle("-fx-border-color:" + borderColor
+						+ ", black; -fx-border-width: 12px, 6px; -fx-background-color: " + backgroundColor
+						+ "; -fx-border-radius: 5px; -fx-text-fill: white; -fx-cursor: hand;");
 
-			// Goods stat changes
-			Label goodsLabel = new Label("+1");
-			goodsLabel.setStyle("-fx-text-fill: white;");
-			goodsLabel.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
-			ImageView goodsSymbol = new ImageView("/goods.png");
-			goodsSymbol.setFitWidth(25);
-			goodsSymbol.setFitHeight(25);
+				double optionButtonTop = (indexShownOptions < 2) ? 325d : 230d;
+				double optionButtonLeft = (indexShownOptions % 2 == 0) ? 225d : 15d;
+				AnchorPane.setTopAnchor(optionButton, optionButtonTop);
+				AnchorPane.setLeftAnchor(optionButton, optionButtonLeft);
 
-			// Money stat changes
-			Label moneyLabel = new Label("-99");
-			moneyLabel.setStyle("-fx-text-fill: white;");
-			moneyLabel.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
-			ImageView moneySymbol = new ImageView("/money.png");
-			moneySymbol.setFitWidth(15);
-			moneySymbol.setFitHeight(15);
+				boolean meetsRequirements = true;
+				for (int j = 0; j < 4; j++) {
+					if (players[currentPlayer].getResources()[j] < eventOptions[i].getRequirements()[j]) {
+						meetsRequirements = false;
+						break;
+					}
+				}
 
-			// Placing each button and stat changes on the screen
-			switch (i) {
-			// first button
-			case 0:
-				AnchorPane.setTopAnchor(button, 230.0);
-				AnchorPane.setLeftAnchor(button, 30.0);
+				int numEffects = 0;
+				for (int j = 0; j < 4; j++) {
+					int effect = eventOptions[i].getEffects()[j];
+					if (effect != 0) {
+						Label resourceLabel = new Label(((effect > 0) ? "+" : "-") + Math.abs(effect));
+						resourceLabel.setStyle((!meetsRequirements) ? "-fx-text-fill: grey;"
+								: (effect > 0) ? "-fx-text-fill: green;" : "-fx-text-fill: red;");
+						resourceLabel.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
+						ImageView resourceLogo = new ImageView((j == 0) ? healthImage
+								: (j == 1) ? educationImage : (j == 2) ? goodsImage : moneyImage);
+						AnchorPane.setTopAnchor(resourceLabel, optionButtonTop + 65);
+						AnchorPane.setLeftAnchor(resourceLabel, optionButtonLeft - 5.0 + (45 * numEffects));
+						AnchorPane.setTopAnchor(resourceLogo, optionButtonTop + 65);
+						AnchorPane.setLeftAnchor(resourceLogo, optionButtonLeft + 16.0 + (45 * numEffects));
+						eventLayout.getChildren().addAll(resourceLabel, resourceLogo);
+						numEffects++;
+					}
+				}
 
-				AnchorPane.setTopAnchor(educationLabel, 295.0);
-				AnchorPane.setLeftAnchor(educationLabel, 10.0);
-				AnchorPane.setTopAnchor(educationSymbol, 285.0);
-				AnchorPane.setLeftAnchor(educationSymbol, 32.0);
+				int[] optionIndex = { i };
+				if (meetsRequirements) {
+					optionButton.setOnAction(e -> {
+						if (!hasClickedAnOption[0] && optionButton.isVisible()) {
+							hasClickedAnOption[0] = true;
+							for (int j = 0; j < 4; j++) {
+								players[currentPlayer].getResources()[j] += eventOptions[optionIndex[0]]
+										.getEffects()[j];
+							}
 
-				AnchorPane.setTopAnchor(healthLabel, 295.0);
-				AnchorPane.setLeftAnchor(healthLabel, 65.0);
-				AnchorPane.setTopAnchor(healthSymbol, 295.0);
-				AnchorPane.setLeftAnchor(healthSymbol, 87.0);
+							if (eventOptions[optionIndex[0]].getObjectiveIndex() != -1) {
+								players[currentPlayer].getObjectives()[eventOptions[optionIndex[0]]
+										.getObjectiveIndex()]++;
+							}
 
-				AnchorPane.setTopAnchor(goodsLabel, 295.0);
-				AnchorPane.setLeftAnchor(goodsLabel, 110.0);
-				AnchorPane.setTopAnchor(goodsSymbol, 292.0);
-				AnchorPane.setLeftAnchor(goodsSymbol, 130.0);
+							if (eventOptions[optionIndex[0]].getEndsEvent()) {
+								mainSceneHandler.landed(-2);
+							} else {
+								mainSceneHandler.switchPlayerUI();
+								mainSceneHandler.landed(mainSceneHandler.getEventIndex());
+							}
+						}
+					});
+				}
 
-				AnchorPane.setTopAnchor(moneyLabel, 295.0);
-				AnchorPane.setLeftAnchor(moneyLabel, 160.0);
-				AnchorPane.setTopAnchor(moneySymbol, 295.0);
-				AnchorPane.setLeftAnchor(moneySymbol, 183.0);
-				break;
-			// second button
-			case 1:
-				AnchorPane.setTopAnchor(button, 230.0);
-				AnchorPane.setLeftAnchor(button, 230.0);
-
-				AnchorPane.setTopAnchor(educationLabel, 295.0);
-				AnchorPane.setLeftAnchor(educationLabel, 210.0);
-				AnchorPane.setTopAnchor(educationSymbol, 285.0);
-				AnchorPane.setLeftAnchor(educationSymbol, 232.0);
-
-				AnchorPane.setTopAnchor(healthLabel, 295.0);
-				AnchorPane.setLeftAnchor(healthLabel, 265.0);
-				AnchorPane.setTopAnchor(healthSymbol, 295.0);
-				AnchorPane.setLeftAnchor(healthSymbol, 287.0);
-
-				AnchorPane.setTopAnchor(goodsLabel, 295.0);
-				AnchorPane.setLeftAnchor(goodsLabel, 310.0);
-				AnchorPane.setTopAnchor(goodsSymbol, 292.0);
-				AnchorPane.setLeftAnchor(goodsSymbol, 330.0);
-
-				AnchorPane.setTopAnchor(moneyLabel, 295.0);
-				AnchorPane.setLeftAnchor(moneyLabel, 360.0);
-				AnchorPane.setTopAnchor(moneySymbol, 295.0);
-				AnchorPane.setLeftAnchor(moneySymbol, 383.0);
-				break;
-
-			// third button
-			case 2:
-				AnchorPane.setTopAnchor(button, 325.0);
-				AnchorPane.setLeftAnchor(button, 30.0);
-
-				AnchorPane.setTopAnchor(educationLabel, 395.0);
-				AnchorPane.setLeftAnchor(educationLabel, 10.0);
-				AnchorPane.setTopAnchor(educationSymbol, 385.0);
-				AnchorPane.setLeftAnchor(educationSymbol, 32.0);
-
-				AnchorPane.setTopAnchor(healthLabel, 395.0);
-				AnchorPane.setLeftAnchor(healthLabel, 65.0);
-				AnchorPane.setTopAnchor(healthSymbol, 395.0);
-				AnchorPane.setLeftAnchor(healthSymbol, 87.0);
-
-				AnchorPane.setTopAnchor(goodsLabel, 395.0);
-				AnchorPane.setLeftAnchor(goodsLabel, 110.0);
-				AnchorPane.setTopAnchor(goodsSymbol, 392.0);
-				AnchorPane.setLeftAnchor(goodsSymbol, 130.0);
-
-				AnchorPane.setTopAnchor(moneyLabel, 395.0);
-				AnchorPane.setLeftAnchor(moneyLabel, 160.0);
-				AnchorPane.setTopAnchor(moneySymbol, 395.0);
-				AnchorPane.setLeftAnchor(moneySymbol, 183.0);
-				break;
-
-			// fourth button
-			case 3:
-				AnchorPane.setTopAnchor(button, 325.0);
-				AnchorPane.setLeftAnchor(button, 230.0);
-
-				AnchorPane.setTopAnchor(educationLabel, 395.0);
-				AnchorPane.setLeftAnchor(educationLabel, 210.0);
-				AnchorPane.setTopAnchor(educationSymbol, 385.0);
-				AnchorPane.setLeftAnchor(educationSymbol, 232.0);
-
-				AnchorPane.setTopAnchor(healthLabel, 395.0);
-				AnchorPane.setLeftAnchor(healthLabel, 265.0);
-				AnchorPane.setTopAnchor(healthSymbol, 395.0);
-				AnchorPane.setLeftAnchor(healthSymbol, 287.0);
-
-				AnchorPane.setTopAnchor(goodsLabel, 395.0);
-				AnchorPane.setLeftAnchor(goodsLabel, 310.0);
-				AnchorPane.setTopAnchor(goodsSymbol, 392.0);
-				AnchorPane.setLeftAnchor(goodsSymbol, 330.0);
-
-				AnchorPane.setTopAnchor(moneyLabel, 395.0);
-				AnchorPane.setLeftAnchor(moneyLabel, 360.0);
-				AnchorPane.setTopAnchor(moneySymbol, 395.0);
-				AnchorPane.setLeftAnchor(moneySymbol, 383.0);
-				break;
-
-			default:
-				break;
+				eventLayout.getChildren().add(optionButton);
+				indexShownOptions++;
 			}
-			eventLayout.getChildren().add(button);
-			eventLayout.getChildren().addAll(educationLabel, healthLabel, goodsLabel, moneyLabel);
-			eventLayout.getChildren().addAll(educationSymbol, healthSymbol, goodsSymbol, moneySymbol);
 		}
 		BorderPane outerLayout = new BorderPane();
-		outerLayout.setStyle("-fx-border-color: black; -fx-border-width: 12px;");
+		outerLayout.setStyle("-fx-border-color: black; -fx-border-width: 6px;");
 		outerLayout.setCenter(eventLayout);
 
-		Scene eventScene = new Scene(outerLayout, 480, 480);
-		eventStage.setScene(eventScene);
-		eventStage.showAndWait();
+		return outerLayout;
 	}
 }

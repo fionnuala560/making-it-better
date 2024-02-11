@@ -1,55 +1,47 @@
 package application;
 
 public class Player {
-	
-	private char playerType; //s = student, p = parent, t = teacher, e = engineer
+
+	private char playerType; // s = student, p = parent, t = teacher, e = engineer
 	private String playerName;
 	private boolean isAIControlled;
-	private int money;
-	private int health;
-	private int education;
-	private int goods;
-	private int score = 0;
-	private static int[] studentStartingRes = {1, 2, 3, 4};
-	private static int[] parentStartingRes = {1, 2, 3, 4};
-	private static int[] teacherStartingRes = {1, 2, 3, 4};
-	private static int[] engineerStartingRes = {1, 2, 3, 4};
-	
+	// indexed: health, education, goods, money
+	private int[] resources = {-1, -1, -1, -1};
+	private int[] objectives = { 0, 0, 0 };
+	private static int[] studentStartingRes = { 100, 10, 30, 0 };
+	private static int[] parentStartingRes = { 100, 40, 50, 30 };
+	private static int[] teacherStartingRes = { 100, 70, 50, 30 };
+	private static int[] engineerStartingRes = { 100, 80, 50, 80 };
+
 	public Player(char playerType, String playerName, boolean isAIControlled) {
 		this.playerType = playerType;
 		this.playerName = playerName;
 		this.isAIControlled = isAIControlled;
-		switch(playerType) {
+		switch (playerType) {
 		case 's':
-			money = studentStartingRes[0]; 
-			health = studentStartingRes[1];
-			education = studentStartingRes[2];
-			goods = studentStartingRes[3];
+			resources[0] = studentStartingRes[0];
+			resources[1] = studentStartingRes[1];
+			resources[2] = studentStartingRes[2];
+			resources[3] = studentStartingRes[3];
 			break;
 		case 'p':
-			money = parentStartingRes[0]; 
-			health = parentStartingRes[1];
-			education = parentStartingRes[2];
-			goods = parentStartingRes[3];
+			resources[0] = parentStartingRes[0];
+			resources[1] = parentStartingRes[1];
+			resources[2] = parentStartingRes[2];
+			resources[3] = parentStartingRes[3];
 			break;
 		case 't':
-			money = teacherStartingRes[0]; 
-			health = teacherStartingRes[1];
-			education = teacherStartingRes[2];
-			goods = teacherStartingRes[3];
+			resources[0] = teacherStartingRes[0];
+			resources[1] = teacherStartingRes[1];
+			resources[2] = teacherStartingRes[2];
+			resources[3] = teacherStartingRes[3];
 			break;
 		case 'e':
-			money = engineerStartingRes[0]; 
-			health = engineerStartingRes[1];
-			education = engineerStartingRes[2];
-			goods = engineerStartingRes[3];
+			resources[0] = engineerStartingRes[0];
+			resources[1] = engineerStartingRes[1];
+			resources[2] = engineerStartingRes[2];
+			resources[3] = engineerStartingRes[3];
 			break;
-		default:
-			money = -1;
-			health = -1;
-			education = -1;
-			goods = -1;
-			
 		}
 	}
 
@@ -64,45 +56,45 @@ public class Player {
 	public boolean isAIControlled() {
 		return isAIControlled;
 	}
-	
+
 	public int getMoney() {
-		return money;
+		return resources[3];
 	}
-	
+
 	public void setMoney(int money) {
-		this.money = money;
+		resources[3] = money;
 	}
-	
+
 	public int getHealth() {
-		return health;
+		return resources[0];
 	}
-	
+
 	public void setHealth(int health) {
-		this.health = health;
+		resources[0] = health;
 	}
-	
+
 	public int getEducation() {
-		return education;
+		return resources[1];
 	}
-	
+
 	public void setEducation(int education) {
-		this.education = education;
+		resources[1] = education;
 	}
-	
+
 	public int getGoods() {
-		return goods;
+		return resources[2];
 	}
-	
+
 	public void setGoods(int goods) {
-		this.goods = goods;
+		resources[2] = goods;
 	}
 	
-	public void setScore(int score) {
-		this.score = score;
+	public int[] getResources() {
+		return resources;
 	}
-	
-	public int getscore() {
-		return score;
+
+	public int[] getObjectives() {
+		return objectives;
 	}
 
 }

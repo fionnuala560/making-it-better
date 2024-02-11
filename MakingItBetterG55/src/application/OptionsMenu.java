@@ -1,6 +1,5 @@
 package application;
 
-import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -8,7 +7,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -16,16 +14,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 
 public class OptionsMenu {
-	private Scene scene;
-	private String font;
 	
-	public OptionsMenu(Scene optionsScene, Scene homeScene, Stage primaryStage) {
+	private Scene scene;
+	private Scene callingScene;
+	private String font = "";
+	
+	public OptionsMenu() {
 		GridPane optionsScreen = new GridPane();
 		optionsScreen.setStyle("-fx-background-image: url('/woodbackground.jpg');");
 		scene = new Scene(optionsScreen, 1200, 800);
@@ -44,7 +41,7 @@ public class OptionsMenu {
 	            optionsScreen.getRowConstraints().add(rowConst);         
 	        }
 
-		font = "SansSerif";
+		font = (font == "") ? "SansSerif" : font;
 	        
 	        //lower banner
 	        Rectangle r1 = new Rectangle();
@@ -69,24 +66,21 @@ public class OptionsMenu {
 	        //back button
 		Button back = new Button("Back");
 		back.setStyle("-fx-cursor: hand; -fx-border-color: #152546; -fx-border-width: 14px; -fx-background-color: #536F7B; -fx-text-fill: white;");
-		//back.setFont(Font.font("SansSerif", FontWeight.BOLD, 40));
 		back.setPrefSize(320, 29);
 		optionsScreen.add(back, 28, 32, 32, 32);
 		back.setOnAction(event -> {
 			Stage tempMain = (Stage) back.getScene().getWindow();
-			tempMain.setScene(homeScene);
+			tempMain.setScene(callingScene);
 		});	
 
 		//colour blind
 		Text cb = new Text("Colourblind Mode");
-		//cb.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
 		cb.setStyle("-fx-fill: white;");
 		optionsScreen.add(cb, 21, 13);
 	
 		MenuButton colours = new MenuButton("Colour Options");
 		colours.setMinSize(400, 62);
 		colours.setStyle("-fx-cursor: hand; -fx-border-color: #152546; -fx-border-width: 4px; -fx-background-color: #536F7B; -fx-text-fill: white;");
-		//colours.setFont(Font.font("SansSerif", FontWeight.BOLD, 28));
 		MenuItem protanopia = new MenuItem("Protanopia (Red-Green)");
 		protanopia.setOnAction(event ->{
 			colours.setText("Protanopia (Red-Green)");
@@ -104,14 +98,12 @@ public class OptionsMenu {
 	
 		//language
 		Text lang = new Text("Language");
-		//lang.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
 		lang.setStyle("-fx-fill: white;");
 		optionsScreen.add(lang, 21, 22);
 		
 		MenuButton languages = new MenuButton("English");
 		languages.setMinSize(400, 62);
 		languages.setStyle("-fx-cursor: hand; -fx-border-color: #152546; -fx-border-width: 4px; -fx-background-color: #536F7B; -fx-text-fill: white;");
-		//languages.setFont(Font.font("SansSerif", FontWeight.BOLD, 28));
 		MenuItem english = new MenuItem("English");
 		english.setOnAction(event ->{
 			languages.setText("English");
@@ -133,22 +125,22 @@ public class OptionsMenu {
 	
 		//fullscreen
 		Text fullscreen = new Text("Full Screen");
-		//fullscreen.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
 		fullscreen.setStyle("-fx-fill: white;");
 		optionsScreen.add(fullscreen, 3, 14);
 		
 		CheckBox fsCheckBox = new CheckBox("");
 		optionsScreen.add(fsCheckBox, 2, 14);
 		fsCheckBox.setOnAction(event ->{
+			Stage tempStage = (Stage) fsCheckBox.getScene().getWindow();
 			if (fsCheckBox.isSelected()) {
-				primaryStage.setFullScreen(true);
-				r1.setWidth(primaryStage.getWidth());
-				r1.setHeight(primaryStage.getHeight() / 40);
-				r2.setWidth(primaryStage.getWidth());
-				r2.setHeight(primaryStage.getHeight()*3 / 8);
+				tempStage.setFullScreen(true);
+				r1.setWidth(tempStage.getWidth());
+				r1.setHeight(tempStage.getHeight() / 40);
+				r2.setWidth(tempStage.getWidth());
+				r2.setHeight(tempStage.getHeight()*3 / 8);
 			}
 			if (!(fsCheckBox.isSelected())) {
-				primaryStage.setFullScreen(false);
+				tempStage.setFullScreen(false);
 				r1.setWidth(1200);
 				r1.setHeight(20);
 				r2.setWidth(1200);
@@ -158,7 +150,6 @@ public class OptionsMenu {
 	
 		//music
 		Text music = new Text("Music");
-		//music.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
 		music.setStyle("-fx-fill: white;");
 		optionsScreen.add(music, 3, 19);
 		
@@ -167,7 +158,6 @@ public class OptionsMenu {
 
 		//volume
 		Text volume = new Text("Volume");
-		///volume.setFont(Font.font("sansSerif", FontWeight.BOLD, 32));
 		volume.setStyle("-fx-fill: white;");
 		optionsScreen.add(volume, 2, 24);
 		
@@ -177,7 +167,6 @@ public class OptionsMenu {
 
 		//fonts
 		Text fonts = new Text("Fonts");
-		//fonts.setFont(Font.font(font, FontWeight.BOLD, 32));
 		fonts.setStyle("-fx-fill: white;");
 		optionsScreen.add(fonts, 2, 30);
 		
@@ -209,12 +198,13 @@ public class OptionsMenu {
 		
 		setFont(font, title, back, cb, colours, lang, languages, fullscreen, fsCheckBox, music, volume, fonts, fontMenu);
 	}
-
-	public Scene getOptionsMenu() {
+	
+	public Scene getOptionsMenu(Scene callingScene) {
+		this.callingScene = callingScene;
 		return scene;
 	}
 
-	public void setFont(String font, Text title, Button back, Text cb, MenuButton colours, Text lang, MenuButton languages, Text fullscreen, CheckBox fsCheckBox, Text music, Text volume, Text fonts, MenuButton fontMenu) {
+	private void setFont(String font, Text title, Button back, Text cb, MenuButton colours, Text lang, MenuButton languages, Text fullscreen, CheckBox fsCheckBox, Text music, Text volume, Text fonts, MenuButton fontMenu) {
 		title.setFont(Font.font(font, FontWeight.BOLD, 64));
 		back.setFont(Font.font(font, FontWeight.BOLD, 40));
 		cb.setFont(Font.font(font, FontWeight.BOLD, 32));
