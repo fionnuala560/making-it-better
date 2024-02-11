@@ -8,10 +8,10 @@ public class Player {
 	// indexed: health, education, goods, money
 	private int[] resources = {-1, -1, -1, -1};
 	private int[] objectives = { 0, 0, 0 };
-	private static int[] studentStartingRes = { 1, 2, 3, 4 };
-	private static int[] parentStartingRes = { 1, 2, 3, 4 };
-	private static int[] teacherStartingRes = { 1, 2, 3, 4 };
-	private static int[] engineerStartingRes = { 1, 2, 3, 4 };
+	private static int[] studentStartingRes = { 100, 10, 30, 0 };
+	private static int[] parentStartingRes = { 100, 40, 50, 30 };
+	private static int[] teacherStartingRes = { 100, 70, 50, 30 };
+	private static int[] engineerStartingRes = { 100, 80, 50, 80 };
 
 	public Player(char playerType, String playerName, boolean isAIControlled) {
 		this.playerType = playerType;

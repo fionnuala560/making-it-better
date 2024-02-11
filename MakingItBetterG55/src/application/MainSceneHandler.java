@@ -29,6 +29,7 @@ public class MainSceneHandler {
 	private int movement = 0;
 	private boolean canMove = false;
 	private boolean canRoll = true;
+	private int eventIndex = -1;
 
 	private BoardHandler boardHandler;
 	private OptionsMenu optionsMenu;
@@ -41,13 +42,73 @@ public class MainSceneHandler {
 	private EventDisplayer eventDisplayer;
 	private GridPane grid = new GridPane();
 
-	private Event[] events = new Event[] { new Event("title", "body Body",
-			new EventOption[] {
-					new EventOption("option", new int[] { 1, 2, 3, -4 }, new int[] { 1, 2, 3, 4 }),
-					new EventOption("option", new int[] { 1, 2, 3, -4 }, new int[] { 1, 2, 3, 4 }),
-					new EventOption("option", new int[] { 1, 2, 3, -4 }, new int[] { 1, 2, 3, 4 })
-					},
-			true), };
+	private Event[] events = new Event[] { new Event("Twisted Ankle", "You've stepped in a small hole covered by grass"
+			+ " and hurt your ankle. It should heal on it's own soon, but going forward it's probably best to stick to"
+			+ " the paths when you can.",
+			new EventOption[] { new EventOption("Ouch!", new int[] { -10, 0, 0, 0 }, new int[] { 0, 0, 0, 0 }) },
+			false),
+
+			new Event("Lucky Penny",
+					"You've spotted a small glimer on the path. You reach down to investigate and discover"
+							+ " it's a coin! Looks like luck's on your side.",
+					new EventOption[] { new EventOption("Nice!", new int[] { 0, 0, 0, 5 }, new int[] { 0, 0, 0, 0 }) },
+					false),
+
+			new Event("Sticky Situation",
+					"You're happy to see that there's more sap than you were expecting ready to be collected, but less"
+							+ " excited to find out tonight's weather would make it a difficult and dangerous job.",
+					new EventOption[] {
+							new EventOption("Come back another\nday", new int[] { 0, 0, 0, 0 },
+									new int[] { 0, 0, 0, 0 }),
+							new EventOption("Better not stay\ntoo long", new int[] { -5, 0, 20, 0 },
+									new int[] { 35, 0, 0, 0 }),
+							new EventOption("Collect it ALL!", new int[] { -20, -2, 45, 0 }, new int[] { 40, 0, 0, 0 }),
+							new EventOption("Collect it carefully", new int[] { -10, 0, 45, 0 },
+									new int[] { 40, 50, 0, 0 }) },
+					false),
+
+			new Event("Lousy Yield",
+					"After lots of work and waiting, it's finally time to harvest. Maybe it was something about the"
+							+ " weather or in the soil, or just plain bad luck, but either way you can't help but feel a bit disapointed in"
+							+ " your yield.",
+					new EventOption[] {
+							new EventOption("At least it's something", new int[] { 0, 0, 10, 0 },
+									new int[] { 0, 0, 0, 0 }),
+							new EventOption("Make the most of it", new int[] { 0, 0, 20, 0 },
+									new int[] { 0, 60, 0, 0 }), },
+					false),
+
+			new Event("Adequate Yield",
+					"After lots of work and waiting, it's finally time to harvest. It was an average crop nothing to complain"
+							+ " or brag about, and you feel decidely content with your yield.",
+					new EventOption[] {
+							new EventOption("It's honest work", new int[] { 0, 0, 30, 0 }, new int[] { 0, 0, 0, 0 }), },
+					false),
+
+			new Event("Mighty Yield",
+					"After lots of work and waiting, it's finally time to harvest. It must be something to do with how"
+							+ " hard you worked or well you planned, or just plain superiority over your peers, but either way you can't"
+							+ " help but feel proud of your yield.",
+					new EventOption[] {
+							new EventOption("Hard work pays off", new int[] { 0, 0, 50, 0 }, new int[] { 0, 0, 0, 0 }),
+							new EventOption("I'm the best!", new int[] { 0, -1, 55, 0 }, new int[] { 0, 0, 0, 0 }) },
+					false),
+
+			new Event("Shop", "A place to sell your wares and purchase products with your profits.",
+					new EventOption[] {
+							new EventOption("Sell Goods", new int[] { 0, 0, -10, 5 }, new int[] { 0, 0, 10, 0 },
+									new boolean[] { true, true, true, true }, -1, false),
+							new EventOption("Buy Medicine", new int[] { 30, 0, 0, -10 }, new int[] { 0, 0, 0, 10 },
+									new boolean[] { true, true, true, true }, -1, false),
+							new EventOption("Buy Raspberry Pi", new int[] { 0, 0, 0, -60 }, new int[] { 0, 0, 0, 60 },
+									new boolean[] { true, false, false, false }, 1, false),
+							new EventOption("Buy Books", new int[] { 0, 0, 0, -20 }, new int[] { 0, 0, 0, 20 },
+									new boolean[] { false, true, false, false }, -1, false),
+							new EventOption("Buy Motorcycle", new int[] { 0, 0, 0, -60 }, new int[] { 0, 0, 0, 60 },
+									new boolean[] { false, false, true, false }, 1, false), },
+					true),
+
+	};
 
 	public MainSceneHandler(OptionsMenu optionsMenu, Player[] players) {
 		this.players = players;
@@ -56,19 +117,9 @@ public class MainSceneHandler {
 	}
 
 	public void handleTurn() {
-		switch (turnNumber % 4) {
-		case 0:
-			break;
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		}
 		turnNumber++;
 		boardHandler.moveToNextPlayer(turnNumber % 4);
-		switchPlayerUI(root);
+		switchPlayerUI();
 	}
 
 	public void landedNextTurn() {
@@ -87,7 +138,8 @@ public class MainSceneHandler {
 		switch (eventIndex) {
 		case -2:
 			Tools.linearFadeOut(eventPane, .5d);
-			switchPlayerUI(root);
+			this.eventIndex = -1;
+			switchPlayerUI();
 			// falls through
 		case -1:
 			if (movement > 0) {
@@ -101,10 +153,17 @@ public class MainSceneHandler {
 			eventPane = eventDisplayer.openEventPopup(events[eventIndex], turnNumber % 4, this);
 			eventPane.setTranslateX(275);
 			eventPane.setTranslateY(100);
-			Tools.linearFadeIn(eventPane, .5d);
+			if(this.eventIndex != eventIndex) {
+				Tools.linearFadeIn(eventPane, .5d);
+			}
+			this.eventIndex = eventIndex;
 			grid.add(eventPane, 0, 0);
 			break;
 		}
+	}
+	
+	public int getEventIndex() {
+		return eventIndex;
 	}
 
 	public Scene makeMainScene() {
@@ -324,7 +383,7 @@ public class MainSceneHandler {
 		return mainScene;
 	}
 
-	private void switchPlayerUI(BorderPane root) {
+	public void switchPlayerUI() {
 		Node newBottomPlayerBox = createPlayerPanel(turnNumber % 4);
 		Node newRightPlayerBox = createPlayerPanel((turnNumber + 1) % 4);
 		Node newTopPlayerBox = createPlayerPanel((turnNumber + 2) % 4);
@@ -372,11 +431,11 @@ public class MainSceneHandler {
 		String borderColor = colors[playerIndex + 4];
 
 		// creates a label for each player resource
-		Label nameLabel = new Label(currentPlayer.getPlayerName());
-		Label healthLabel = new Label(Integer.toString(currentPlayer.getHealth()));
-		Label educationLabel = new Label(Integer.toString(currentPlayer.getEducation()));
-		Label goodsLabel = new Label(Integer.toString(currentPlayer.getGoods()));
-		Label moneyLabel = new Label(Integer.toString(currentPlayer.getMoney()));
+		Label nameLabel = new Label(currentPlayer.getPlayerName() + " ");
+		Label healthLabel = new Label(Integer.toString(currentPlayer.getHealth()) + " ");
+		Label educationLabel = new Label(Integer.toString(currentPlayer.getEducation()) + " ");
+		Label goodsLabel = new Label(Integer.toString(currentPlayer.getGoods()) + " ");
+		Label moneyLabel = new Label(Integer.toString(currentPlayer.getMoney()) + " ");
 
 		Node playerPanel;
 

@@ -7,6 +7,7 @@ public class EventOption {
 	private int[] requirements = {-1, -1, -1, -1};
 	private boolean[] playersVisableTo = {true, true, true, true};
 	private int objectiveIndex = -1;
+	private boolean endsEvent = true;
 	
 	public EventOption (String text, int[] effects, int[] requirements) {
 		this.text = text;
@@ -22,6 +23,11 @@ public class EventOption {
 	public EventOption(String text, int[] effects, int[] requirements, boolean[] playersVisableTo, int objectiveIndex) {
 		this(text, effects, requirements, playersVisableTo);
 		this.objectiveIndex = objectiveIndex;
+	}
+	
+	public EventOption(String text, int[] effects, int[] requirements, boolean[] playersVisableTo, int objectiveIndex, boolean endsEvent) {
+		this(text, effects, requirements, playersVisableTo, objectiveIndex);
+		this.endsEvent = endsEvent;
 	}
 
 	public String getText() {
@@ -42,6 +48,10 @@ public class EventOption {
 
 	public int getObjectiveIndex() {
 		return objectiveIndex;
+	}
+	
+	public boolean getEndsEvent() {
+		return endsEvent;
 	}
 	
 }

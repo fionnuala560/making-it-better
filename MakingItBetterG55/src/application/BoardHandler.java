@@ -228,25 +228,45 @@ public class BoardHandler {
 			}
 
 			if (willHit) {
+				double randomValue = Math.random();
 				switch ((int) nodeData[6]) {
 				case 0:
 					return -1;
 				case 1:
 					changeInMovement = 1;
+					if(randomValue > .8) {
+						eventIndex = 0;
+					}
 					break;
 				case 2:
 					if (movement >= 2) {
 						changeInMovement = 2;
+						if(randomValue > .80) {
+							eventIndex = 2;
+						}
 					} else {
 						return -1;
 					}
 					break;
 				case 3:
 					changeInMovement = 1;
+					if(randomValue > .95) {
+						eventIndex = 1;
+					}
+					break;
+				case 4:
+					changeInMovement = 1;
+					if(randomValue > .8) {
+						eventIndex = 3;
+					} else if (randomValue > .2){
+						eventIndex = 4;
+					} else {
+						eventIndex = 5;
+					}
 					break;
 				case 5:
 					changeInMovement = 1;
-					eventIndex = 0;
+					eventIndex = 6;
 					break;
 				case 69:
 					return -1;
