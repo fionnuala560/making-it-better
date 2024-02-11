@@ -39,6 +39,15 @@ public class MainSceneHandler {
 	private Player[] players;
 	private BorderPane eventPane;
 	private EventDisplayer eventDisplayer;
+	private GridPane grid = new GridPane();
+
+	private Event[] events = new Event[] { new Event("title", "body Body",
+			new EventOption[] {
+					new EventOption("option", new int[] { 1, 2, 3, -4 }, new int[] { 1, 2, 3, 4 }),
+					new EventOption("option", new int[] { 1, 2, 3, -4 }, new int[] { 1, 2, 3, 4 }),
+					new EventOption("option", new int[] { 1, 2, 3, -4 }, new int[] { 1, 2, 3, 4 })
+					},
+			true), };
 
 	public MainSceneHandler(OptionsMenu optionsMenu, Player[] players) {
 		this.players = players;
@@ -47,9 +56,6 @@ public class MainSceneHandler {
 	}
 
 	public void handleTurn() {
-		if (turnNumber > 0) {
-			boardHandler.moveToNextPlayer(turnNumber % 4);
-		}
 		switch (turnNumber % 4) {
 		case 0:
 			break;
@@ -61,6 +67,8 @@ public class MainSceneHandler {
 			break;
 		}
 		turnNumber++;
+		boardHandler.moveToNextPlayer(turnNumber % 4);
+		switchPlayerUI(root);
 	}
 
 	public void landedNextTurn() {
@@ -72,18 +80,36 @@ public class MainSceneHandler {
 	}
 
 	public void landed() {
-		if (movement > 0) {
-			this.canMove = true;
-		} else {
-			switchPlayerUI(players, root);
-			handleTurn();
+		landed(-1);
+	}
+
+	public void landed(int eventIndex) {
+		switch (eventIndex) {
+		case -2:
+			Tools.linearFadeOut(eventPane, .5d);
+			switchPlayerUI(root);
+			// falls through
+		case -1:
+			if (movement > 0) {
+				this.canMove = true;
+			} else {
+				handleTurn();
+			}
+			break;
+		default:
+			grid.getChildren().remove(eventPane);
+			eventPane = eventDisplayer.openEventPopup(events[eventIndex], turnNumber % 4, this);
+			eventPane.setTranslateX(275);
+			eventPane.setTranslateY(100);
+			Tools.linearFadeIn(eventPane, .5d);
+			grid.add(eventPane, 0, 0);
+			break;
 		}
 	}
 
 	public Scene makeMainScene() {
 		root = new BorderPane();
 		root.setStyle("-fx-background-image: url('/woodbackground.jpg');");
-		GridPane grid = new GridPane();
 		root.setCenter(grid);
 		Scene mainScene = new Scene(root, 1200, 800);
 		mainScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -279,27 +305,26 @@ public class MainSceneHandler {
 		formatPlayerPanel(topPlayerBox, 2);
 		formatPlayerPanel(leftPlayerBox, 3);
 
+		eventPane = eventDisplayer.openEventPopup(events[0], turnNumber % 4, this);
+		eventPane.setTranslateX(275);
+		eventPane.setTranslateY(100);
+		grid.add(eventPane, 0, 0);
+		eventPane.setVisible(false);
+
 		ImageView settingsButton = new ImageView(new Image("/setting.png", 64, 64, false, false));
 		settingsButton.setStyle("-fx-cursor: hand;");
 		settingsButton.setTranslateX(-50);
-		settingsButton.setTranslateY(550);
-		grid.add(settingsButton, 0, 0);
+		settingsButton.setTranslateY(150);
+		grid.add(settingsButton, 0, 1);
 		settingsButton.setOnMouseClicked(e -> {
 			Stage tempMain = (Stage) settingsButton.getScene().getWindow();
 			tempMain.setScene(optionsMenu.getOptionsMenu(settingsButton.getScene()));
 		});
-		
-		eventPane = eventDisplayer.openEventPopup( new Event("title", "body Body", new EventOption[]{
-				new EventOption("option", new int[] {1, 2, 3, -4}, new int [] {1,2,3,4}),
-				new EventOption("option", new int[] {1, 2, 3, -4}, new int [] {1,2,3,4}),
-				new EventOption("option", new int[] {1, 2, 3, -4}, new int [] {1,2,3,4})
-				}, true), turnNumber % 4);
-		grid.add(eventPane, 0, 0);
 
 		return mainScene;
 	}
 
-	private void switchPlayerUI(Player[] allPlayers, BorderPane root) {
+	private void switchPlayerUI(BorderPane root) {
 		Node newBottomPlayerBox = createPlayerPanel(turnNumber % 4);
 		Node newRightPlayerBox = createPlayerPanel((turnNumber + 1) % 4);
 		Node newTopPlayerBox = createPlayerPanel((turnNumber + 2) % 4);
@@ -341,7 +366,8 @@ public class MainSceneHandler {
 	private Node createPlayerPanel(int playerIndex) {
 
 		Player currentPlayer = players[playerIndex];
-		String[] colors = {"lightskyblue", "lightgreen", "lightpink", "mediumpurple", "darkblue", "darkgreen", "deeppink", "indigo"};
+		String[] colors = { "lightskyblue", "lightgreen", "lightpink", "mediumpurple", "darkblue", "darkgreen",
+				"deeppink", "indigo" };
 		String backgroundColor = colors[playerIndex];
 		String borderColor = colors[playerIndex + 4];
 

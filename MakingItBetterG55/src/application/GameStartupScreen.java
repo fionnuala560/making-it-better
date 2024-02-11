@@ -392,7 +392,6 @@ public class GameStartupScreen {
 			MainSceneHandler mainSceneHandler = new MainSceneHandler(optionsMenu, players);
 			Scene mainScene = mainSceneHandler.makeMainScene();
 			tempStage.setScene(mainScene);
-			mainSceneHandler.handleTurn();
 		});
 	}
 

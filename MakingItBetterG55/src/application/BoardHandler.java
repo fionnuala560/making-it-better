@@ -30,7 +30,7 @@ public class BoardHandler {
 		this.mainSceneHandler = mainSceneHandler;
 	}
 
-	private void animateSquareBallMovement(Pane ball, int direction) {
+	private void animateSquareBallMovement(Pane ball, int direction, int eventIndex) {
 		// direction 0 = left; 1 = up; 2 = right; 3 = down;
 		AnimationTimer animator = new AnimationTimer() {
 
@@ -55,7 +55,7 @@ public class BoardHandler {
 					shouldMove += ticks;
 				} else {
 					shouldMove = 0;
-					mainSceneHandler.landed();
+					mainSceneHandler.landed(eventIndex);
 					roundAllCoords();
 					this.stop();
 				}
@@ -199,6 +199,7 @@ public class BoardHandler {
 	public int tryToMove(Pane ball, int direction, int movement) {
 
 		int changeInMovement = 0;
+		int eventIndex = -1;
 		ImageView currentPlayerIV = null;
 		for (int i = 0; i < 4; i++) {
 			if (((float[]) playerImageViews[i].getUserData())[7] == 1) {
@@ -243,6 +244,10 @@ public class BoardHandler {
 				case 3:
 					changeInMovement = 1;
 					break;
+				case 5:
+					changeInMovement = 1;
+					eventIndex = 0;
+					break;
 				case 69:
 					return -1;
 				default:
@@ -251,7 +256,7 @@ public class BoardHandler {
 			}
 		}
 
-		animateSquareBallMovement(ball, direction);
+		animateSquareBallMovement(ball, direction, eventIndex);
 		return changeInMovement;
 	}
 

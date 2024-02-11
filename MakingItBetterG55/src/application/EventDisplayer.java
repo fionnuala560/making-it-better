@@ -18,7 +18,7 @@ public class EventDisplayer {
 		this.players = players;
 	}
 
-	public BorderPane openEventPopup(Event event, int currentPlayer) {
+	public BorderPane openEventPopup(Event event, int currentPlayer, MainSceneHandler mainSceneHandler) {
 
 		AnchorPane eventLayout = new AnchorPane();
 		eventLayout.setStyle(
@@ -49,6 +49,7 @@ public class EventDisplayer {
 		Image goodsImage = new Image("/goods.png", 20, 20, false, false);
 		Image moneyImage = new Image("/money.png", 20, 20, false, false);
 		EventOption[] eventOptions = event.getOptions();
+		boolean[] hasClickedAnOption = {false};
 		int indexShownOptions = 0;
 		
 		// For every option passed, create a button
@@ -67,12 +68,20 @@ public class EventDisplayer {
 			AnchorPane.setTopAnchor(optionButton, optionButtonTop);
 			AnchorPane.setLeftAnchor(optionButton, optionButtonLeft);
 			
+			boolean meetsRequirements = true;
+			for (int j = 0; j < 4; j++) {
+				if(players[currentPlayer].getResources()[j] < eventOptions[i].getRequirements()[j]) {
+					meetsRequirements = false;
+					break;
+				}
+			}
+			
 			int numEffects = 0;
 			for(int j = 0; j < 4; j++) {
 				int effect = eventOptions[i].getEffects()[j];
 				if(effect != 0) {
 					Label resourceLabel = new Label(((effect > 0) ? "+" : "-") + Math.abs(effect));
-					resourceLabel.setStyle( (effect > 0) ? "-fx-text-fill: green;" : "-fx-text-fill: red;");
+					resourceLabel.setStyle( (!meetsRequirements) ? "-fx-text-fill: grey;" : (effect > 0) ? "-fx-text-fill: green;" : "-fx-text-fill: red;");
 					resourceLabel.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
 					ImageView resourceLogo = new ImageView((j == 0) ? healthImage : (j == 1) ? educationImage : (j == 2) ? goodsImage : moneyImage);
 					AnchorPane.setTopAnchor(resourceLabel, optionButtonTop + 65);
@@ -83,6 +92,20 @@ public class EventDisplayer {
 					numEffects++;
 				}
 			}
+			
+			int[] optionIndex = {i};
+			if(meetsRequirements) {
+				optionButton.setOnAction(e -> {
+					if (!hasClickedAnOption[0] && optionButton.isVisible()) {
+						hasClickedAnOption[0] = true;
+						for(int j = 0; j < 4; j++) {
+							players[currentPlayer].getResources()[j] += eventOptions[optionIndex[0]].getEffects()[j];
+						}
+						mainSceneHandler.landed(-2);
+					}
+				});
+			}
+			
 			eventLayout.getChildren().add(optionButton);
 			indexShownOptions++;
 			}
