@@ -1,9 +1,14 @@
 package application;
 
+import java.util.ArrayList;
+
 import javafx.animation.AnimationTimer;
 import javafx.scene.Node;
 
 public abstract class Tools {
+	
+	public static ArrayList<Node> nodesAnimating = new ArrayList<Node>();
+	public static ArrayList<AnimationTimer> activeAnimations = new ArrayList<AnimationTimer>();
 	
 	public static void linearFadeIn(Node n, double fadeSeconds) {
 		linearFade(n, fadeSeconds, true);
@@ -15,13 +20,24 @@ public abstract class Tools {
 
 	private static void linearFade(Node n, double fadeSeconds, boolean isFadeIn) {
 		
-		AnimationTimer fadeInAnimation = new AnimationTimer() {
+		AnimationTimer fadeAnimation = new AnimationTimer() {
 			private long lastUpdate;
 			double scaler;
 
 			@Override
 			public void start() {
-				scaler = 0;
+				
+				int nodeIndex = nodesAnimating.indexOf(n);
+				if(nodeIndex != -1) {
+					scaler = Double.parseDouble(activeAnimations.get(nodeIndex).toString());
+					activeAnimations.get(nodeIndex).stop();
+				} else {
+					scaler = 0;
+				}
+				nodesAnimating.add(n);
+				nodeIndex = nodesAnimating.indexOf(n);
+				activeAnimations.add(nodeIndex, this);
+				
 				lastUpdate = System.nanoTime();
 				if(isFadeIn) {
 					n.setVisible(true);
@@ -30,6 +46,11 @@ public abstract class Tools {
 					n.setOpacity(1);
 				}
 				super.start();
+			}
+			
+			@Override
+			public String toString() {
+				return Double.toString(scaler);
 			}
 
 			@Override
@@ -52,10 +73,13 @@ public abstract class Tools {
 				if(!isFadeIn) {
 					n.setVisible(false);
 				}
+				int nodeIndex = nodesAnimating.indexOf(n);
+				activeAnimations.remove(nodeIndex);
+				nodesAnimating.remove(nodeIndex);
 				super.stop();
 			}
 		};
-		fadeInAnimation.start();
+		fadeAnimation.start();
 	}
 	
 	
