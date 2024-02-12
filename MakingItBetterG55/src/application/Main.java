@@ -21,12 +21,6 @@ public class Main extends Application {
 			GridPane homeScreen = new GridPane();
 			homeScreen.setStyle("-fx-background-image: url('/woodbackground.jpg');");
 			Scene homeScene = new Scene(homeScreen, 1200, 800);
-			
-			MainSceneHandler mainSceneHandler = new MainSceneHandler();
-			Scene mainScene = mainSceneHandler.makeMainScene();
-			
-			GameStartupScreen gSS = new GameStartupScreen(mainScene, homeScene);
-			Scene gSSScene = gSS.getGameStartupScreen();
 
 			EpilogueScreen epilogueScreen = new EpilogueScreen(homeScene);
 			Scene epScene = epilogueScreen.getEpilogueScene();
@@ -34,8 +28,10 @@ public class Main extends Application {
 			GridPane root = new GridPane();
 			Scene optionsScene = new Scene(root, 1200, 800);
 			optionsScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			OptionsMenu om = new OptionsMenu(mainScene, homeScene, primaryStage);
-			Scene oMScene = om.getOptionsMenu();
+			OptionsMenu om = new OptionsMenu();
+			
+			GameStartupScreen gSS = new GameStartupScreen(homeScene, om);
+			Scene gSSScene = gSS.getGameStartupScreen();
 
 			homeScreen.setGridLinesVisible(false);
 	        final int numCols = 40;
@@ -77,10 +73,12 @@ public class Main extends Application {
 			settingsWheel.setFitWidth(100);
 			settingsWheel.setFitHeight(100);
 
-			Button settings = new Button("");
-			settings.setGraphic(settingsWheel);
-			settings.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
-			settings.setOnAction(event -> {
+			Button settingsButton = new Button("");
+			settingsButton.setGraphic(settingsWheel);
+			settingsButton.setStyle("-fx-cursor: hand;");
+			settingsButton.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
+			settingsButton.setOnAction(event -> {
+				Scene oMScene = om.getOptionsMenu(homeScene);
 				primaryStage.setScene(oMScene);
 			});
 
@@ -96,7 +94,7 @@ public class Main extends Application {
 
 
 
-			homeScreen.add(settings, 1, 32);
+			homeScreen.add(settingsButton, 1, 32);
 
 			homeScreen.add(title, 8, 0, 40, 20);
 			homeScreen.add(playButton, 14, 10, 40, 20);

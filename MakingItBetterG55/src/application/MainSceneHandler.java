@@ -1,9 +1,10 @@
 package application;
 
 import javafx.animation.AnimationTimer;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.*;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,12 +12,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 
 public class MainSceneHandler {
 
@@ -24,27 +29,97 @@ public class MainSceneHandler {
 	private int movement = 0;
 	private boolean canMove = false;
 	private boolean canRoll = true;
+	private int eventIndex = -1;
+
 	private BoardHandler boardHandler;
+	private OptionsMenu optionsMenu;
 	private ImageView dice = new ImageView();
+	private BorderPane root;
 	private Text diceText = new Text("Click To Roll!");
 	private Button endTurnButton = new Button("End Turn");
-	int[] currentPlayerIndex = {0};
+	private Player[] players;
+	private BorderPane eventPane;
+	private EventDisplayer eventDisplayer;
+	private GridPane grid = new GridPane();
+
+	private Event[] events = new Event[] { new Event("Twisted Ankle", "You've stepped in a small hole covered by grass"
+			+ " and hurt your ankle. It should heal on it's own soon, but going forward it's probably best to stick to"
+			+ " the paths when you can.",
+			new EventOption[] { new EventOption("Ouch!", new int[] { -10, 0, 0, 0 }, new int[] { 0, 0, 0, 0 }) },
+			false),
+
+			new Event("Lucky Penny",
+					"You've spotted a small glimer on the path. You reach down to investigate and discover"
+							+ " it's a coin! Looks like luck's on your side.",
+					new EventOption[] { new EventOption("Nice!", new int[] { 0, 0, 0, 5 }, new int[] { 0, 0, 0, 0 }) },
+					false),
+
+			new Event("Sticky Situation",
+					"You're happy to see that there's more sap than you were expecting ready to be collected, but less"
+							+ " excited to find out tonight's weather would make it a difficult and dangerous job.",
+					new EventOption[] {
+							new EventOption("Come back another\nday", new int[] { 0, 0, 0, 0 },
+									new int[] { 0, 0, 0, 0 }),
+							new EventOption("Better not stay\ntoo long", new int[] { -5, 0, 20, 0 },
+									new int[] { 35, 0, 0, 0 }),
+							new EventOption("Collect it ALL!", new int[] { -20, -2, 45, 0 }, new int[] { 40, 0, 0, 0 }),
+							new EventOption("Collect it carefully", new int[] { -10, 0, 45, 0 },
+									new int[] { 40, 50, 0, 0 }) },
+					false),
+
+			new Event("Lousy Yield",
+					"After lots of work and waiting, it's finally time to harvest. Maybe it was something about the"
+							+ " weather or in the soil, or just plain bad luck, but either way you can't help but feel a bit disapointed in"
+							+ " your yield.",
+					new EventOption[] {
+							new EventOption("At least it's something", new int[] { 0, 0, 10, 0 },
+									new int[] { 0, 0, 0, 0 }),
+							new EventOption("Make the most of it", new int[] { 0, 0, 20, 0 },
+									new int[] { 0, 60, 0, 0 }), },
+					false),
+
+			new Event("Adequate Yield",
+					"After lots of work and waiting, it's finally time to harvest. It was an average crop nothing to complain"
+							+ " or brag about, and you feel decidely content with your yield.",
+					new EventOption[] {
+							new EventOption("It's honest work", new int[] { 0, 0, 30, 0 }, new int[] { 0, 0, 0, 0 }), },
+					false),
+
+			new Event("Mighty Yield",
+					"After lots of work and waiting, it's finally time to harvest. It must be something to do with how"
+							+ " hard you worked or well you planned, or just plain superiority over your peers, but either way you can't"
+							+ " help but feel proud of your yield.",
+					new EventOption[] {
+							new EventOption("Hard work pays off", new int[] { 0, 0, 50, 0 }, new int[] { 0, 0, 0, 0 }),
+							new EventOption("I'm the best!", new int[] { 0, -1, 55, 0 }, new int[] { 0, 0, 0, 0 }) },
+					false),
+
+			new Event("Shop", "A place to sell your wares and purchase products with your profits.",
+					new EventOption[] {
+							new EventOption("Sell Goods", new int[] { 0, 0, -10, 5 }, new int[] { 0, 0, 10, 0 },
+									new boolean[] { true, true, true, true }, -1, false),
+							new EventOption("Buy Medicine", new int[] { 30, 0, 0, -10 }, new int[] { 0, 0, 0, 10 },
+									new boolean[] { true, true, true, true }, -1, false),
+							new EventOption("Buy Raspberry Pi", new int[] { 0, 0, 0, -60 }, new int[] { 0, 0, 0, 60 },
+									new boolean[] { true, false, false, false }, 1, false),
+							new EventOption("Buy Books", new int[] { 0, 0, 0, -20 }, new int[] { 0, 0, 0, 20 },
+									new boolean[] { false, true, false, false }, -1, false),
+							new EventOption("Buy Motorcycle", new int[] { 0, 0, 0, -60 }, new int[] { 0, 0, 0, 60 },
+									new boolean[] { false, false, true, false }, 1, false), },
+					true),
+
+	};
+
+	public MainSceneHandler(OptionsMenu optionsMenu, Player[] players) {
+		this.players = players;
+		this.optionsMenu = optionsMenu;
+		eventDisplayer = new EventDisplayer(players);
+	}
 
 	public void handleTurn() {
-		if (turnNumber > 0) {
-			boardHandler.moveToNextPlayer(turnNumber % 4);
-		}
-		switch (turnNumber % 4) {
-		case 0:
-			break;
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		}
 		turnNumber++;
+		boardHandler.moveToNextPlayer(turnNumber % 4);
+		switchPlayerUI();
 	}
 
 	public void landedNextTurn() {
@@ -56,25 +131,53 @@ public class MainSceneHandler {
 	}
 
 	public void landed() {
-		if (movement > 0) {
-			this.canMove = true;
-		} else {
-			handleTurn();
+		landed(-1);
+	}
+
+	public void landed(int eventIndex) {
+		switch (eventIndex) {
+		case -2:
+			Tools.linearFadeOut(eventPane, .5d);
+			this.eventIndex = -1;
+			switchPlayerUI();
+			// falls through
+		case -1:
+			if (movement > 0) {
+				this.canMove = true;
+			} else {
+				handleTurn();
+			}
+			break;
+		default:
+			grid.getChildren().remove(eventPane);
+			eventPane = eventDisplayer.openEventPopup(events[eventIndex], turnNumber % 4, this);
+			eventPane.setTranslateX(275);
+			eventPane.setTranslateY(100);
+			if(this.eventIndex != eventIndex) {
+				Tools.linearFadeIn(eventPane, .5d);
+			}
+			this.eventIndex = eventIndex;
+			grid.add(eventPane, 0, 0);
+			break;
 		}
+	}
+	
+	public int getEventIndex() {
+		return eventIndex;
 	}
 
 	public Scene makeMainScene() {
-		BorderPane root  = new BorderPane();
-		GridPane grid = new GridPane();
+		root = new BorderPane();
+		root.setStyle("-fx-background-image: url('/woodbackground.jpg');");
 		root.setCenter(grid);
 		Scene mainScene = new Scene(root, 1200, 800);
 		mainScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 		boardHandler = new BoardHandler(this);
-		Pane board = boardHandler.makeSquareBallGroup(150);
+		Pane board = boardHandler.makeSquareBallGroup(165);
 		grid.add(board, 0, 0);
 		board.setTranslateX(500);
-		board.setTranslateY(300);
+		board.setTranslateY(320);
 
 		diceText.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 
@@ -101,7 +204,7 @@ public class MainSceneHandler {
 			}
 		});
 
-		double originalBarX = 950;
+		double originalBarX = 850;
 		double diceX = 850;
 		double diceY = 250;
 
@@ -132,13 +235,13 @@ public class MainSceneHandler {
 
 			@Override
 			public void handle(long now) {
-				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
-				if ((diceBarScaler[0] + elaspedSeconds) > 1) {
+				double elapsedSeconds = (now - lastUpdate) / 1_000_000_000.0;
+				if ((diceBarScaler[0] + elapsedSeconds) > 1) {
 					diceBarScaler[0] = 1;
 					translateX = originalBarX;
 				} else {
-					translateX += (64 * elaspedSeconds);
-					diceBarScaler[0] += elaspedSeconds;
+					translateX += (64 * elapsedSeconds);
+					diceBarScaler[0] += elapsedSeconds;
 				}
 				dice.setTranslateX(diceX
 						+ ((Math.random() * shakeFactor * diceBarScaler[0]) - (shakeFactor / 2 * diceBarScaler[0])));
@@ -179,8 +282,8 @@ public class MainSceneHandler {
 
 			@Override
 			public void handle(long now) {
-				double elaspedSeconds = (now - lastUpdate) / 1_000_000_000.0;
-				scaler += elaspedSeconds;
+				double elapsedSeconds = (now - lastUpdate) / 1_000_000_000.0;
+				scaler += elapsedSeconds;
 				if (Math.round(scaler * 100) % 10 == 0) {
 					tempMovement = (int) (Math.random() * 6) + 1;
 					dice.setViewport(new Rectangle2D((tempMovement * 128) - 128, 0, 128, 128));
@@ -188,7 +291,7 @@ public class MainSceneHandler {
 				dice.setTranslateX(diceX + ((Math.random() * shakeFactor) - (shakeFactor / 2)));
 				dice.setTranslateY(diceY + ((Math.random() * shakeFactor) - (shakeFactor / 2)));
 				dice.setRotate(scaler * rotateFactor);
-				if ((scaler + elaspedSeconds) > 1) {
+				if ((scaler + elapsedSeconds) > 1) {
 					scaler = 1;
 					stop();
 				}
@@ -228,13 +331,11 @@ public class MainSceneHandler {
 		dice.setTranslateX(diceX);
 		dice.setTranslateY(diceY);
 		diceBar.setTranslateX(originalBarX);
-		diceBar.setTranslateY(550);
+		diceBar.setTranslateY(350);
 		diceBarBorder.setTranslateX(originalBarX);
-		diceBarBorder.setTranslateY(550);
+		diceBarBorder.setTranslateY(350);
 		endTurnButton.setTranslateX(850);
 		endTurnButton.setTranslateY(350);
-
-
 
 		mainScene.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
 
@@ -253,151 +354,108 @@ public class MainSceneHandler {
 
 		});
 
-		Player Engineer = new Player('e', "Homer", false);
-		Player Teacher = new Player('t', "Marge", false);
-		Player Parent = new Player('p', "Bart", false);
-		Player Student = new Player('s', "Lisa", false);
+		Node bottomPlayerBox = createPlayerPanel(turnNumber % 4);
+		Node rightPlayerBox = createPlayerPanel((turnNumber + 1) % 4);
+		Node topPlayerBox = createPlayerPanel((turnNumber + 2) % 4);
+		Node leftPlayerBox = createPlayerPanel((turnNumber + 3) % 4);
 
-		Player[] allPlayers  = new Player[]{Engineer, Teacher, Parent, Student};
-		endTurnButton.setOnAction(event -> switchPlayer(allPlayers, root));
+		formatPlayerPanel(bottomPlayerBox, 0);
+		formatPlayerPanel(rightPlayerBox, 1);
+		formatPlayerPanel(topPlayerBox, 2);
+		formatPlayerPanel(leftPlayerBox, 3);
 
-		HBox bottomPlayerBox = createPlayerPanel(allPlayers[0]);
-		VBox rightPlayerBox = createPlayerPanelSides(allPlayers[1]);
-		HBox topPlayerBox = createPlayerPanel(allPlayers[2]);
-		VBox leftPlayerBox = createPlayerPanelSides(allPlayers[3]);
+		eventPane = eventDisplayer.openEventPopup(events[0], turnNumber % 4, this);
+		eventPane.setTranslateX(275);
+		eventPane.setTranslateY(100);
+		grid.add(eventPane, 0, 0);
+		eventPane.setVisible(false);
 
-		formatBottomPanel(bottomPlayerBox, root);
-		formatRightPanel(rightPlayerBox, root);
-		formatTopPanel(topPlayerBox, root);
-		formatLeftPanel(leftPlayerBox, root);
+		ImageView settingsButton = new ImageView(new Image("/setting.png", 64, 64, false, false));
+		settingsButton.setStyle("-fx-cursor: hand;");
+		settingsButton.setTranslateX(-50);
+		settingsButton.setTranslateY(150);
+		grid.add(settingsButton, 0, 1);
+		settingsButton.setOnMouseClicked(e -> {
+			Stage tempMain = (Stage) settingsButton.getScene().getWindow();
+			tempMain.setScene(optionsMenu.getOptionsMenu(settingsButton.getScene()));
+		});
 
 		return mainScene;
 	}
 
-	private void switchPlayer(Player[] allPlayers, BorderPane root){
-		currentPlayerIndex[0] = (currentPlayerIndex[0]+1)%4;
-		HBox newBottomPlayerBox = createPlayerPanel(allPlayers[currentPlayerIndex[0]]);
-		VBox newRightPlayerBox = createPlayerPanelSides(allPlayers[(currentPlayerIndex[0] + 1) % 4]);
-		HBox newTopPlayerBox = createPlayerPanel(allPlayers[(currentPlayerIndex[0] + 2) % 4]);
-		VBox newLeftPlayerBox = createPlayerPanelSides(allPlayers[(currentPlayerIndex[0] + 3) % 4]);
+	public void switchPlayerUI() {
+		Node newBottomPlayerBox = createPlayerPanel(turnNumber % 4);
+		Node newRightPlayerBox = createPlayerPanel((turnNumber + 1) % 4);
+		Node newTopPlayerBox = createPlayerPanel((turnNumber + 2) % 4);
+		Node newLeftPlayerBox = createPlayerPanel((turnNumber + 3) % 4);
 
-		formatBottomPanel(newBottomPlayerBox, root);
-		formatRightPanel(newRightPlayerBox, root);
-		formatTopPanel(newTopPlayerBox, root);
-		formatLeftPanel(newLeftPlayerBox,root);
+		formatPlayerPanel(newBottomPlayerBox, 0);
+		formatPlayerPanel(newRightPlayerBox, 1);
+		formatPlayerPanel(newTopPlayerBox, 2);
+		formatPlayerPanel(newLeftPlayerBox, 3);
 	}
 
-
-
-	private void formatLeftPanel(VBox box, BorderPane root){
-		VBox.setVgrow(root, Priority.ALWAYS);
-		box.setMaxHeight(500);
-		box.setPrefWidth(70);
-		root.setLeft(box);
-		BorderPane.setAlignment(box, Pos.CENTER_LEFT);
+	private void formatPlayerPanel(Node box, int panelIndex) {
+		if (panelIndex % 2 == 0) {
+			HBox.setHgrow(root, Priority.ALWAYS);
+			((HBox) box).setMaxWidth((panelIndex == 0) ? 1000 : 500);
+			((HBox) box).setPrefHeight((panelIndex == 0) ? 100 : 60);
+			BorderPane.setAlignment(box, (panelIndex == 0) ? Pos.BOTTOM_CENTER : Pos.TOP_CENTER);
+		} else {
+			VBox.setVgrow(root, Priority.ALWAYS);
+			((VBox) box).setMaxHeight(500);
+			((VBox) box).setPrefWidth(70);
+			BorderPane.setAlignment(box, (panelIndex == 1) ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
+		}
+		switch (panelIndex) {
+		case 0:
+			root.setBottom(box);
+			break;
+		case 1:
+			root.setRight(box);
+			break;
+		case 2:
+			root.setTop(box);
+			break;
+		case 3:
+			root.setLeft(box);
+		}
 	}
 
-	private void formatRightPanel(VBox box, BorderPane root){
-		VBox.setVgrow(root, Priority.ALWAYS);
-		box.setMaxHeight(500);
-		box.setPrefWidth(70);
-		root.setRight(box);
-		BorderPane.setAlignment(box, Pos.CENTER_RIGHT);
-	}
+	private Node createPlayerPanel(int playerIndex) {
 
-	private void formatTopPanel(HBox box, BorderPane root){
-		box.setPrefHeight(60);
-		box.setMaxWidth(500);
-		root.setTop(box);
-		BorderPane.setAlignment(box, Pos.TOP_CENTER);
-	}
+		Player currentPlayer = players[playerIndex];
+		String[] colors = { "lightskyblue", "lightgreen", "lightpink", "mediumpurple", "darkblue", "darkgreen",
+				"deeppink", "indigo" };
+		String backgroundColor = colors[playerIndex];
+		String borderColor = colors[playerIndex + 4];
 
-	private void formatBottomPanel(HBox box, BorderPane root){
-		HBox.setHgrow(root, Priority.ALWAYS);
-		box.setMaxWidth(1000);
-		box.setPrefHeight(100);
-		root.setBottom(box);
-		BorderPane.setAlignment(box, Pos.BOTTOM_CENTER);
-	}
+		// creates a label for each player resource
+		Label nameLabel = new Label(currentPlayer.getPlayerName() + " ");
+		Label healthLabel = new Label(Integer.toString(currentPlayer.getHealth()) + " ");
+		Label educationLabel = new Label(Integer.toString(currentPlayer.getEducation()) + " ");
+		Label goodsLabel = new Label(Integer.toString(currentPlayer.getGoods()) + " ");
+		Label moneyLabel = new Label(Integer.toString(currentPlayer.getMoney()) + " ");
 
-	private HBox createPlayerPanel(Player currentPlayer){
+		Node playerPanel;
 
-		String backgroundColor = getPlayerColor(currentPlayer.getPlayerType());
-		String borderColor = getBorderColor(currentPlayer.getPlayerType());
-
-		//creates a horizontal box (for the top/bottom of the screen
-		HBox playerPanel = new HBox();
-		playerPanel.setStyle("-fx-background-color: " +  backgroundColor + ";-fx-border-color: " + borderColor + ";-fx-border-width: 5px;");
-
-
-		playerPanel.setPadding(new Insets(5));
-
-		//creates a label for each player resource
-		Label nameLabel = new Label(currentPlayer.getPlayerName());
-		Label scoreLabel = new Label(Integer.toString(currentPlayer.getscore()));
-		Label moneyLabel = new Label(Integer.toString(currentPlayer.getMoney()));
-		Label goodsLabel = new Label(Integer.toString(currentPlayer.getGoods()));
-		Label educationsLabel = new Label(Integer.toString(currentPlayer.getEducation()));
-		Label healthLabel = new Label(Integer.toString(currentPlayer.getHealth()));
-
-		//adds all of the player resources to the player panel box
-		playerPanel.getChildren().addAll(nameLabel, scoreLabel, moneyLabel, goodsLabel, educationsLabel, healthLabel);
+		if (Math.abs(playerIndex - turnNumber) % 2 == 0) {
+			HBox hBox = new HBox();
+			hBox.setPadding(new Insets(5));
+			hBox.getChildren().addAll(nameLabel, healthLabel, educationLabel, goodsLabel, moneyLabel);
+			playerPanel = hBox;
+		} else {
+			VBox vBox = new VBox();
+			vBox.setPadding(new Insets(5));
+			vBox.getChildren().addAll(nameLabel, healthLabel, educationLabel, goodsLabel, moneyLabel);
+			playerPanel = vBox;
+		}
+		playerPanel.setStyle("-fx-background-color: " + backgroundColor + ";-fx-border-color: " + borderColor
+				+ ";-fx-border-width: 5px;");
 
 		return playerPanel;
 	}
 
-	private VBox createPlayerPanelSides(Player currentPlayer){
-
-		String backgroundColor = getPlayerColor(currentPlayer.getPlayerType());
-		String borderColor = getBorderColor(currentPlayer.getPlayerType());
-		//creates a vertical box (for the left/right of the screen)
-		VBox playerPanel = new VBox();
-		playerPanel.setStyle("-fx-background-color: " +  backgroundColor + ";-fx-border-color: " + borderColor + ";-fx-border-width: 5px;");
-		playerPanel.setPadding(new Insets(5));
-
-		//creates a label for each player resource
-		Label nameLabel = new Label(currentPlayer.getPlayerName());
-		Label scoreLabel = new Label(Integer.toString(currentPlayer.getscore()));
-		Label moneyLabel = new Label(Integer.toString(currentPlayer.getMoney()));
-		Label goodsLabel = new Label(Integer.toString(currentPlayer.getGoods()));
-		Label educationsLabel = new Label(Integer.toString(currentPlayer.getEducation()));
-		Label healthLabel = new Label(Integer.toString(currentPlayer.getHealth()));
-
-		//adds all of the player resources to the player panel box
-		playerPanel.getChildren().addAll(nameLabel, scoreLabel, moneyLabel, goodsLabel, educationsLabel, healthLabel);
-
-		return playerPanel;
-	}
-
-	private String getPlayerColor(char playerType){
-		switch(playerType){
-		case 'e':
-			return "lightskyblue";
-		case 't':
-			return "lightgreen";
-		case 'p':
-			return "lightpink";
-		case 's':
-			return "mediumpurple";
-		}
-
-		return null;
-	}
-
-	private String getBorderColor(char playerType){
-		switch(playerType){
-		case 'e':
-			return "darkblue";
-		case 't':
-			return "darkgreen";
-		case 'p':
-			return "deeppink";
-		case 's':
-			return "indigo";
-		}
-
-		return null;
-	}
 	private void processMoveInput(Pane board, int direction) {
 		int changeInMovement = boardHandler.tryToMove(board, direction, movement);
 		if (changeInMovement != -1) {
