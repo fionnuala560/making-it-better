@@ -52,21 +52,81 @@ public class Player {
 		initListeners();
 	}
 
-	//automatically adds 20 to the score if the player is a Student and their education has at least doubled from its starting value
-	private void addStudentEducationListener() {
-		if (playerType == 's') {
-			int initialEducation = resources[1];
+	//MAINTAIN OBJECTIVES
 
-			score.addListener((observable, oldValue, newValue) -> {
-				if (resources[1] >= initialEducation * 2) {
-					increaseScore(20);
+	//Student objective 1 is automatically not complete if the student's health drops below 50%
+	private void addStudentHealthListener(){
+		if(playerType == 's'){
+			IntegerProperty healthProperty = new SimpleIntegerProperty(this.resources[0]);
+
+			healthProperty.addListener((observable, oldValue, newValue) -> {
+				//checks if the student's health has fallen below 50%
+				if(newValue.intValue() < oldValue.intValue() * 0.5){
+					this.objectives[0] = -1;
 				}
 			});
 		}
 	}
 
+	private void addParentGoodsListener(){
+		if(playerType == 'p'){
+			IntegerProperty goodsProperty = new SimpleIntegerProperty(this.resources[2]);
+
+			goodsProperty.addListener((observable, oldValue, newValue) -> {
+				//checks if the parent's goods have fallen below 50%
+				if(newValue.intValue() < oldValue.intValue() * 0.5){
+					this.objectives[0] = -1;
+				}
+			});
+		}
+	}
+
+	private void addTeacherEducationListener(){
+		if(playerType == 't'){
+			IntegerProperty educationProperty = new SimpleIntegerProperty(resources[1]);
+
+			educationProperty.addListener((observable, oldValue, newValue) -> {
+				if(newValue.intValue() < oldValue.intValue() * 0.5){
+					this.objectives[0] = -1;
+				}
+			});
+		}
+	}
+
+	private void addEngineerMoneyListener(){
+		if(playerType == 'e'){
+			IntegerProperty moneyProperty = new SimpleIntegerProperty(resources[3]);
+
+			moneyProperty.addListener((observable, oldValue, newValue) -> {
+				if(newValue.intValue() < oldValue.intValue() * 0.5){
+					this.objectives[0] = -1;
+				}
+			});
+		}
+	}
+
+
+	//automatically adds 100 to the score if the player is a Student and their education has at least doubled from its starting value
+	private void addStudentEducationListener() {
+		if (playerType == 's') {
+			IntegerProperty educationProperty = new SimpleIntegerProperty(resources[1]);
+
+			educationProperty.addListener((observable, oldValue, newValue) -> {
+				//checks if the student's education has doubled
+				if (newValue.intValue() >= oldValue.intValue() * 2) {
+					increaseScore(100);
+				}
+			});
+		}
+	}
+
+
 	private void initListeners(){
 		addStudentEducationListener();
+		addStudentHealthListener();
+		addParentGoodsListener();
+		addTeacherEducationListener();
+		addEngineerMoneyListener();
 	}
 
 	public char getPlayerType() {
@@ -144,49 +204,17 @@ public class Player {
 	Engineer objective 2 and 3 install certain no. improvements for school, train teacher
 	 */
 
-	//to be called every time a player makes a step to complete an objective
-	public void contributeToObjective(){
-		score.set(score.get() + 5);
-	}
 
-	//each time a player completes a task that they had ownership of
-	public void completeTask(){
-		score.set(score.get() + 20);
-	}
-
-	//each time a player contributes resources to a task that is not their own
-	public void contributeResource(){
-		score.set(score.get() + 5);
-	}
-
-	//scoreMaintainResource() and scoreExcessResources() to be called only when the game is finished
+	//scoreObjective() and scoreExcessResources() to be called only when the game is finished
 	//calculated for each player on game over
-	public void scoreMaintainResource(){
-		if(this.playerType == 's'){
-			if(this.resources[0] >= (studentStartingRes[1])*0.75){
-				score.set(score.get() + 20);
-			}
-		} else if(this.playerType == 't'){
-			if(this.resources[1] >= (teacherStartingRes[2])*0.75){
-				score.set(score.get() + 20);
-			}
-		} else if(this.playerType == 'p'){
-			if(this.resources[2] >= (parentStartingRes[3])*0.75){
-				score.set(score.get() + 20);
-			}
-		} else if(this.playerType == 'e'){
-			if(this.resources[3] >= (engineerStartingRes[0])*0.75){
-				score.set(score.get() + 20);
-			}
-		}
-	}
 
-	//student specific for objective achieved
-	public void scoreStudentReachedResource(){
-		if(this.playerType == 's'){
-			if(this.resources[1] >= studentStartingRes[2]*2){
-				score.set(score.get() + 20);
-			}
+	public void scoreObjectives(){
+		if(this.objectives[0] == 0){
+			increaseScore(100);
+		} else if(this.objectives[1] >= 5){
+			increaseScore(100);
+		} else if(this.objectives[2] >= 5){
+			increaseScore(100);
 		}
 	}
 
@@ -194,40 +222,40 @@ public class Player {
 	public void scoreExcessResources(){
 		if(this.playerType == 's'){
 			if(this.resources[3] >= (studentStartingRes[0])*0.25){
-				score.set(score.get() + 10);
+				increaseScore(10);
 			} else if(this.resources[2] >= (studentStartingRes[3])*0.25){
-				score.set(score.get() + 10);
+				increaseScore(10);
 			}
 		} else if(this.playerType == 't'){
 			if(this.resources[3] >= (teacherStartingRes[0])*0.25){
-				score.set(score.get() + 10);
+				increaseScore(10);
 			} else if(this.resources[0] >= (teacherStartingRes[1])*0.25){
-				score.set(score.get() + 10);
+				increaseScore(10);
 			} else if(this.resources[2] >= (teacherStartingRes[3])*0.25){
-				score.set(score.get() + 10);
+				increaseScore(10);
 			}
 		} else if(this.playerType == 'p'){
 			if(this.resources[3] >= (parentStartingRes[0])*0.25){
-				score.set(score.get() + 10);
+				increaseScore(10);
 			} else if(this.resources[1] >= (parentStartingRes[2])*0.25){
-				score.set(score.get() + 10);
+				increaseScore(10);
 			} else if(this.resources[0] >= (parentStartingRes[1])*0.25){
-				score.set(score.get() + 10);
+				increaseScore(10);
 			}
 		} else if(this.playerType == 'e'){
 			if(this.resources[0] >= (engineerStartingRes[1])*0.25){
-				score.set(score.get() + 10);
+				increaseScore(10);
 			} else if(this.resources[1] >= (engineerStartingRes[2])*0.25){
-				score.set(score.get() + 10);
+				increaseScore(10);
 			} else if(this.resources[2] >= (engineerStartingRes[3])*0.25){
-				score.set(score.get() + 10);
+				increaseScore(10);
 			}
 		}
 	}
 
 	public void addGameOverScores(){
 		this.scoreExcessResources();
-		this.scoreMaintainResource();
+		this.scoreObjectives();
 	}
 
 }
