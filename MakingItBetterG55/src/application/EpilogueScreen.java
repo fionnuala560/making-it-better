@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.Scene;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -39,7 +40,14 @@ public class EpilogueScreen {
     private Label label3d = new Label("Keep your objectives in mind as you progress\n                        through the game.");
     private Label label4d = new Label("Try working together to complete the tasks?");
 
+    private Label totalScoreLabel;
+    private int totalScore;
+
     private int currentLabelIndex = 0;
+
+    public void setTotalScore(int totalScore){
+        this.totalScore = totalScore;
+    }
 
     /*public Epilogue(Scene homeScene){
     BorderPane epilogue = new BorderPane();
@@ -47,16 +55,24 @@ public class EpilogueScreen {
     EpilogueScene = new Scene(epilogue, 1200, 800);
     }*/
     public EpilogueScreen(Scene homeScene){
+        this.totalScore = totalScore;
         BorderPane epilogue = new BorderPane();
         epilogue.setStyle("-fx-background-image: url(/woodbackground.jpg);");
         epilogueScene = new Scene(epilogue, 1200, 800);
 
         Text title = new Text("Epilogue :)");
-        title.setFont(Font.font("SansSerif", FontWeight.BOLD, 100));
+        title.setFont(Font.font("SansSerif", FontWeight.BOLD, 70));
         title.setStyle("-fx-fill: black; -fx-stroke: white; -fx-stroke-width: 4px;");
         title.setTranslateX(350);
         title.setTranslateY(15);
         epilogue.setTop(title);
+
+        totalScoreLabel = new Label("Total Score: " + totalScore);
+        totalScoreLabel.setFont(Font.font("SansSerif", FontWeight.BOLD, 20));
+        totalScoreLabel.setStyle("-fx-fill: black");
+        totalScoreLabel.setTranslateX(0);
+        totalScoreLabel.setTranslateY(100);
+        epilogue.setCenter(totalScoreLabel);
 
         //setting replay button to
         replayButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 40));
@@ -81,10 +97,10 @@ public class EpilogueScreen {
             System.exit(0);
         });
 
-        Label[] fullWinArr = {label1a, label1b, label1c, label1d};
-        Label[] goodTryArr = {label2a, label2b, label2c, label2d};
-        Label[] anAttemptArr = {label3a, label3b, label3c, label3d};
-        Label[] yikesArr = {label4a, label4b, label4c, label4d};
+        Label[] fullWinArr = {totalScoreLabel,label1a, label1b, label1c, label1d};
+        Label[] goodTryArr = {totalScoreLabel,label2a, label2b, label2c, label2d};
+        Label[] anAttemptArr = {totalScoreLabel, label3a, label3b, label3c, label3d};
+        Label[] yikesArr = {totalScoreLabel, label4a, label4b, label4c, label4d};
 
         for (Label x : fullWinArr){
             x.setFont(Font.font("SansSerif", FontWeight.BOLD, 36));
@@ -106,10 +122,16 @@ public class EpilogueScreen {
             x.setStyle("-fx-fill: black");
         }
 
+
+        HBox scoreBox = new HBox();
+        scoreBox.setPadding(new Insets(5));
+        totalScoreLabel.setFont(Font.font("SansSerif", FontWeight.BOLD, 36));
+        totalScoreLabel.setStyle("-fx-fill: black");
+
         VBox epilogueText = new VBox();
         //epilogueText.setStyle("-fx-border-width: 5px; -fx-border-color: black");
         epilogueText.setPadding(new Insets(5));
-        epilogueText.setTranslateY(-100);
+        epilogueText.setTranslateY(-70);
         epilogueText.setTranslateX(-150);
         epilogueText.setMaxHeight(400);
         epilogueText.setMinWidth(875);
@@ -118,7 +140,19 @@ public class EpilogueScreen {
         //epilogueText.getChildren().addAll(anAttemptArr);
         //epilogueText.getChildren().addAll(yikesArr);
         epilogueText.setAlignment(Pos.CENTER);
-        for(Label i : fullWinArr){
+        Label[] array = new Label[4];
+
+        if(totalScore < 100){
+            array = yikesArr;
+        } else if(totalScore < 250){
+            array = anAttemptArr;
+        } else if(totalScore < 500){
+            array = goodTryArr;
+        } else if(totalScore < 1000){
+            array = fullWinArr;
+        }
+
+        for(Label i : array){
             i.setVisible(false);
         }
         epilogueScene.setOnKeyPressed(event -> {
@@ -166,4 +200,6 @@ public class EpilogueScreen {
     }
 
     public Scene getEpilogueScene(){return epilogueScene;}
+
+
 }

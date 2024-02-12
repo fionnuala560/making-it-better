@@ -212,9 +212,9 @@ public class Player {
 		if(this.objectives[0] == 0){
 			increaseScore(100);
 		} else if(this.objectives[1] >= 5){
-			increaseScore(100);
+			increaseScore(200);
 		} else if(this.objectives[2] >= 5){
-			increaseScore(100);
+			increaseScore(300);
 		}
 	}
 
