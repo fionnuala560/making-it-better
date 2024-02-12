@@ -2,6 +2,7 @@ package application;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
@@ -13,6 +14,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class EpilogueScreen {
 
@@ -42,8 +45,9 @@ public class EpilogueScreen {
 
     private Label totalScoreLabel;
     private int totalScore;
+    private Label[][] arrays;
+    private Label[] currentArray;
 
-    private int currentLabelIndex = 0;
 
     public void setTotalScore(int totalScore){
         this.totalScore = totalScore;
@@ -68,11 +72,7 @@ public class EpilogueScreen {
         epilogue.setTop(title);
 
         totalScoreLabel = new Label("Total Score: " + totalScore);
-        totalScoreLabel.setFont(Font.font("SansSerif", FontWeight.BOLD, 20));
-        totalScoreLabel.setStyle("-fx-fill: black");
-        totalScoreLabel.setTranslateX(0);
-        totalScoreLabel.setTranslateY(100);
-        epilogue.setCenter(totalScoreLabel);
+
 
         //setting replay button to
         replayButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 40));
@@ -123,11 +123,6 @@ public class EpilogueScreen {
         }
 
 
-        HBox scoreBox = new HBox();
-        scoreBox.setPadding(new Insets(5));
-        totalScoreLabel.setFont(Font.font("SansSerif", FontWeight.BOLD, 36));
-        totalScoreLabel.setStyle("-fx-fill: black");
-
         VBox epilogueText = new VBox();
         //epilogueText.setStyle("-fx-border-width: 5px; -fx-border-color: black");
         epilogueText.setPadding(new Insets(5));
@@ -135,67 +130,42 @@ public class EpilogueScreen {
         epilogueText.setTranslateX(-150);
         epilogueText.setMaxHeight(400);
         epilogueText.setMinWidth(875);
-        epilogueText.getChildren().addAll(fullWinArr);
+
         //epilogueText.getChildren().addAll(goodTryArr);
         //epilogueText.getChildren().addAll(anAttemptArr);
         //epilogueText.getChildren().addAll(yikesArr);
         epilogueText.setAlignment(Pos.CENTER);
-        Label[] array = new Label[4];
+        Label[][] arrayHolder = { new Label[0] };
+        epilogueText.getChildren().addAll(arrayHolder[0]);
 
-        if(totalScore < 100){
-            array = yikesArr;
-        } else if(totalScore < 250){
-            array = anAttemptArr;
-        } else if(totalScore < 500){
-            array = goodTryArr;
-        } else if(totalScore < 1000){
-            array = fullWinArr;
+        if (totalScore < 100) {
+            epilogueText.getChildren().addAll(yikesArr);
+        } else if (totalScore < 250) {
+            epilogueText.getChildren().addAll(anAttemptArr);
+        } else if (totalScore < 500) {
+            epilogueText.getChildren().addAll(goodTryArr);
+        } else if (totalScore < 1000) {
+            epilogueText.getChildren().addAll(fullWinArr);
         }
 
-        for(Label i : array){
-            i.setVisible(false);
+        for (Node node : epilogueText.getChildren()) {
+            ((Label) node).setVisible(false);
         }
+
+        int[] currentLabelIndex = { 0 };
+
         epilogueScene.setOnKeyPressed(event -> {
-            if(event.getCode() == KeyCode.N){
-                if(currentLabelIndex < fullWinArr.length){
-                    fullWinArr[currentLabelIndex].setVisible(true);
-                    currentLabelIndex++;
+            if (event.getCode() == KeyCode.N) {
+                int index = currentLabelIndex[0]++;
+                if (index < epilogueText.getChildren().size()) {
+                    Node node = epilogueText.getChildren().get(index);
+                    if (node instanceof Label) {
+                        ((Label) node).setVisible(true);
+                    }
                 }
             }
         });
-        /*for(Label i : goodTryArr){
-            i.setVisible(false);
-        }
-        epilogueScene.setOnKeyPressed(event ->{
-            if(event.getCode() == KeyCode.N){
-                if(currentLabelIndex < goodTryArr.length){
-                    goodTryArr[currentLabelIndex].setVisible(true);
-                    currentLabelIndex++;
-                }
-            }
-        });*/
-        /*for(Label i : anAttemptArr){
-            i.setVisible(false);
-        }
-        epilogueScene.setOnKeyPressed(event ->{
-            if(event.getCode() == KeyCode.N){
-                if(currentLabelIndex < anAttemptArr.length){
-                    anAttemptArr[currentLabelIndex].setVisible(true);
-                    currentLabelIndex++;
-                }
-            }
-        });*/
-        /*for(Label i : yikesArr){
-            i.setVisible(false);
-        }
-        epilogueScene.setOnKeyPressed(event ->{
-            if(event.getCode() == KeyCode.N){
-                if(currentLabelIndex < yikesArr.length){
-                    yikesArr[currentLabelIndex].setVisible(true);
-                    currentLabelIndex++;
-                }
-            }
-        });*/
+
         epilogue.setCenter(epilogueText);
     }
 
