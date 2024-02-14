@@ -3,12 +3,14 @@ package application;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.util.Duration;
 
 public class EventDisplayer {
 
@@ -99,6 +101,12 @@ public class EventDisplayer {
 						numEffects++;
 					}
 				}
+				
+				Tooltip tooltip = new Tooltip();
+				tooltip.setFont(Font.font("SansSerif", FontWeight.BOLD, 12));
+				tooltip.setShowDelay(new Duration(10));
+				tooltip.setShowDuration(Duration.INDEFINITE);
+				tooltip.setHideDelay(Duration.ZERO);
 
 				int[] optionIndex = { i };
 				if (meetsRequirements) {
@@ -123,6 +131,21 @@ public class EventDisplayer {
 							}
 						}
 					});
+
+					if (!eventOptions[i].getTooltip().equals("")) {
+						tooltip.setText(eventOptions[i].getTooltip());
+						Tooltip.install(optionButton, tooltip);
+					}
+				} else {
+					String requirementsString = " Requires: " + ((eventOptions[i].getRequirements()[0] != 0) ? eventOptions[i].getRequirements()[0] + " Health, " : "") +
+							((eventOptions[i].getRequirements()[1] != 0) ? eventOptions[i].getRequirements()[1] + " Education, " : "") +
+							((eventOptions[i].getRequirements()[2] != 0) ? eventOptions[i].getRequirements()[2] + " Goods, " : "") +
+							((eventOptions[i].getRequirements()[3] != 0) ? eventOptions[i].getRequirements()[3] + " Money" : "");
+					if (requirementsString.substring(requirementsString.length()-2, requirementsString.length()).equals(", ")) {
+						requirementsString = requirementsString.substring(0, requirementsString.length()-2);
+					}
+					tooltip.setText(eventOptions[i].getTooltip() + requirementsString);
+					Tooltip.install(optionButton, tooltip);
 				}
 
 				eventLayout.getChildren().add(optionButton);

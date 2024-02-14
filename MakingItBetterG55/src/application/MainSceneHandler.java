@@ -105,7 +105,7 @@ public class MainSceneHandler {
 							new EventOption("Buy Books", new int[] { 0, 0, 0, -20 }, new int[] { 0, 0, 0, 20 },
 									new boolean[] { false, true, false, false }, -1, false),
 							new EventOption("Buy Motorcycle", new int[] { 0, 0, 0, -60 }, new int[] { 0, 0, 0, 60 },
-									new boolean[] { false, false, true, false }, 1, false), },
+									new boolean[] { false, false, true, false }, 1, false, "Always roll a 3 or above for movement."), },
 					true),
 
 	};
