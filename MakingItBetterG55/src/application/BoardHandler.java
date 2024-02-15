@@ -455,7 +455,7 @@ public class BoardHandler {
 		int[][] tileTypes = new int[9][9];
 
 		try (BufferedReader bufferedReader = new BufferedReader(
-				new FileReader(System.getProperty("user.dir") + "/MakingItBetterG55/src/tiles.txt"))) {
+				new FileReader(System.getProperty("user.dir") + "/src/tiles.txt"))) {
 
 			String line = bufferedReader.readLine();
 			for (int i = 0; i < 9; i++) {
