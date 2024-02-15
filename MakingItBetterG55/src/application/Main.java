@@ -26,6 +26,9 @@ public class Main extends Application {
 			Scene optionsScene = new Scene(root, 1200, 800);
 			optionsScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			OptionsMenu om = new OptionsMenu();
+
+			EpilogueScreen epilogueScreen = new EpilogueScreen(homeScene, om);
+			Scene epScene = epilogueScreen.getEpilogueScene();
 			
 			GameStartupScreen gSS = new GameStartupScreen(homeScene, om);
 			Scene gSSScene = gSS.getGameStartupScreen();
@@ -78,7 +81,18 @@ public class Main extends Application {
 				Scene oMScene = om.getOptionsMenu(homeScene);
 				primaryStage.setScene(oMScene);
 			});
-			
+
+			Button epilogueButton = new Button("Epilogue");
+			epilogueButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 40));
+			epilogueButton.setStyle("-fx-cursor: hand; -fx-border-color: #152546; -fx-border-width: 14px; -fx-background-color: #536F7B; -fx-text-fill: white;");
+			epilogueButton.setPrefSize(320, 29);
+
+			epilogueButton.setOnAction(event -> {
+				primaryStage.setScene(epScene);
+			});
+			homeScreen.add(epilogueButton, 14, 30, 40, 40);
+
+
 
 			homeScreen.add(settingsButton, 1, 32);
 

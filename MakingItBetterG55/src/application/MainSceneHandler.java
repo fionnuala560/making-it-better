@@ -42,6 +42,8 @@ public class MainSceneHandler {
 	private EventDisplayer eventDisplayer;
 	private GridPane grid = new GridPane();
 
+
+
 	private Event[] events = new Event[] { new Event("Twisted Ankle", "You've stepped in a small hole covered by grass"
 			+ " and hurt your ankle. It should heal on it's own soon, but going forward it's probably best to stick to"
 			+ " the paths when you can.",
@@ -203,6 +205,7 @@ public class MainSceneHandler {
 				landed();
 			}
 		});
+
 
 		double originalBarX = 850;
 		double diceX = 850;
@@ -380,6 +383,7 @@ public class MainSceneHandler {
 			tempMain.setScene(optionsMenu.getOptionsMenu(settingsButton.getScene()));
 		});
 
+
 		return mainScene;
 	}
 
@@ -436,18 +440,19 @@ public class MainSceneHandler {
 		Label educationLabel = new Label(Integer.toString(currentPlayer.getEducation()) + " ");
 		Label goodsLabel = new Label(Integer.toString(currentPlayer.getGoods()) + " ");
 		Label moneyLabel = new Label(Integer.toString(currentPlayer.getMoney()) + " ");
+		Label scoreLabel = new Label (Integer.toString((currentPlayer.getScore())));
 
 		Node playerPanel;
 
 		if (Math.abs(playerIndex - turnNumber) % 2 == 0) {
 			HBox hBox = new HBox();
 			hBox.setPadding(new Insets(5));
-			hBox.getChildren().addAll(nameLabel, healthLabel, educationLabel, goodsLabel, moneyLabel);
+			hBox.getChildren().addAll(nameLabel, healthLabel, educationLabel, goodsLabel, moneyLabel, scoreLabel);
 			playerPanel = hBox;
 		} else {
 			VBox vBox = new VBox();
 			vBox.setPadding(new Insets(5));
-			vBox.getChildren().addAll(nameLabel, healthLabel, educationLabel, goodsLabel, moneyLabel);
+			vBox.getChildren().addAll(nameLabel, healthLabel, educationLabel, goodsLabel, moneyLabel, scoreLabel);
 			playerPanel = vBox;
 		}
 		playerPanel.setStyle("-fx-background-color: " + backgroundColor + ";-fx-border-color: " + borderColor
@@ -469,6 +474,30 @@ public class MainSceneHandler {
 				dice.setViewport(new Rectangle2D((movement * 128) - 128, 0, 128, 128));
 			}
 		}
+	}
+
+	public int totalPlayerScore(Player[] players){
+		int totalScore = 0;
+		for(Player p : players){
+			p.addGameOverScores();
+			totalScore += p.getScore();
+		}
+		return  totalScore;
+	}
+
+	public void endGame(Scene mainScene){
+		//check end of game conditions
+		int totalScore = totalPlayerScore(players);
+		displayTotalScore(mainScene, totalScore);
+	}
+
+	private void displayTotalScore(Scene mainScene, int totalScore){
+		EpilogueScreen epilogueScreen = new EpilogueScreen(mainScene, optionsMenu);
+		epilogueScreen.setTotalScore(totalScore);
+
+		Stage primaryStage = (Stage) mainScene.getWindow();
+		primaryStage.setScene(epilogueScreen.getEpilogueScene());
+
 	}
 
 }
