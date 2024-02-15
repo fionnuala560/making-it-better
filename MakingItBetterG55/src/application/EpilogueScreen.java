@@ -6,6 +6,7 @@ import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.Scene;
@@ -23,7 +24,7 @@ public class EpilogueScreen {
     private Scene epilogueScene;
     private Button replayButton = new Button("Replay");
     private Button quitButton = new Button("Quit");
-    private Button settingsButton = new Button();
+    private ImageView settingsButton = new ImageView("/setting.png");
 
     private Label label1a = new Label("Congratulations!!");
     private Label label2a = new Label("Good Effort :)");
@@ -55,13 +56,9 @@ public class EpilogueScreen {
     public void setTotalScore(int totalScore){
         this.totalScore = totalScore;
     }
-    public void setPlayers(Player[] players){this.players = players;}
+    //public void setPlayers(Player[] players){this.players = players;}
 
-    /*public Epilogue(Scene homeScene){
-    BorderPane epilogue = new BorderPane();
-    epilogue.setStyle("-fx-background-image: url(/woodbackground.jpg);");
-    EpilogueScene = new Scene(epilogue, 1200, 800);
-    }*/
+
     public EpilogueScreen(Scene homeScene, OptionsMenu optionsMenu){
         this.totalScore = totalScore;
         BorderPane epilogue = new BorderPane();
@@ -102,8 +99,11 @@ public class EpilogueScreen {
         });
 
         settingsButton.setStyle("-fx-cursor: hand;");
-        settingsButton.setTranslateX(30);
-        settingsButton.setTranslateY(635);
+        settingsButton.setFitHeight(100);
+        settingsButton.setFitWidth(100);
+        settingsButton.setTranslateX(38);
+        settingsButton.setTranslateY(-100);
+        epilogue.setBottom(settingsButton);
         settingsButton.setOnMouseClicked(e -> {
             Stage tempMain = (Stage) settingsButton.getScene().getWindow();
             tempMain.setScene(optionsMenu.getOptionsMenu(settingsButton.getScene()));
@@ -143,30 +143,21 @@ public class EpilogueScreen {
         epilogueText.setMaxHeight(400);
         epilogueText.setMinWidth(875);
 
-        //epilogueText.getChildren().addAll(goodTryArr);
-        //epilogueText.getChildren().addAll(anAttemptArr);
-        //epilogueText.getChildren().addAll(yikesArr);
+
         epilogueText.setAlignment(Pos.CENTER);
         Label[][] arrayHolder = { new Label[0] };
         epilogueText.getChildren().addAll(arrayHolder[0]);
 
-        for(Player p : players){
-            if(p.getHealth() <= 0 && totalScore >= 250){
-                epilogueText.getChildren().addAll(anAttemptArr);
-            } else if(p.getHealth() <= 0 && totalScore < 250){
+            if (totalScore < 100) {
                 epilogueText.getChildren().addAll(yikesArr);
+            } else if (totalScore < 250) {
+                epilogueText.getChildren().addAll(anAttemptArr);
+            } else if (totalScore < 500) {
+                epilogueText.getChildren().addAll(goodTryArr);
+            } else if (totalScore < 1000) {
+                epilogueText.getChildren().addAll(fullWinArr);
             }
-        }
 
-        if (totalScore < 100) {
-            epilogueText.getChildren().addAll(yikesArr);
-        } else if (totalScore < 250) {
-            epilogueText.getChildren().addAll(anAttemptArr);
-        } else if (totalScore < 500) {
-            epilogueText.getChildren().addAll(goodTryArr);
-        } else if (totalScore < 1000) {
-            epilogueText.getChildren().addAll(fullWinArr);
-        }
 
         for (Node node : epilogueText.getChildren()) {
             ((Label) node).setVisible(false);
@@ -190,6 +181,5 @@ public class EpilogueScreen {
     }
 
     public Scene getEpilogueScene(){return epilogueScene;}
-
 
 }
