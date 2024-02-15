@@ -2,6 +2,7 @@ package application;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -22,6 +23,7 @@ public class EpilogueScreen {
     private Scene epilogueScene;
     private Button replayButton = new Button("Replay");
     private Button quitButton = new Button("Quit");
+    private Button settingsButton = new Button();
 
     private Label label1a = new Label("Congratulations!!");
     private Label label2a = new Label("Good Effort :)");
@@ -45,6 +47,7 @@ public class EpilogueScreen {
 
     private Label totalScoreLabel;
     private int totalScore;
+    private Player[] players;
     private Label[][] arrays;
     private Label[] currentArray;
 
@@ -52,13 +55,14 @@ public class EpilogueScreen {
     public void setTotalScore(int totalScore){
         this.totalScore = totalScore;
     }
+    public void setPlayers(Player[] players){this.players = players;}
 
     /*public Epilogue(Scene homeScene){
     BorderPane epilogue = new BorderPane();
     epilogue.setStyle("-fx-background-image: url(/woodbackground.jpg);");
     EpilogueScene = new Scene(epilogue, 1200, 800);
     }*/
-    public EpilogueScreen(Scene homeScene){
+    public EpilogueScreen(Scene homeScene, OptionsMenu optionsMenu){
         this.totalScore = totalScore;
         BorderPane epilogue = new BorderPane();
         epilogue.setStyle("-fx-background-image: url(/woodbackground.jpg);");
@@ -95,6 +99,14 @@ public class EpilogueScreen {
         epilogue.setRight(quitButton);
         quitButton.setOnAction(event -> {
             System.exit(0);
+        });
+
+        settingsButton.setStyle("-fx-cursor: hand;");
+        settingsButton.setTranslateX(30);
+        settingsButton.setTranslateY(635);
+        settingsButton.setOnMouseClicked(e -> {
+            Stage tempMain = (Stage) settingsButton.getScene().getWindow();
+            tempMain.setScene(optionsMenu.getOptionsMenu(settingsButton.getScene()));
         });
 
         Label[] fullWinArr = {totalScoreLabel,label1a, label1b, label1c, label1d};
@@ -137,6 +149,14 @@ public class EpilogueScreen {
         epilogueText.setAlignment(Pos.CENTER);
         Label[][] arrayHolder = { new Label[0] };
         epilogueText.getChildren().addAll(arrayHolder[0]);
+
+        for(Player p : players){
+            if(p.getHealth() <= 0 && totalScore >= 250){
+                epilogueText.getChildren().addAll(anAttemptArr);
+            } else if(p.getHealth() <= 0 && totalScore < 250){
+                epilogueText.getChildren().addAll(yikesArr);
+            }
+        }
 
         if (totalScore < 100) {
             epilogueText.getChildren().addAll(yikesArr);

@@ -500,8 +500,9 @@ public class MainSceneHandler {
 	}
 
 	private void displayTotalScore(Scene mainScene, int totalScore){
-		EpilogueScreen epilogueScreen = new EpilogueScreen(mainScene);
+		EpilogueScreen epilogueScreen = new EpilogueScreen(mainScene, optionsMenu);
 		epilogueScreen.setTotalScore(totalScore);
+		epilogueScreen.setPlayers(players);
 
 		Stage primaryStage = (Stage) mainScene.getWindow();
 		primaryStage.setScene(epilogueScreen.getEpilogueScene());

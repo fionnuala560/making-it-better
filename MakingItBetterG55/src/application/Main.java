@@ -22,13 +22,13 @@ public class Main extends Application {
 			homeScreen.setStyle("-fx-background-image: url('/woodbackground.jpg');");
 			Scene homeScene = new Scene(homeScreen, 1200, 800);
 
-			EpilogueScreen epilogueScreen = new EpilogueScreen(homeScene);
-			Scene epScene = epilogueScreen.getEpilogueScene();
-
 			GridPane root = new GridPane();
 			Scene optionsScene = new Scene(root, 1200, 800);
 			optionsScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			OptionsMenu om = new OptionsMenu();
+
+			EpilogueScreen epilogueScreen = new EpilogueScreen(homeScene, om);
+			Scene epScene = epilogueScreen.getEpilogueScene();
 			
 			GameStartupScreen gSS = new GameStartupScreen(homeScene, om);
 			Scene gSSScene = gSS.getGameStartupScreen();
@@ -113,6 +113,4 @@ public class Main extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
-
-
 }
