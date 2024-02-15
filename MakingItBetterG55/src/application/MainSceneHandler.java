@@ -383,14 +383,6 @@ public class MainSceneHandler {
 			tempMain.setScene(optionsMenu.getOptionsMenu(settingsButton.getScene()));
 		});
 
-		Button epilogueButton = new Button("Epilogue");
-		epilogueButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 40));
-		epilogueButton.setStyle("-fx-cursor: hand; -fx-border-color: #152546; -fx-border-width: 14px; -fx-background-color: #536F7B; -fx-text-fill: white;");
-		epilogueButton.setPrefSize(320, 29);
-		epilogueButton.setOnAction(event ->  {
-			endGame(mainScene);
-		});
-		grid.add(epilogueButton,0,2);
 
 		return mainScene;
 	}
