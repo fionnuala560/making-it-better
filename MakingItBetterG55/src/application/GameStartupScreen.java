@@ -26,7 +26,7 @@ public class GameStartupScreen {
 	private Button parentButton = new Button("Parent");
 	private Button teacherButton = new Button("Teacher");
 	private Button engineerButton = new Button("Engineer");
-	private ImageView settingsButton = new ImageView("/setting.png");
+	//private ImageView settingsButton = new ImageView("/setting.png");
 	private Button startButton = new Button("Start");
 	private Button backButton = new Button("<");
 	private CheckBox boxA = new CheckBox("AI Controlled");
@@ -52,21 +52,27 @@ public class GameStartupScreen {
 					+ "which must be met in order to win the game, but don't forget, you must work as a team and solve problems together. "
 					+ "Good Luck!!");
 	private Label label7 = new Label("Team's Objective: ");
-	private Label label8 = new Label("Objectives:\n\n- Keep certain level of health "
-			+ "throughout the whole game.\n- Go to school a certain number of times.\n"
-			+ "- Reach certain education level.");
-	private Label label9 = new Label("Objectives:\n\n- Keep goods certain level throughout the whole game.\n"
-			+ "- Buy certain number of improvements from shop.\n"
-			+ "- Interact with student a certain number of times.");
-	private Label label10 = new Label("Objectives:\n\n- Keep certain level of education throughout the whole game.\n"
-			+ "- Teach at the school a certain number of times.\n"
-			+ "- Eat certain number of apples collected from students.");
-	private Label label11 = new Label("Objectives:\n\n- Keep certain level of money throughout the whole game.\n"
-			+ "- Install certain number of improvements for school.\n" + "- Train teacher.");
-	private TextField textField1 = new TextField();
-	private TextField textField2 = new TextField();
-	private TextField textField3 = new TextField();
-	private TextField textField4 = new TextField();
+	
+	private String[] studentObjectives = {"Maintain at least 80 health all "
+			+ "throughout the whole game.", "Study at school 10 times.", "Reach certain 90 education."};
+	
+	private Label label8 = new Label("Objectives:\n\n- " + studentObjectives[0] + "\n -" + studentObjectives[1] + "\n -" + studentObjectives[2]);
+	
+	private String[] parentObjectives = {"Keep at least 30 goods throughout the whole game.", "Buy 2 improvements from the shop or family's home.", "Interact with student a certain 10 times."};
+	
+	private Label label9 = new Label("Objectives:\n\n- " + parentObjectives[0] + "\n -" + parentObjectives[1] + "\n -" + parentObjectives[2]);
+	
+	private String[] teacherObjectives = {"Keep at least 60 education throughout the whole game.", "Teach at the school 10 times.", "Eat 3 apples collected from the student."};
+	
+	private Label label10 = new Label("Objectives:\n\n- "+ teacherObjectives[0] + "\n -" + teacherObjectives[1] + "\n -" + teacherObjectives[2]);
+	
+	private String[] engineerObjectives = {"Keep at least 40 money throughout the whole game.", "Install certain 2 improvements for the school.", "Train the teacher 5 times."};
+	
+	private Label label11 = new Label("Objectives:\n\n- " + engineerObjectives[0] + "\n -" + engineerObjectives[1] + "\n -" + engineerObjectives[2]);
+	private TextField textField1 = new TextField("Student");
+	private TextField textField2 = new TextField("Parent");
+	private TextField textField3 = new TextField("Teacher");
+	private TextField textField4 = new TextField("Engineer");
 
 	private boolean isStudentAI;
 	private boolean isParentAI;
@@ -84,8 +90,8 @@ public class GameStartupScreen {
 		gridPane.getRowConstraints().addAll(row1);
 
 		// Setting coordinates of label1 and add to scene
-		title.setFont(Font.font("SansSerif", FontWeight.BOLD, 50));
-		title.setStyle("-fx-fill: black; -fx-stroke: white; -fx-stroke-width: 1px;");
+		title.setFont(Main.fredokaOne);
+		title.setStyle("-fx-font-size: 50; -fx-fill: white; -fx-effect: dropshadow(gaussian, black, 5 , 1.0, 0, 0);");
 		title.setTranslateX(300);
 		title.setTranslateY(20);
 		gridPane.setValignment(title, VPos.TOP);
@@ -111,19 +117,6 @@ public class GameStartupScreen {
 		label7.setTranslateY(370);
 		gridPane.setValignment(label7, VPos.TOP);
 		gridPane.add(label7, 0, 0);
-
-		// set coordinates, size of settingsButton and add to scene
-		settingsButton.setStyle("-fx-cursor: hand;");
-		settingsButton.setFitHeight(100);
-		settingsButton.setFitWidth(100);
-		settingsButton.setTranslateX(30);
-		settingsButton.setTranslateY(635);
-		gridPane.setValignment(settingsButton, VPos.TOP);
-		gridPane.add(settingsButton, 0, 0);
-		settingsButton.setOnMouseClicked(e -> {
-			Stage tempMain = (Stage) settingsButton.getScene().getWindow();
-			tempMain.setScene(optionsMenu.getOptionsMenu(settingsButton.getScene()));
-		});
 
 		// set height of studentButton and add to scene
 		studentButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 22));
@@ -185,7 +178,7 @@ public class GameStartupScreen {
 
 		// create panes for when each player button is pressed
 		Pane studentPane = new Pane();
-		studentPane.getChildren().add(boxA);
+		//studentPane.getChildren().add(boxA);
 		boxA.setFont(Font.font("SansSerif", FontWeight.BOLD, 20));
 		boxA.setStyle("-fx-text-fill: white;");
 		boxA.setTranslateX(50);
@@ -226,7 +219,7 @@ public class GameStartupScreen {
 		studentPane.setVisible(false);
 
 		Pane parentPane = new Pane();
-		parentPane.getChildren().add(boxB);
+		//parentPane.getChildren().add(boxB);
 		boxB.setFont(Font.font("SansSerif", FontWeight.BOLD, 20));
 		boxB.setStyle("-fx-text-fill: white;");
 		boxB.setTranslateX(50);
@@ -267,7 +260,7 @@ public class GameStartupScreen {
 		parentPane.setVisible(false);
 
 		Pane teacherPane = new Pane();
-		teacherPane.getChildren().add(boxC);
+		//teacherPane.getChildren().add(boxC);
 		boxC.setFont(Font.font("SansSerif", FontWeight.BOLD, 20));
 		boxC.setStyle("-fx-text-fill: white;");
 		boxC.setTranslateX(50);
@@ -308,7 +301,7 @@ public class GameStartupScreen {
 		teacherPane.setVisible(false);
 
 		Pane engineerPane = new Pane();
-		engineerPane.getChildren().add(boxD);
+		//engineerPane.getChildren().add(boxD);
 		boxD.setFont(Font.font("SansSerif", FontWeight.BOLD, 20));
 		boxD.setStyle("-fx-text-fill: white;");
 		boxD.setTranslateX(50);
@@ -383,15 +376,16 @@ public class GameStartupScreen {
 		});
 
 		startButton.setOnAction(e -> {
-			Player[] players = { new Player('e', textField4.getText(), isEngineerAI),
-					new Player('t', textField3.getText(), isTeacherAI),
-					new Player('p', textField2.getText(), isParentAI),
-					new Player('s', textField1.getText(), isStudentAI) };
+			Player[] players = { new Player('e', textField4.getText(), isEngineerAI, engineerObjectives),
+					new Player('t', textField3.getText(), isTeacherAI, teacherObjectives),
+					new Player('p', textField2.getText(), isParentAI, parentObjectives),
+					new Player('s', textField1.getText(), isStudentAI, studentObjectives) };
 
 			Stage tempStage = (Stage) startButton.getScene().getWindow();
-			MainSceneHandler mainSceneHandler = new MainSceneHandler(optionsMenu, players);
+			MainSceneHandler mainSceneHandler = new MainSceneHandler(players);
 			Scene mainScene = mainSceneHandler.makeMainScene();
 			tempStage.setScene(mainScene);
+			tempStage.centerOnScreen();
 		});
 	}
 

@@ -9,6 +9,7 @@ public class EventOption {
 	private int objectiveIndex = -1;
 	private boolean endsEvent = true;
 	private String tooltip = "";
+	private int itemIndex = -1;
 	
 	public EventOption (String text, int[] effects, int[] requirements) {
 		this.text = text;
@@ -35,9 +36,18 @@ public class EventOption {
 		this(text, effects, requirements, playersVisableTo, objectiveIndex, endsEvent);
 		this.tooltip = tooltip;
 	}
+	
+	public EventOption(String text, int[] effects, int[] requirements, boolean[] playersVisableTo, int objectiveIndex, boolean endsEvent, String tooltip, int itemIndex) {
+		this(text, effects, requirements, playersVisableTo, objectiveIndex, endsEvent, tooltip);
+		this.itemIndex = itemIndex;
+	}
 
 	public String getText() {
 		return text;
+	}
+	
+	public int getItemIndex() {
+		return itemIndex;
 	}
 
 	public int[] getEffects() {

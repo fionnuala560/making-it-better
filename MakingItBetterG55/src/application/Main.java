@@ -1,7 +1,8 @@
 package application;
-	
+
+import java.io.InputStream;
+
 import javafx.application.Application;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
@@ -11,17 +12,33 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 
 public class Main extends Application {
+	
+	public static Font fredokaOne;
+	public static Font arialRoundedMTBold;
+	public static Scene homeScene;
+	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+	        InputStream fredokaStream = Main.class.getResourceAsStream("/FredokaOne-Regular.ttf");
+	        if (fredokaStream != null) {
+	            fredokaOne = Font.loadFont(fredokaStream, 36);
+	            fredokaStream.close();
+	        }
+	        InputStream arialMTStream = Main.class.getResourceAsStream("/arialroundedmtbold.ttf");
+	        if (arialMTStream != null) {
+	        	arialRoundedMTBold = Font.loadFont(arialMTStream, 36);
+	            arialMTStream.close();
+	        }
+			
 			TextRetriever textRetriever = new TextRetriever();
 			GridPane homeScreen = new GridPane();
 			homeScreen.setStyle("-fx-background-image: url('/woodbackground.jpg');");
-			Scene homeScene = new Scene(homeScreen, 1200, 800);
-
+			homeScene = new Scene(homeScreen, 1200, 800);
 			GridPane root = new GridPane();
 			Scene optionsScene = new Scene(root, 1200, 800);
 			optionsScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -44,12 +61,12 @@ public class Main extends Application {
 	            homeScreen.getRowConstraints().add(rowConst);         
 	        }
 	        Text title = new Text(textRetriever.getText(1,1));
-	        title.setFont(Font.font("SansSerif", FontWeight.BOLD, 100));
-	        title.setStyle("-fx-fill: black; -fx-stroke: white; -fx-stroke-width: 4px;");
+	        title.setFont(fredokaOne);
+	        title.setStyle("-fx-font-size: 80; -fx-fill: white; -fx-effect: dropshadow(gaussian, black, 5 , 1.0, 0, 0);");
 
 			Button playButton = new Button("Play");
 			playButton.setStyle("-fx-cursor: hand; -fx-border-color: #152546; -fx-border-width: 14px; -fx-background-color: #536F7B; -fx-text-fill: white;");
-			playButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 40));
+			playButton.setFont(fredokaOne);
 			playButton.setPrefSize(320, 29);
 			
 			playButton.setOnAction(event -> {
@@ -57,14 +74,15 @@ public class Main extends Application {
 			});
 			
 			Button quitButton = new Button("Quit");
-			quitButton.setFont(Font.font("SansSerif", FontWeight.BOLD, 40));
+			quitButton.setFont(fredokaOne);
 			quitButton.setStyle("-fx-cursor: hand; -fx-border-color: #152546; -fx-border-width: 14px; -fx-background-color: #536F7B; -fx-text-fill: white;");
 			quitButton.setPrefSize(320, 29);
 			//Adding the event to close the menu
 			quitButton.setOnAction(event -> {
 				System.exit(0);
 			});	
-						
+					
+			/*
 			ImageView settingsWheel = new ImageView("/setting.png");			
 			settingsWheel.setStyle("-fx-cursor: hand;");
 			settingsWheel.setFitWidth(100);
@@ -78,9 +96,9 @@ public class Main extends Application {
 				Scene oMScene = om.getOptionsMenu(homeScene);
 				primaryStage.setScene(oMScene);
 			});
-			
 
 			homeScreen.add(settingsButton, 1, 32);
+			*/
 
 			homeScreen.add(title, 8, 0, 40, 20);
 			homeScreen.add(playButton, 14, 10, 40, 20);

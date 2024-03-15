@@ -8,15 +8,18 @@ public class Player {
 	// indexed: health, education, goods, money
 	private int[] resources = {-1, -1, -1, -1};
 	private int[] objectives = { 0, 0, 0 };
+	private boolean[] items = {false, false, false};
+	private String[] objectivesText;
 	private static int[] studentStartingRes = { 100, 10, 30, 0 };
 	private static int[] parentStartingRes = { 100, 40, 50, 30 };
 	private static int[] teacherStartingRes = { 100, 70, 50, 30 };
 	private static int[] engineerStartingRes = { 100, 80, 50, 80 };
 
-	public Player(char playerType, String playerName, boolean isAIControlled) {
+	public Player(char playerType, String playerName, boolean isAIControlled, String[] objectivesText) {
 		this.playerType = playerType;
 		this.playerName = playerName;
 		this.isAIControlled = isAIControlled;
+		this.objectivesText = objectivesText;
 		switch (playerType) {
 		case 's':
 			resources[0] = studentStartingRes[0];
@@ -48,9 +51,17 @@ public class Player {
 	public char getPlayerType() {
 		return playerType;
 	}
+	
+	public boolean[] getItems() {
+		return items;
+	}
 
 	public String getPlayerName() {
 		return playerName;
+	}
+	
+	public String[] getObjectivesText() {
+		return objectivesText;
 	}
 
 	public boolean isAIControlled() {

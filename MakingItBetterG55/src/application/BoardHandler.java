@@ -20,7 +20,7 @@ public class BoardHandler {
 	private Image[] tileImages = { new Image("/WaterTile.png", 256, 256, false, false),
 			new Image("/GrassTile.png", 256, 256, false, false), new Image("/TreesTile.png", 256, 256, false, false),
 			new Image("/DirtTile.png", 256, 256, false, false), new Image("/RiceTile.png", 256, 256, false, false),
-			new Image("/HouseTile.png", 256, 256, false, false) };
+			new Image("/HouseTile.png", 256, 256, false, false), new Image("/HouseTile.png", 256, 256, false, false), new Image("/HouseTile.png", 256, 256, false, false), new Image("/HouseTile.png", 256, 256, false, false) };
 	private ImageView playerImageViews[] = { new ImageView(new Image("/EngineerBot.png", 185, 185, false, false)),
 			new ImageView(new Image("/TeacherBot.png", 185, 185, false, false)),
 			new ImageView(new Image("/ParentBot.png", 185, 185, false, false)),
@@ -268,6 +268,18 @@ public class BoardHandler {
 					changeInMovement = 1;
 					eventIndex = 6;
 					break;
+				case 6:
+					changeInMovement = 1;
+					eventIndex = 7;
+					break;
+				case 7:
+					changeInMovement = 1;
+					eventIndex = 8;
+					break;
+				case 8:
+					changeInMovement = 1;
+					eventIndex = 9;
+					break;
 				case 69:
 					return -1;
 				default:
@@ -432,7 +444,6 @@ public class BoardHandler {
 			player.setUserData(
 					new float[] { a, b, sideLengthScaler, origin[0], origin[1], gridSize, 69, (i == 0) ? 1 : 0 });
 		}
-
 		return ball;
 	}
 
